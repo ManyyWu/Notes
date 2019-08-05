@@ -1,12 +1,16 @@
 # UNPV 笔记
+
 ## 1. 基础知识
 ## 2. 函数定义
 ## 3. TCP异常处理
 >* ### 进程一端退出(exit、C-C、异常终止)
 >>* 进程退出等同于主动关闭调用close()，内核会关闭所有文件描述符，触发FIN分节发送(如果设置了SO_LINGER的l_onoff = 1则发送RST分节)。
 >>* FIN分节处理: 另一端read()返回0表示对端关闭。
->>* RST分节处理: 另一端read()返回-1并设置errno = ECONNRESET，收到RST后调用send()则导致进程接收SIGPIPE信号，该信号默认终止进程。
+>>* RST分节处理: 另一端read()返回-1并设置errno = ECONNRESET，收到RST后调用send()则导致进程接收SIGPIPE信号，该信号默认终止进程。[详解](#SIGPIPE信号)
+>* ### 一端主要崩溃(非主动关闭)、中间路由不通
+>>* 
 ## 4. 重点
+
 >* ### 服务端关闭连接不进入TIME_WAIT的方法
 >>1. 客户端主动关闭连接。
 >>2. 服务端设置SO_LINGER的l_onoff = 1使用RST方式关闭连接。
