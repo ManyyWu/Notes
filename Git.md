@@ -18,7 +18,7 @@
     $git remote add origin https://github.com/username/repo.git # 添加远程仓库
     或
     $git config remote.origin.url=https://github.com/username/repo.git #修改远程仓库
-    $git push -u origin master    # push
+    $git push -u origin master -f # push
 ## 更新代码：
     $git pull <url> <branch>
 ## 查看分支：
