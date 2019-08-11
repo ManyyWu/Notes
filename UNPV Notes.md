@@ -11,24 +11,26 @@
 >>>* 无需分片即能穿才路径的最大传输单位，在两个主机之间的路径中最小的MTU称为路径的MTU(Path MTU)。
 >>>* SYN分节上的MSS目的是告诉对端其重组缓冲区大小的实际值，从而试图避免分片，MSS = MTU - IP Header - TCP Header。
 >>>* 当IP数据包从某个接口输出时，如果大小超过链路MTU，IPv4和IPv6将对IP数据包进行分片。IPv6禁止中间节点设备分片，分片只能在两端主机进行。IPv4主机和中间节点设备都可对IP数据包进行分片，可通过设置IP头部的DF位防止主机和中间节点设备对IP数据包分片
+>>>* MSS协商
+>>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/mss.png)
 >>>* TCP输出
->>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_out.png)
+>>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_out.png)
 >>>* UDP输出
->>![image](https://github.com/ManyyWu/Notes/blob/master/image/udp_out.png)
+>>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/udp_out.png)
 >* ### TCP三次握手和四次挥手
->>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_connect_and_close.png)
+>>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_connect_and_close.png)
 >* ### TCP状态转换
 >>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_status_convert.png)
+>* ### TCP连接过程
+>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_cs.png)
 ## 2. 函数定义
 >* ### 套接字地址结构
 >>* IPv4套接字结构
 >>>```C
 >>>#include <netinet/in.h>
->>>
 >>>struct in_addr {
 >>>    in_addr_t s_addr;
 >>>};
->>>
 >>>struct sockaddr_in {
 >>>    uint8_t        sin_len;     /* length of structure (16) */
 >>>    sa_family_t    sin_family;  /* AF_INET */
@@ -42,14 +44,12 @@
 >>* IPv6套接字结构
 >>>```C
 >>>#include <netinet/in.h>
->>>
 >>>struct in6_addr {
 >>>union {
 >>>    uint8_t    u6_addr8[16]; /* 128-bit IPv6 address */
 >>>                             /* network byte ordered */
 >>>};
 >>>#define SIN6_LEN             /* required for compile-time tests */
->>>
 >>>struct sockaddr_in6 {
 >>>    uint8_t         sin6_len;      /* length of this struct (28) */
 >>>    sa_family_t     sin6_family;   /* AF_INET6 */
@@ -64,7 +64,6 @@
 >>* 通用套接字结构sockaddr_storage，足以容纳系统支持的任何套接字地址结构
 >>>```C
 >>>#include <netinet/in.h>
->>>
 >>>struct sockaddr_storage {
 >>>    uint8_t        ss_len;    /* length of struct  */
 >>>    sa_family_t    ss_family; /* address family, AF_xxx value */
@@ -79,7 +78,6 @@
 >>* 通用套接字结构sockaddr
 >>>```C
 >>>#include <sys/socket.h>
->>>
 >>>struct sockaddr {
 >>>    uint8_t     sa_len;      /* total length */
 >>>    sa_family_t sa_family;   /* address family: AF_xxx value */
@@ -136,6 +134,50 @@
 >>>* 如果不被支持的地址族作为family参数，这两个函数就都返回-1，并将errno置为EAFNOSUPPORT。
 >>>* 如果len太小，那么返回NULL，并置errno为ENOSPC。
 >>>* inet_ntop()的参数strptr不可为NULL。
+>* ### TCP套接字编程
+>>* socket()
+>>>```C
+>>>#include <sys/socket.h>
+>>>int socket (int family, int type, int protocol);
+>>>/* 返回：若成功则为非负描述符，若出错则为-1 */
+>>>```
+>>>* family指明协议族，type指明套接字类型，protocol指明具体协议，0表示默认值。
+>>>* socket()的family常值
+>>>>|family|说明|
+>>>>|----|----|
+>>>>|AF_INET|IPv4协议|
+>>>>|AF_INET6|IPv6协议|
+>>>>|AF_LOCL|Unix域协议|
+>>>>|AF_ROUTE|路由套接字|
+>>>>|AF_KEY|密钥套接字|
+>>>* socket()的type常值
+>>>>|type|说明|
+>>>>|----|----|
+>>>>|SOCK_STREAM|字节流套接字|
+>>>>|SOCK_DGRAM|数据报套接字|
+>>>>|SOCK_SEQPACKET|有序分组套接字|
+>>>>|SOCK_RAW|原始套接字|
+>>>* socket()的protocol常值
+>>>>|protocol|说明|
+>>>>|----|----|
+>>>>|IPPROTO_TCP|TCP传输协议|
+>>>>|IPPROTO_DUP|UDP传输协议|
+>>>>|IPPROTO_SCTP|SCTP传输协议|
+>>>* socket()中family和type的组合
+>>>>||AF_INET|AF_INET6|AF_LOCOL|AF_ROUTE|AF_KEY|
+>>>>|----|----|----|----|----|----|
+>>>>|SOCK_STREAM|TCP/SCTP|TCP/SCTP|是|||
+>>>>|SOCK_DGRAM|UDP|UDP|是|||
+>>>>|SOCK_SEQPACKET|SCTP|SCTP|是|||
+>>>>|SOCK_RAW|IPv4|IPv6||是|是|
+>>* connect()
+>>>```C
+>>>#include <sys/socket.h>
+>>>int connect (int sockfd, const struct sockaddr *servaddr, socklen_t addrlen);
+>>>/* 返回：若成功则为0，若出错则为-1 */
+>>>```
+>>>* sockfd为socket()返回的套接字描述符，servaddr指向服务器地址结构(该结构是包含协议服务器IP地址、服务器端口号的三元组)，addrlen为地址结构的大小。
+>>>*  
 ## 3. TCP异常处理
 >* ### 进程一端退出(exit、C-C、异常终止)
 >>* 进程退出等同于主动关闭调用close()，内核会关闭所有文件描述符，触发FIN分节发送(如果设置了SO_LINGER的l_onoff = 1则发送RST分节)。
@@ -157,12 +199,12 @@
 >* ### close()和shutdown()区别
 >>* 调用close()把描述符引用数减1，仅在引用数为0时才关闭套接字，而调用shutdown()不管引用计数直接触发TCP的正常终止序列。
 >>* 调用close()直接终止两个方向的数据传输，而shutdown()可以只关闭读半部或写半部的连接，此时仍可以进行写或读操作。如图所示:
->>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_shutdown.png)
+>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_shutdown.png)
 >* ### connect()
 >>* 当connect()失败则该套接字不可再用，必须关闭，不能再对该套接字再次调用connect()函数。
 >* ### SIGCHLD信号处理函数中调用wait()和waitpid()
 >>* 在SIGCHLD信号处理函数中，应该使用waitpid()函数。如图:
->>![image](https://github.com/ManyyWu/Notes/blob/master/image/wait_and_waitpid.png)
+>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/wait_and_waitpid.png)
 >>* 如果使用wait()函数，若5个SIGCHLD同时传递给父进程，该信号处理函数可能只被执行一次，导至留下4个僵死进程。
 >>正确的写法应为:
 >>```C
@@ -191,9 +233,6 @@
 >* 中文主导句尾加'**。**'; 英文主导句尾加'**.**'。
 >* 括号统一用英文'**()**'。
 >* 不使用**TAB**。
->* 代码缩进**4**个符号位的**TAB**。
+>* 代码缩进**4**个空格。
 >* 统一使用英文分号'**;**'。
-
-```
-
-```
+>* "函数"使用"**()**"代替。
