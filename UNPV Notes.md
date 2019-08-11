@@ -51,14 +51,14 @@
 >>>#define SIN6_LEN             /* required for compile-time tests */
 >>>
 >>>struct sockaddr_in6 {
->>>    uint8_t        sin6_len;        /* length of this struct (28) */
->>>    sa_family_t        sin6_family; /* AF_INET6 */
->>>    in_port_t        sin6_port;     /* transport layer port# */
->>>                                    /* network byte ordered */
->>>    uint32_t        sin6_flowinfo;  /* IPv6 information, undefined */
->>>    struct in6_addr    sin6_addr;   /* IPv6 address */
->>>                                    /* network byte ordered */
->>>    uint32_t        sin6_scope_id;  /* set of interfaces for a scope */
+>>>    uint8_t         sin6_len;      /* length of this struct (28) */
+>>>    sa_family_t     sin6_family;   /* AF_INET6 */
+>>>    in_port_t       sin6_port;     /* transport layer port# */
+>>>                                   /* network byte ordered */
+>>>    uint32_t        sin6_flowinfo; /* IPv6 information, undefined */
+>>>    struct in6_addr sin6_addr;     /* IPv6 address */
+>>>                                   /* network byte ordered */
+>>>    uint32_t        sin6_scope_id; /* set of interfaces for a scope */
 >>>};
 >>>```
 >>* 通用套接字结构sockaddr_storage，足以容纳系统支持的任何套接字地址结构
