@@ -1,8 +1,10 @@
 # UNPV 笔记
-
 ## 1. 基础知识
+>* ### TCP状态转换
+>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_status_convert.png)
 ## 2. 函数定义
 ## 3. TCP异常处理
+
 >* ### 进程一端退出(exit、C-C、异常终止)
 >>* 进程退出等同于主动关闭调用close()，内核会关闭所有文件描述符，触发FIN分节发送(如果设置了SO_LINGER的l_onoff = 1则发送RST分节)。
 >>* FIN分节处理: 另一端read()返回0表示对端关闭。
@@ -23,12 +25,12 @@
 >* ### close()和shutdown()区别
 >>* 调用close()把描述符引用数减1，仅在引用数为0时才关闭套接字，而调用shutdown()不管引用计数直接触发TCP的正常终止序列。
 >>* 调用close()直接终止两个方向的数据传输，而shutdown()可以只关闭读半部或写半部的连接，此时仍可以进行写或读操作。如图所示：
->![image](https://user-images.githubusercontent.com/51533330/62421147-bbfe4700-b6cf-11e9-9617-582a3614d714.png)
+>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_shutdown.png)
 >* ### connect()
 >>* 当connect()失败则该套接字不可再用，必须关闭，不能再对该套接字再次调用connect()函数。
 >* ### SIGCHLD信号处理函数中调用wait()和waitpid()
 >>* 在SIGCHLD信号处理函数中，应该使用waitpid()函数。如图：
->>![image](https://user-images.githubusercontent.com/51533330/62414429-8c0e5f80-b64d-11e9-8ed1-3f2e13d681fc.png)
+>>![image](https://github.com/ManyyWu/Notes/blob/master/image/wait_and_waitpid.png)
 >>* 如果使用wait()函数，若5个SIGCHLD同时传递给父进程，该信号处理函数可能只被执行一次，导至留下4个僵死进程。
 >>正确的写法应为：
 >>```C++
