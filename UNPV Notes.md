@@ -177,8 +177,18 @@
 >>>/* 返回：若成功则为0，若出错则为-1 */
 >>>```
 >>>* sockfd为socket()返回的套接字描述符，servaddr指向服务器地址结构(该结构是包含协议服务器IP地址、服务器端口号的三元组)，addrlen为地址结构的大小。
->>>*  
+>>>* connect()出错的几种情况:
+>>>> |errno|原因|处理方法|
+>>>> |----|----|----|
+>>>> |ETIMEDOUT|客户端未收到SYN分节，连接超时。[详解](#收到rst的条件)||
+>>>> |ECONNREFUSED|服务器对客户端响应RST，表明服务器主机没有监听指定端口，这是一个硬错误||
+>>>> |EHOSTUNREACH|客户端发出的SYN在中间某个路由器上引发一个"destination unreachable"的ICMP错误，这是一个软错误||
+>>>> |ENETUNREACH|同EHOSTUNREACH||
 ## 3. TCP异常处理
+>* ### 收到RST的条件
+>>1. 目的地为某端口的SYN到达，然而该端口上没有正在监听的服务器。
+>>2. TCP想取消一个已有连接。
+>>3. TCP接收到一个根本不存在的连接上的分节
 >* ### 进程一端退出(exit、C-C、异常终止)
 >>* 进程退出等同于主动关闭调用close()，内核会关闭所有文件描述符，触发FIN分节发送(如果设置了SO_LINGER的l_onoff = 1则发送RST分节)。
 >>* FIN分节处理: 另一端read()返回0表示对端关闭。
@@ -196,7 +206,7 @@
 >>1. 客户端主动关闭连接。
 >>2. 服务端设置SO_LINGER的l_onoff = 1使用RST方式关闭连接。
 >>3. 服务端使用SO_REUSERPORT选项允许端口重用。
->* ### close()和shutdown()区别
+>* ### close()和shutdown()的区别
 >>* 调用close()把描述符引用数减1，仅在引用数为0时才关闭套接字，而调用shutdown()不管引用计数直接触发TCP的正常终止序列。
 >>* 调用close()直接终止两个方向的数据传输，而shutdown()可以只关闭读半部或写半部的连接，此时仍可以进行写或读操作。如图所示:
 >>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_shutdown.png)
