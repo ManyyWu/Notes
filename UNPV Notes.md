@@ -45,33 +45,29 @@
 >>>
 >>>struct in6_addr {
 >>>union {
->>>	uint8_t	u6_addr8[16];			/* 128-bit IPv6 address */
->>>									/* network byte ordered */
+>>>    uint8_t    u6_addr8[16]; /* 128-bit IPv6 address */
+>>>                             /* network byte ordered */
 >>>};
->>>#define SIN6_LEN					/* required for compile-time tests */
+>>>#define SIN6_LEN             /* required for compile-time tests */
 >>>
 >>>struct sockaddr_in6 {
->>>	__uint8_t		sin6_len;		/* length of this struct (28) */
->>>	sa_family_t		sin6_family;	/* AF_INET6 */
->>>	in_port_t		sin6_port;		/* transport layer port# */
->>>									/* network byte ordered */
->>>	__uint32_t		sin6_flowinfo;	/* IPv6 information, undefined */
->>>	struct in6_addr	sin6_addr;		/* IPv6 address */
->>>									/* network byte ordered */
->>>	__uint32_t		sin6_scope_id;	/* set of interfaces for a scope */
+>>>    uint8_t        sin6_len;        /* length of this struct (28) */
+>>>    sa_family_t        sin6_family; /* AF_INET6 */
+>>>    in_port_t        sin6_port;     /* transport layer port# */
+>>>                                    /* network byte ordered */
+>>>    uint32_t        sin6_flowinfo;  /* IPv6 information, undefined */
+>>>    struct in6_addr    sin6_addr;   /* IPv6 address */
+>>>                                    /* network byte ordered */
+>>>    uint32_t        sin6_scope_id;  /* set of interfaces for a scope */
 >>>};
 >>>```
 >>* 通用套接字结构sockaddr_storage，足以容纳系统支持的任何套接字地址结构
 >>>```C
 >>>#include <netinet/in.h>
 >>>
->>>#define __ss_aligntype  unsigned long int
->>>#define _SS_PADSIZE \
->>>    	(_SS_SIZE - __SOCKADDR_COMMON_SIZE - sizeof (__ss_aligntype))
->>>
 >>>struct sockaddr_storage {
->>>	uint8_t		ss_len;				/* length of struct  */
->>>	sa_family_t	ss_family;			/* address family, AF_xxx value */
+>>>    uint8_t        ss_len;    /* length of struct  */
+>>>    sa_family_t    ss_family; /* address family, AF_xxx value */
 >>>/* implemetation-dependent elemetns to provide:
 >>> *  a) aligenment sufficient to fullfill the aligenment requirements of
 >>> *     all socket address types that the system supports.
@@ -85,9 +81,9 @@
 >>>#include <sys/socket.h>
 >>>
 >>>struct sockaddr {
->>>	__uint8_t	sa_len;			/* total length */
->>>	sa_family_t	sa_family;		/* address family: AF_xxx value */
->>>	char		sa_data[14];	/* protocol-specific address */
+>>>    uint8_t     sa_len;      /* total length */
+>>>    sa_family_t sa_family;   /* address family: AF_xxx value */
+>>>    char        sa_data[14]; /* protocol-specific address */
 >>>};
 >>>```
 >>* 字节序转换函数
@@ -173,11 +169,11 @@
 >>void
 >>sig_chld (int signo)
 >>{
->>	pid_t pid;
->>	int stat;
->>	while ((pid = waitpid(-1, &stat, WNOHANG)) > 0)
->>		printf("child %d terminated, err_code: %d\n", pid, stat);
->>	return;
+>>    pid_t pid;
+>>    int stat;
+>>    while ((pid = waitpid(-1, &stat, WNOHANG)) > 0)
+>>        printf("child %d terminated, err_code: %d\n", pid, stat);
+>>    return;
 >>}
 >>/*
 >>* 其中WNOHANG选项告知内核在没有已终止的子进程时不要阻塞。
