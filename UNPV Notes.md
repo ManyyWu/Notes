@@ -18,7 +18,7 @@
 >>>* UDP输出
 >>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/udp_out.png)
 >* ### TCP三次握手和四次挥手
->>>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_connect_and_close.png)
+>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_connect_and_close.png)
 >* ### TCP状态转换
 >>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_status_convert.png)
 >* ### TCP连接过程
@@ -226,20 +226,20 @@
 >>>![image](https://github.com/ManyyWu/Notes/blob/master/image/wait_and_waitpid.png)
 >>* 如果使用wait()函数，若5个SIGCHLD同时传递给父进程，该信号处理函数可能只被执行一次，导至留下4个僵死进程。
 >>正确的写法应为:
->>```C
->>void
->>sig_chld (int signo)
->>{
->>    pid_t pid;
->>    int stat;
->>    while ((pid = waitpid(-1, &stat, WNOHANG)) > 0)
->>        printf("child %d terminated, err_code: %d\n", pid, stat);
->>    return;
->>}
->>/*
->>* 其中WNOHANG选项告知内核在没有已终止的子进程时不要阻塞。
->>*/
->>```
+>>>```C
+>>>void
+>>>sig_chld (int signo)
+>>>{
+>>>    pid_t pid;
+>>>    int stat;
+>>>    while ((pid = waitpid(-1, &stat, WNOHANG)) > 0)
+>>>        printf("child %d terminated, err_code: %d\n", pid, stat);
+>>>    return;
+>>>}
+>>>/*
+>>>* 其中WNOHANG选项告知内核在没有已终止的子进程时不要阻塞。
+>>>*/
+>>>```
 >* ### SIGPIPE信号
 >>* 当一个进程向某个已收到RST的套接字进行写操作时，内核向该进程发出SIGPIPE信号(该信号默认是终止进程)，write()函数将返回EPIPE错误。
 >>* 结合TCP的"四次握手"关闭，TCP是全双工的信道，TCP连接两端的两个端点各负责一条。当对端调用close()时，虽然本意是关闭整个两条信道，但本端只是收到FIN分节，按照TCP协议的语义，表示对端只是关闭了其所负责的那一条单工信道，仍然可以继续接收数据。也就是说，因为TCP协议的限制，本无法获知对端的socket是调用了close()还是shutdown()。本端收到FIN分节之后，如果没有调用read()，则无法知道连接是否已关闭。此时仍向对端发送数据，第一次调用write()，write()仅把数据拷贝到发送缓冲区，并不会返回错误，但对端收到数据后会返回RST。第二次调用write()时便会触发SIGPIPE信号。
