@@ -25,7 +25,7 @@
 >>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_cs.png)
 ## 2. 函数定义
 >* ### 套接字地址结构
->>* IPv4套接字结构
+>>* #### IPv4套接字结构
 >>>```C
 >>>#include <netinet/in.h>
 >>>struct in_addr {
@@ -41,7 +41,7 @@
 >>>    char           sin_zero[8]; /* unused */
 >>>};
 >>>```
->>* IPv6套接字结构
+>>* #### IPv6套接字结构
 >>>```C
 >>>#include <netinet/in.h>
 >>>struct in6_addr {
@@ -61,7 +61,7 @@
 >>>    uint32_t        sin6_scope_id; /* set of interfaces for a scope */
 >>>};
 >>>```
->>* 通用套接字结构sockaddr_storage，足以容纳系统支持的任何套接字地址结构
+>>* #### 通用套接字结构sockaddr_storage，足以容纳系统支持的任何套接字地址结构
 >>>```C
 >>>#include <netinet/in.h>
 >>>struct sockaddr_storage {
@@ -75,7 +75,7 @@
 >>> */
 >>>};
 >>>```
->>* 通用套接字结构sockaddr
+>>* #### 通用套接字结构sockaddr
 >>>```C
 >>>#include <sys/socket.h>
 >>>struct sockaddr {
@@ -84,7 +84,7 @@
 >>>    char        sa_data[14]; /* protocol-specific address */
 >>>};
 >>>```
->>* 字节序转换函数
+>>* #### 字节序转换函数
 >>>```C
 >>>#include <netinet/in.h>
 >>>uint16_t htons (uint16_t host16bitvalue);
@@ -93,7 +93,7 @@
 >>>uint32_t htons (uint32_t net32bitvalue);
 >>>```
 >>>* **其中h代表host，n代表network，s代表short，l代表long。**
->>* 字节操作函数
+>>* #### 字节操作函数
 >>>* Berkeley函数
 >>>```C
 >>>#include <strings.h>
@@ -110,7 +110,7 @@
 >>>int   memcmp (const void *ptr1, const void *ptr2, size_t nbytes);
 >>>/* 返回：若相等则为0，>0或<0 */
 >>>```
->>* IPv4地址转换函数
+>>* #### IPv4地址转换函数
 >>>```C
 >>>#include <arpa/inet.h>
 >>>int       inet_aton (const char *strptr, struct in_addr *addrptr);
@@ -122,7 +122,7 @@
 >>>```
 >>>* **a代表点分十进制数串，n代表网络字节序二进制值。**
 >>>* **对于inet_addr()，INADDR_NONE为32位值0xffffffff，当strptr为"255.255.255.255"时，inet_addr()返回INADDR_NONE，因此该函数不能用来处理地址"255.255.255.255"，如今inet_addr()已弃用，最好使用新的inet_aton()。**
->>* 适用于Ipv4和IPv6的地址转换函数
+>>* #### 适用于Ipv4和IPv6的地址转换函数
 >>>```C
 >>>#include <arpa/inet.h>
 >>>int         inet_pton (int family, const char *strptr, void *addrptr);
@@ -135,7 +135,7 @@
 >>>* 如果len太小，那么返回NULL，并置errno为ENOSPC。
 >>>* inet_ntop()的参数strptr不可为NULL。
 >* ### TCP套接字编程
->>* socket()
+>>* #### socket()
 >>>```C
 >>>#include <sys/socket.h>
 >>>int socket (int family, int type, int protocol);
@@ -170,26 +170,35 @@
 >>>>|SOCK_DGRAM|UDP|UDP|是|||
 >>>>|SOCK_SEQPACKET|SCTP|SCTP|是|||
 >>>>|SOCK_RAW|IPv4|IPv6||是|是|
->>* connect()
+>>* #### connect()
 >>>```C
 >>>#include <sys/socket.h>
 >>>int connect (int sockfd, const struct sockaddr *servaddr, socklen_t addrlen);
 >>>/* 返回：若成功则为0，若出错则为-1 */
 >>>```
 >>>* sockfd为socket()返回的套接字描述符，servaddr指向服务器地址结构(该结构是包含协议服务器IP地址、服务器端口号的三元组)，addrlen为地址结构的大小。
->>>* connect()出错的几种情况:
->>>> |errno|原因|处理方法|
->>>> |----|----|----|
->>>> |ETIMEDOUT|客户端未收到SYN分节，连接超时。[详解](#收到rst的条件)||
->>>> |ECONNREFUSED|服务器对客户端响应RST，表明服务器主机没有监听指定端口，这是一个硬错误||
->>>> |EHOSTUNREACH|客户端发出的SYN在中间某个路由器上引发一个"destination unreachable"的ICMP错误，这是一个软错误||
->>>> |ENETUNREACH|同EHOSTUNREACH||
+>>>* connect()出错的几种情况
+>>>> |errno|原因|
+>>>> |----|----|
+>>>> |ETIMEDOUT|客户端未收到SYN分节，连接超时。|
+>>>> |ECONNREFUSED|服务器对客户端响应RST，表明服务器主机没有监听指定端口，这是一个硬错误。|
+>>>> |EHOSTUNREACH|客户端发出的SYN在中间某个路由器上引发一个"destination unreachable"的ICMP错误，这是一个软错误。|
+>>>> |ENETUNREACH|同EHOSTUNREACH。|
+>>>> ***connect()失败则表示该套接字不可再用，必须关闭，不能再对该套接字再次调用connect()***
+>>
+>>* #### bind()
 ## 3. TCP异常处理
->* ### 收到RST的条件
->>1. 目的地为某端口的SYN到达，然而该端口上没有正在监听的服务器。
->>2. TCP想取消一个已有连接。
->>3. TCP接收到一个根本不存在的连接上的分节
->* ### 进程一端退出(exit、C-C、异常终止)
+>* ### 收到RST的几种情况
+>> |条件|errno|处理方法|
+>> |----|----|----|
+>> |目的地为某端口的SYN到达，然而该端口上没有正在监听的服务器|||
+>> |TCP想取消一个已有连接|||
+>> |TCP接收到一个根本不存在的连接上的分节|||
+>* ### ICMP错误
+>> |条件|errno|处理方法|
+>> |----|----|----|
+>> ||||
+>* ### 进程一端退出(exit、C-c、异常终止)
 >>* 进程退出等同于主动关闭调用close()，内核会关闭所有文件描述符，触发FIN分节发送(如果设置了SO_LINGER的l_onoff = 1则发送RST分节)。
 >>* FIN分节处理: 另一端read()返回0表示对端关闭。
 >>* RST分节处理: 另一端read()返回-1并设置errno = ECONNRESET，收到RST后调用send()则导致进程接收SIGPIPE信号，该信号默认终止进程。[详解](#SIGPIPE信号)
@@ -246,3 +255,6 @@
 >* 代码缩进**4**个空格。
 >* 统一使用英文分号'**;**'。
 >* "函数"使用"**()**"代替。
+## 5. Markdown教程
+>* 页内跳转
+>> `[Hello World](#hello-world)`，空格使用"**-**"代替，标题中英文使用小写。
