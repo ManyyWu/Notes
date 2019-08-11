@@ -1,10 +1,11 @@
 # UNPV 笔记
 ## 1. 基础知识
 >* ### TCP状态转换
->![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_status_convert.png)
+>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_status_convert.png)
+>* ### TCP三次握手和四次挥手
+>>![image](https://github.com/ManyyWu/Notes/blob/master/image/tcp_connect_and_close.png)
 ## 2. 函数定义
 ## 3. TCP异常处理
-
 >* ### 进程一端退出(exit、C-C、异常终止)
 >>* 进程退出等同于主动关闭调用close()，内核会关闭所有文件描述符，触发FIN分节发送(如果设置了SO_LINGER的l_onoff = 1则发送RST分节)。
 >>* FIN分节处理: 另一端read()返回0表示对端关闭。
