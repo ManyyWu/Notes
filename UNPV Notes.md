@@ -185,8 +185,28 @@
 >>>> |EHOSTUNREACH|客户端发出的SYN在中间某个路由器上引发一个"destination unreachable"的ICMP错误，这是一个软错误。|
 >>>> |ENETUNREACH|同EHOSTUNREACH。|
 >>>> ***connect()失败则表示该套接字不可再用，必须关闭，不能再对该套接字再次调用connect()***
->>
 >>* #### bind()
+>>>```C
+>>>#include <sys/socket.h>
+>>>int bind (int sockfd, const struct sockaddr *myaddr, socklen_t addrlen);
+>>>/* 返回：若成功则为0，若出错则为-1 */
+>>>```
+>>>* sockfd为监听套接字，myaddr指向监听地址结构，addrlen为地址结构的大小。
+>>>* bind()返回的常见错误是EADDRINUSE，可使用SO_REUSEADDR和SO_REUSEPORT这两个套接字选项设置地址重用和端口重用。
+>>>* bind()不同的IP地址和端口号组合产生的结果
+>>>> |IP地址|端口|结果|
+>>>> |----|----|----|
+>>>> |通配地址|0|内核选择IP和端口|
+>>>> |通配地址|非0|内核选择IP，进程指定端口|
+>>>> |本地IP地址|0|进程指定IP，内核选择端口|
+>>>> |本地IP地址|非0|进程指定IP和端口|
+>>>* 对于IPv4，监听端口号通常指定为INADDR_ANY，其值一般为0。对于IPv6，监听端口通常指定为in6addr_any，其值为常值IN6ADDR_ANY_INIT。
+>>>>```C
+>>>>#include <netinet/in.h>
+>>>>#define INADDR_ANY (u_int32_t)0x00000000
+>>>>extern const struct in6_addr in6addr_any 
+>>>>```
+>>>* 如果让内核为套接字选择一个临时端口号，函数bind()并不返回所选择的值。必须调用getsockname()获取协议地址和端口号。
 ## 3. TCP异常处理
 >* ### 收到RST的几种情况
 >> |条件|errno|处理方法|
