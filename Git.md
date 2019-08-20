@@ -67,3 +67,7 @@
     $git push --tag newtag # 提交到tag
 ## 删除远程仓库
     $git push -d origin b # 删除远程分支b
+## Git设置全局代理
+    ssr设置好socks5代理端口
+    $git config --global http.proxy 'socks5://127.0.0.1:1080'
+    $git config --global https.proxy 'socks5://127.0.0.1:1080'
