@@ -1,18 +1,18 @@
-0. mkdir ~/usr/bin
-1. Windows时间同步
+## 0. mkdir ~/usr/bin
+## 1. Windows时间同步
     sudo apt-get install ntpdate
     sudo nptdate time.windows.com
     sudo hwclock --localtime --systohc
-2. 美化
+## 2. 美化
     sudo apt-get update
     sudo apt-get install gnome-tweak-tool
     sudo apt-get install gnome-shell-extensions
     启动程序
     开启Emacs输入
     字体全部选10
-3. 安装Typora
+## 3. 安装Typora
     https://www.typora.io/#linux
-4. 安装electron-ssr
+## 4. 安装electron-ssr
     先安装python3
     sudo ln -s /usr/bin/python3 /bin/python
     sudo apt install libcanberra-gtk-module
@@ -21,12 +21,12 @@
     chmod +x ssr-linux.AppImage
     右键运行、安装
     定阅、更新pac
-5. 删除无效图标
+## 5. 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
-5. 常用工具
+## 5. 常用工具
     sudo apt-get install git curl wget proxycharins4 gcc g++ clang 
-6. ~/ 英文目录
+## 6. ~/ 英文目录
     STEP1: 将这些目录修改为英文名，如：mv 桌面 Desktop
     STEP2: 修改配置文件  ～/.config/user-dirs.dirs ，将对应的路径改为英文名（要和STEP1中修改的英文名对应）
     vim ~/.config/user-dirs.dirs
@@ -39,7 +39,7 @@
     XDG_MUSIC_DIR="$HOME/Musics"
     XDG_PICTURES_DIR="$HOME/Pictures"
     XDG_VIDEOS_DIR="$HOME/Videos"
-7. 安装完整版vim
+## 7. 安装完整版vim
     sudo apt-get remove vim-common
     sudo apt-get isntall vim
     sudo echo "# add by manyy" >> /etc/profile
@@ -54,7 +54,7 @@
     set expandtab
     set softabstop=4
     set hlsearch
-8. 更换源
+## 8. 更换源
     sudo vi /etc/apt/sources.list
     文件最前面添加：
     ##中科大源
