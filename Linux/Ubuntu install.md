@@ -1,3 +1,4 @@
+# Ubuntu Configure guide
 ## 0. mkdir ~/usr/bin
 ## 1. Windows时间同步
     sudo apt-get install ntpdate
