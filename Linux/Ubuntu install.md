@@ -26,7 +26,7 @@
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
 ## 5. 常用工具
-    sudo apt-get install git curl wget proxycharins4 gcc g++ clang 
+    sudo apt-get install git curl wget proxycharins4 gcc g++ clang gdb cmake make
 ## 6. ~/ 英文目录
     STEP1: 将这些目录修改为英文名，如：mv 桌面 Desktop
     STEP2: 修改配置文件  ～/.config/user-dirs.dirs ，将对应的路径改为英文名（要和STEP1中修改的英文名对应）
@@ -59,7 +59,7 @@
     sudo vi /etc/apt/sources.list
     文件最前面添加：
     ##中科大源
-
+    
     deb https://mirrors.ustc.edu.cn/ubuntu/ bionic main restricted universe multiverse
     deb-src https://mirrors.ustc.edu.cn/ubuntu/ bionic main restricted universe multiverse
     deb https://mirrors.ustc.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse
