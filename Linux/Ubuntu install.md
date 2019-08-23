@@ -73,3 +73,9 @@
     
     sudo apt-get update
     sudo apt-get upgrade
+## 开发库
+sudo apt-get install libboost-dev
+## 安装独显驱动
+https://blog.csdn.net/Yan_Chou/article/details/72847943
+## 安装QQ
+https://www.lulinux.com/archives/1319
