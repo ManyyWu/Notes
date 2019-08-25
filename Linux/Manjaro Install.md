@@ -61,6 +61,9 @@
     XDG_MUSIC_DIR="$HOME/Musics"
     XDG_PICTURES_DIR="$HOME/Pictures"
     XDG_VIDEOS_DIR="$HOME/Videos"
+    # 设置蓝牙传输路径(xfce)
+    blueman-services
+    传输-Incoming Folder设置为新目录
 ## 常用开发库
 ## 时间不同步
     sudo ln sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
