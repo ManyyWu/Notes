@@ -69,6 +69,9 @@
     systemctl enable openntpd
 ## 安装Typora
     https://www.typora.io/#linux
+## 安装Clion
+    sudo pacman -S clion
+    # 汉化、破解见安装包
 ## 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
@@ -78,6 +81,9 @@
     将electron-ssr.AppImage复制到~/Usr/bin/
     右键执行,定阅
     添加启动项，命令"home/manyy/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
+## 快捷键(xfce)
+    exo-open --launch TerminalEmulator C-A-T
+    exo-open --launch FileManager      C-A-F
 
 ## emacs 支持
     emacs
