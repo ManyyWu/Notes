@@ -66,10 +66,7 @@
     传输-Incoming Folder设置为新目录
 ## 常用开发库
 ## 时间不同步
-    sudo ln sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-    sudo pacman -S openntpd
-    systemctl restart openntpd
-    systemctl enable openntpd
+    timedatectl set-local-rtc 1 --adjust-system-clocK
 ## 安装Typora
     https://www.typora.io/#linux
 ## 安装Clion
