@@ -15,7 +15,7 @@
         set expandtab
         set softtabstop=4
         set hlsearch 
-    sudo vi /etc/profile # for all users
+    sudo vi ~/.bashrc # for all users
         # vim 
         alias vi=vim
         alias sudo='sudo ' # 看清楚 sudo 后面有个空格
@@ -44,7 +44,7 @@
 ## 安装常用软件
     sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang
     sudo pacman -S google-chrome netease-cloud-music deepin.com.qq.im
-    sudo pacman -S proxychains 
+    sudo pacman -S proxychains
     # 配置proxychains
     sudo vi /etc/proxychainsx.conf 
         socks5 127.0.0.1 1081
@@ -81,6 +81,10 @@
     将electron-ssr.AppImage复制到~/Usr/bin/
     右键执行,定阅
     添加启动项，命令"home/manyy/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
+    gnome添加托盘图标
+    sudo pacman -S libappindicator-sharp libappindicator-gtk3
+    无法运行：libicuuc.so.64问题, 更新系统
+    sudo pacman -Syy && sudo pacman -Syu
 ## 快捷键(xfce)
     exo-open --launch TerminalEmulator C-A-T
     exo-open --launch FileManager      C-A-F
