@@ -43,11 +43,24 @@
     reboot
 ## 安装常用软件
     sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang
-    sudo pacman -S google-chrome netease-cloud-music deepin.com.qq.im
+    sudo pacman -S google-chrome netease-cloud-music deepin.com.qq.office 
+        qq显示图标
+        tweaks-扩展-勾选user theme
+    sudo pacman -S clion
+        下载一下中文字体
+        sudo pacman -S wqy-microhei
+        clion先设置一个中文字体，复制中文即可显示中文且不乱码
+    sudo pacman -S gnome-tweaks
+        设置启动项
+        开启Emacs输入
+        字体全部选10
+        扩展－取消Dash to dock，勾选Dash to panel, 勾选Arc menu, 勾选Desktop icons
     sudo pacman -S proxychains
     # 配置proxychains
     sudo vi /etc/proxychainsx.conf 
         socks5 127.0.0.1 1081
+    sudo pacman -S ntfs-3g # arch 默认只读挂载
+        关闭Windows快速启动
 ## ~/ 英文目录
     STEP1: 将这些目录修改为英文名，如：mv 桌面 Desktop
     STEP2: 修改配置文件  ～/.config/user-dirs.dirs ，将对应的路径改为英文名（要和STEP1中修改的英文名对应）
@@ -88,6 +101,5 @@
 ## 快捷键(xfce)
     exo-open --launch TerminalEmulator C-A-T
     exo-open --launch FileManager      C-A-F
-
-## emacs 支持
-    emacs
+## 快捷键(gnome)
+    gnome-terminal C-A-T
