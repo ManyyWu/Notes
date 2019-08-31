@@ -19,7 +19,6 @@
         # vim 
         alias vi=vim
         alias sudo='sudo ' # 看清楚 sudo 后面有个空格
-        source/etc/profile
 ## 更换arch国内源
     sudo vim /etc/pacman.conf
         [archlinuxcn]
@@ -91,7 +90,7 @@
 ## 显卡
     先备份系统
 ## electron-ssr安装
-    将electron-ssr.AppImage复制到~/Usr/bin/
+    将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
     右键执行,定阅
     添加启动项，命令"home/manyy/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
     gnome添加托盘图标
