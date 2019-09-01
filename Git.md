@@ -74,3 +74,7 @@
 ## 取消全局代理
     $git config --global unset http.proxy
     $git config --global unset https.proxy
+## 免密
+    $ssh-keygen -t rsa
+    $cat ~/.git/id_rsa.pub
+    复制到Github-SSH keys
