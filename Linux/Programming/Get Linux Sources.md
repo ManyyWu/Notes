@@ -1,4 +1,9 @@
+# Get Linux sources
+
+## Ubuntu、Deepin
+
 $sudo vi /etc/apt/sources.list
+
 ```
 deb-src http://packages.deepin.com/deepin lion main contrib non-free
 ```
