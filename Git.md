@@ -75,6 +75,9 @@
     $git config --global unset http.proxy
     $git config --global unset https.proxy
 ## 免密
-    $ssh-keygen -t rsa
+    $ssh-keygen -t rsa -C "email"
     $cat ~/.ssh/id_rsa.pub
     复制到Github-SSH keys
+    ssh-add ~/.ssh/id_rsa
+    测试是否生效
+    ssh -T git@github.com
