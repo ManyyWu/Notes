@@ -22,24 +22,34 @@ source/etc/profile
 ```
 ## 安装常用软件
 * 工具 
-$sudo apt install git curl wget gcc g++ cmake make
+  $sudo apt install git curl wget gcc g++ cmake make
+
 * proxychains4
-$sudo apt install proxychains4
-$sudo vi /etc/proxychains4.conf
-`socks5 127.0.0.1 1081`
+  $sudo apt install proxychains4
+  $sudo vi /etc/proxychains4.conf
+  `socks5 127.0.0.1 1081`
+
 * electron-ssr
-将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
-右键执行，定阅
+  将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
+  右键执行，定阅
+
+  添加启动项:
+
+  vi ~/.config/autostart/electron-ssr.desktop
+  ```
+  "~/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
+  ```
 * Clion2019
-安装、汉化、破解见安装包
+  安装、汉化、破解见安装包
+
 * 其他软件（软件商店）
-Typora
-TIM
-微信
-网易云音乐
-chrome
-企业微信
-Wireshark
+  Typora
+  TIM
+  微信
+  网易云音乐
+  chrome
+  企业微信
+  Wireshark
 ## 安装常用开发库
 * boost
 $sudo apt install libboost-dev

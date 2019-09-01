@@ -92,7 +92,7 @@
 ## electron-ssr安装
     将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
     右键执行,定阅
-    添加启动项，命令"home/manyy/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
+    添加启动项，命令"/home/manyy/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
     gnome添加托盘图标
     sudo pacman -S libappindicator-sharp libappindicator-gtk3
     无法运行：libicuuc.so.64问题, 更新系统
