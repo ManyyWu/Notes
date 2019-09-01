@@ -37,7 +37,7 @@ source/etc/profile
 
   vi ~/.config/autostart/electron-ssr.desktop
   ```
-  "~/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
+  Exec="~/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
   ```
 * Clion2019
   安装、汉化、破解见安装包
