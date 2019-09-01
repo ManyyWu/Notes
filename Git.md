@@ -79,5 +79,4 @@
     $cat ~/.ssh/id_rsa.pub
     复制到Github-SSH keys
     ssh-add ~/.ssh/id_rsa
-    测试是否生效
-    ssh -T git@github.com
+    ssh -T git@github.com # 测试是否生效
