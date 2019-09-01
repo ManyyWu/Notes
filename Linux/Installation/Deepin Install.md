@@ -30,8 +30,10 @@ source/etc/profile
   `socks5 127.0.0.1 1081`
 
 * electron-ssr
-  将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
-  右键执行，定阅
+
+  * 将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
+  * 右键执行，定阅，设置http代理端口1087，socks5代理端口1081，PAC代理，更新PAC
+  * 网络设置-系统代理-自动代理，配置URL设置为http://127.0.0.1:2333/proxy.pac
 
   添加启动项:
 
@@ -39,6 +41,7 @@ source/etc/profile
   ```
   Exec="~/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
   ```
+
 * Clion2019
   安装、汉化、破解见安装包
 
