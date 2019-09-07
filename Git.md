@@ -74,3 +74,11 @@
 ## 取消全局代理
     $git config --global unset http.proxy
     $git config --global unset https.proxy
+## 免密
+    $ssh-keygen -t rsa -C "email"
+    $cat ~/.ssh/id_rsa.pub
+    复制到Github-SSH keys
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_rsa
+    ssh -T git@github.com # 测试是否生效
+    git config --global url=git@github.com:username/repo.git
