@@ -5,7 +5,7 @@ mount /dev/sda5 /mnt
 mkdir -p /mnt/boot/efi && mount /dev/sda1 /mnt/boot/efi
 mount -t proc proc /mnt/proc
 mount -t sysfs sys /mnt/sys
-moun t-o bind /dev/ /mnt/dev
+mount -o bind /dev/ /mnt/dev
 mount -t devpts pts /mnt/dev/pts/
 chroot /mnt
 grub-install /dev/sda1
