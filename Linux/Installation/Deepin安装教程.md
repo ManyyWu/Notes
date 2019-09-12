@@ -1,7 +1,7 @@
 # Deepin Install
 ## 安装vim
-sudo apt install vim
-sudo vim /etc/vim/vimrc
+1. $sudo apt install vim
+2. $sudo vim /etc/vim/vimrc
 ```
 " add by manyy 
 set nu
@@ -13,38 +13,31 @@ set expandtab
 set softtabstop=4
 set hlsearch 
 ```
-vi ~/.bashrc # for all users
+3. $vi ~/.bashrc # for all users
 ```
-# vim 
 alias vi=vim
 alias sudo='sudo ' # 看清楚 sudo 后面有个空格
 source/etc/profile
 ```
 ## 安装常用软件
 * 工具 
-  sudo apt install git curl wget gcc g++ cmake make
-
+  * $sudo apt install git curl wget gcc g++ cmake make
 * proxychains4
-  sudo apt install proxychains4
-  sudo vi /etc/proxychains4.conf
-  `socks5 127.0.0.1 1081`
-
+  1. $sudo apt install proxychains4
+  2. $sudo vi /etc/proxychains4.conf
+  ```
+  socks5 127.0.0.1 1081
+  ```
 * electron-ssr
-
-  * 将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
-  * 右键执行，定阅，设置http代理端口1087，socks5代理端口1081，PAC代理，更新PAC
-  * 网络设置-系统代理-自动代理，配置URL设置为http://127.0.0.1:2333/proxy.pac
-
-  添加启动项:
-
-  vi ~/.config/autostart/electron-ssr.desktop
+  1. 将electron-ssr.AppImage复制到~/Usr/bin/，添加执行权限
+  2. 右键执行，定阅，设置http代理端口1087，socks5代理端口1081，PAC代理，更新PAC
+  3. 网络设置-系统代理-自动代理，配置URL设置为http://127.0.0.1:2333/proxy.pac
+  4. $vi ~/.config/autostart/electron-ssr.desktop #添加启动项
   ```
   Exec="~/Usr/bin/ssr/electron-ssr-0.2.3-x86_64.AppImage" %U
   ```
-
 * Clion2019
   安装、汉化、破解见安装包
-
 * 其他软件（软件商店）
   Typora
   TIM
@@ -55,11 +48,15 @@ source/etc/profile
   Wireshark
 ## 安装常用开发库
 * boost
-sudo apt install libboost-dev
+```
+$sudo apt install libboost-dev
+```
 ## 输入法
 * 五笔取消自动上屏
-  vi /usr/share/fcitx/table/wbx.conf
-  `AutoSend=0`
+  1. $vi /usr/share/fcitx/table/wbx.conf
+  ```
+  AutoSend=0
+  ```
 ## 显卡驱动
 1. Deepin显卡驱动管理器中安装
 2. 检查驱动是否安装成功
