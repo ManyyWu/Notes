@@ -64,3 +64,9 @@ $sudo apt install libboost-dev
 4. $optirun glxgears -info #测试 Bumblebee 是否支持你的 Optimus 系统
 如果在终端中看到一个关于你的 Nvidia 的提示，恭喜你，Bumblebee 和 Optimus 已经开始工作了。Bumblebee并不能做到集显(Intel显卡)和独显(NVIDIA显卡)之间的自动切换。
 5. $optirun 程序 #使用bumblebeek开启独立显卡运行程序
+## 蓝牙
+使用如下命令查看蓝牙是否被某个软件或者系统给禁用了
+```
+sudo rfkill list
+sudo rfkill unblock bluetooth
+```
