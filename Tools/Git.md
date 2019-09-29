@@ -32,6 +32,8 @@
     $git checkout b       # 切换到分支b
     $git merge master     # 合并b到master
     $git push -u origin b # push
+## 克隆分支:
+    $git clone -b b url directory
 ## 删除分支:
     $git brance -d b               # 删除本地分支b
     $git branch -d -r b            # 删除远程分支b
