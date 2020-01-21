@@ -1,4 +1,5 @@
 # Manjaro Install
+## 断网
 ## 更换国内源
     sudo pacman -Syy
     sudo pacman-mirrors -i -c China -m rank
