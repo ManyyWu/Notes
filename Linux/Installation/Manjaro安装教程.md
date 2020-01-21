@@ -28,7 +28,7 @@
         sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
 ## 安装fcitx 
     sudo pacman -S python-gobject fcitx kcm-fcitx fcitx-im fcitx-configtool
-    vim /etc/.xprofile
+    /etc/.xprofile ~/.xprofile 加上
         # fcitx
         export XIM_PROGRAM=fcitx
         export XIM=fcitx
