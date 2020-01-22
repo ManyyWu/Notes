@@ -46,6 +46,7 @@
     sudo pacman -S google-chrome netease-cloud-music deepin.com.qq.office 
         qq显示图标
         tweaks-扩展-勾选user theme
+    kde安装time: https://www.lulinux.com/archives/1319
     sudo pacman -S clion
         下载一下中文字体
         sudo pacman -S wqy-microhei
