@@ -103,3 +103,5 @@
     exo-open --launch FileManager      C-A-F
 ## 快捷键(gnome)
     gnome-terminal C-A-T
+## proxy(kde)
+    系统代理只设置socks5，或使用SwitchOmega，只设置socks5
