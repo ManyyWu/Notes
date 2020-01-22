@@ -106,3 +106,6 @@
     gnome-terminal C-A-T
 ## proxy(kde)
     系统代理只设置socks5，或使用SwitchOmega，只设置socks5
+## Others
+### chrome设置默认浏览器
+    将html默认打开方式设置为chrome
