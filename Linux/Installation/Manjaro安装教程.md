@@ -42,7 +42,7 @@
     fcitx
     reboot
 ## 安装常用软件
-    sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang
+    sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang gdb
     sudo pacman -S google-chrome netease-cloud-music deepin.com.qq.office 
         qq显示图标
         tweaks-扩展-勾选user theme
@@ -85,6 +85,7 @@
     https://www.typora.io/#linux
 ## 安装Clion
     sudo pacman -S clion
+    sudo pacman -S clion-gdb
     # 汉化、破解见安装包
 ## 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
