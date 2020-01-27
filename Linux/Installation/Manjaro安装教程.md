@@ -25,7 +25,7 @@
         [archlinuxcn]
         SigLevel = Optional TrustedOnly
         Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
-        sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
+    sudo pacman -Syy && sudo pacman -S archlinuxcn-keyring
 ## 安装fcitx 
     sudo pacman -S python-gobject fcitx kcm-fcitx fcitx-im fcitx-configtool
     /etc/.xprofile ~/.xprofile 加上
@@ -42,7 +42,7 @@
     fcitx
     reboot
 ## 安装常用软件
-    sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang gdb
+    sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang gdb zip unzip net-tools
     sudo pacman -S google-chrome netease-cloud-music deepin.com.qq.office 
         qq显示图标
         tweaks-扩展-勾选user theme
@@ -80,7 +80,7 @@
     传输-Incoming Folder设置为新目录
 ## 常用开发库
 ## 时间不同步
-    timedatectl set-local-rtc 1 --adjust-system-clocK
+    timedatectl set-local-rtc 1 --adjust-system-clock
 ## 安装Typora
     https://www.typora.io/#linux
 ## 安装Clion
