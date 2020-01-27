@@ -84,7 +84,7 @@
 ## 安装Typora
     https://www.typora.io/#linux
 ## 安装Clion
-    sudo pacman -S clion
+    sudo pacman -S jdk clion
     sudo pacman -S clion-gdb
     # 汉化、破解见安装包
 ## 删除无效图标
