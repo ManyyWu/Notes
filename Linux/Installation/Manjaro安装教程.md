@@ -45,7 +45,8 @@
     sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang gdb zip unzip net-tools
     sudo pacman -S google-chrome 
     sudo pacman -S netease-cloud-music 
-    sudo pacman -S gnome-settings-daemon deepin.com.qq.office 
+    sudo pacman -S gnome-settings-daemon deepin.com.qq.office
+    安装好的TIM打不开：如果是Arch系KDE/Plasma桌面，先安装gnome-settings-daemon，然后将/usr/lib/gsd-xsettings设置为自动启动
         qq显示图标
         tweaks-扩展-勾选user theme
     kde安装time: https://www.lulinux.com/archives/1319
