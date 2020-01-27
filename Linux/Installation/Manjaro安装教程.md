@@ -43,7 +43,9 @@
     reboot
 ## 安装常用软件
     sudo pacman -S cmake make gcc git wget curl net-tools dnsutils inetutils iproute2 clang gdb zip unzip net-tools
-    sudo pacman -S google-chrome netease-cloud-music deepin.com.qq.office 
+    sudo pacman -S google-chrome 
+    sudo pacman -S netease-cloud-music 
+    sudo pacman -S gnome-settings-daemon deepin.com.qq.office 
         qq显示图标
         tweaks-扩展-勾选user theme
     kde安装time: https://www.lulinux.com/archives/1319
