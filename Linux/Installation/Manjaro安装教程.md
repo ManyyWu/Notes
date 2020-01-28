@@ -83,7 +83,7 @@
     传输-Incoming Folder设置为新目录
 ## 常用开发库
 ## 时间不同步
-    timedatectl set-local-rtc 1 --adjust-system-clock
+    sudo timedatectl set-local-rtc true
 ## 安装Typora
     https://www.typora.io/#linux
 ## 安装Clion
