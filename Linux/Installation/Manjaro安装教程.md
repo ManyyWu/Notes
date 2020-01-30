@@ -103,7 +103,7 @@
     sudo pacman -S libappindicator-sharp libappindicator-gtk3
     无法运行：libicuuc.so.64问题, 更新系统
     sudo pacman -Syy && sudo pacman -Syu
-### PAC代理
+* PAC代理
     http://127.0.0.1:2333/proxy.pac
 ## 快捷键(xfce)
     exo-open --launch TerminalEmulator C-A-T
