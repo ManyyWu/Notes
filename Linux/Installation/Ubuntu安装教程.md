@@ -84,5 +84,6 @@ https://www.lulinux.com/archives/1319
 ## 网易云音乐
 https://music.163.com/#/download
 ## clion
+先安装jdk(官)
 https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
-        解压至/opt 
+解压至/opt 
