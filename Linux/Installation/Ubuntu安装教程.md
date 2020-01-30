@@ -79,5 +79,9 @@
 sudo apt-get install libboost-dev
 ## 安装独显驱动
 https://blog.csdn.net/Yan_Chou/article/details/72847943
-## 安装QQ
+## TIM
 https://www.lulinux.com/archives/1319
+## 网易云音乐
+https://music.163.com/#/download
+## clion
+https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
