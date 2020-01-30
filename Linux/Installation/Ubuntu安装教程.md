@@ -95,3 +95,4 @@ https://music.163.com/#/download
     https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
     解压至/opt
     破解
+    汉化 https://github.com/pingfangx/jetbrains-in-chinese/tree/master/CLion
