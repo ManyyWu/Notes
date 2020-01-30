@@ -62,7 +62,7 @@
     XDG_VIDEOS_DIR="$HOME/Videos"
 ## 安装完整版vim
     sudo apt-get remove vim-common
-    sudo apt-get isntall vim
+    sudo apt-get install vim
     sudo echo "# add by manyy" >> /etc/profile
     sudo echo "alias vi=vim" >> /etc/profile
     vi /etc/vimrc
