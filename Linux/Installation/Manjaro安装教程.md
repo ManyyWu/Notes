@@ -89,7 +89,8 @@
 ## 安装Clion
     sudo pacman -S jdk clion
     sudo pacman -S clion-gdb
-    # 汉化、破解见安装包
+    # 破解见安装包
+        汉化 https://github.com/pingfangx/jetbrains-in-chinese/tree/master/CLion
 ## 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
