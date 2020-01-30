@@ -85,4 +85,4 @@ https://www.lulinux.com/archives/1319
 https://music.163.com/#/download
 ## clion
 https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
-解压至/opt 
+        解压至/opt 
