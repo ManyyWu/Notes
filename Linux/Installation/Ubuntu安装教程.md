@@ -84,6 +84,14 @@ https://www.lulinux.com/archives/1319
 ## 网易云音乐
 https://music.163.com/#/download
 ## clion
-先安装jdk(官)
-https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
-解压至/opt 
+    先安装jdk，官网下载deb包
+    设置JAVA_PATH:
+    sudo vi /etc/profile
+        export JAVA_HOME=/usr/lib/jvm/jdk-13.0.2
+        export JRE_HOME=$JAVA_HOME/jre
+        export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+        export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+    sudo source /etc/profile
+    https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
+    解压至/opt
+    破解
