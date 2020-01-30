@@ -44,7 +44,7 @@
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
 ## 常用工具
-    sudo apt-get install git curl wget proxycharins4 gcc g++ clang gdb cmake make
+    sudo apt-get install git curl wget proxycharins4 gcc g++ clang gdb cmake make net-tools
 ## 输入法切换
     键盘快捷键－打字－切换至下个输入源－设置为ctrl-space
 ## ~/ 英文目录
