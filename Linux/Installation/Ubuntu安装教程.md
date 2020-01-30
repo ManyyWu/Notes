@@ -66,15 +66,15 @@
     sudo echo "# add by manyy" >> /etc/profile
     sudo echo "alias vi=vim" >> /etc/profile
     vi /etc/vimrc
-    内容如下：
-    set nu
-    syntax on
-    set shiftwidth=4
-    set tabstop=4
-    set autoindent
-    set expandtab
-    set softtabstop=4
-    set hlsearch
+        内容如下：
+        set nu
+        syntax on
+        set shiftwidth=4
+        set tabstop=4
+        set autoindent
+        set expandtab
+        set softtabstop=4
+        set hlsearce
 ## 开发库
 sudo apt-get install libboost-dev
 ## 安装独显驱动
