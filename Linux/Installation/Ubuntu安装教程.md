@@ -33,9 +33,9 @@
     先安装python3
     sudo ln -s /usr/bin/python3 /bin/python
     sudo apt install libcanberra-gtk-module
-### deb安装
+* deb安装
         https://github.com/qingshuisiyuan/electron-ssr-backup/releases
-### 手动安装
+* 手动安装
         将程序移至~/usr/bin
         cd ~/usr/bin
         chmod +x ssr-linux.AppImage
