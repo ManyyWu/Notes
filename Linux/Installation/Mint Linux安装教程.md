@@ -31,8 +31,6 @@
     可以到～/.local/share/applications下看是否有xxx.desktop
 ## 常用工具
     sudo apt-get install git curl wget proxycharins4 gcc g++ clang gdb cmake make net-tools
-## 输入法切换
-    键盘快捷键－打字－切换至下个输入源－设置为ctrl-space
 ## ~/ 英文目录
     STEP1: 将这些目录修改为英文名，如：mv 桌面 Desktop
     STEP2: 修改配置文件  ～/.config/user-dirs.dirs ，将对应的路径改为英文名（要和STEP1中修改的英文名对应）
@@ -61,10 +59,16 @@
         set expandtab
         set softtabstop=4
         set hlsearce
+## fcitx
+    # 关闭自动上屏
+    vi /usr/share/fcitx/table/wbx.conf
+    AutoSend=0
+source /etc/.xprofile
+fcitx
 ## 开发库
 sudo apt-get install libboost-dev
 ## 安装独显驱动
-https://blog.csdn.net/Yan_Chou/article/details/72847943
+    驱动管理器
 ## TIM
 https://www.lulinux.com/archives/1319
 ## 网易云音乐
