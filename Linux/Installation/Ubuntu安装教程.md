@@ -33,9 +33,9 @@
     先安装python3
     sudo ln -s /usr/bin/python3 /bin/python
     sudo apt install libcanberra-gtk-module
-* deb安装
+    * deb安装
         https://github.com/qingshuisiyuan/electron-ssr-backup/releases
-* 手动安装
+    * 手动安装
         将程序移至~/usr/bin
         cd ~/usr/bin
         chmod +x ssr-linux.AppImage
@@ -76,13 +76,13 @@
         set softtabstop=4
         set hlsearce
 ## 开发库
-sudo apt-get install libboost-dev
+    sudo apt-get install libboost-dev
 ## 安装独显驱动
-https://blog.csdn.net/Yan_Chou/article/details/72847943
+    https://blog.csdn.net/Yan_Chou/article/details/72847943
 ## TIM
-https://www.lulinux.com/archives/1319
+    https://www.lulinux.com/archives/1319
 ## 网易云音乐
-https://music.163.com/#/download
+    https://music.163.com/#/download
 ## clion
     先安装jdk，官网下载deb包
     设置JAVA_PATH:
