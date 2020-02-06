@@ -40,6 +40,16 @@
         cd ~/usr/bin
         chmod +x ssr-linux.AppImage
         右键运行、安装
+## proxychains4
+    git clone https://github.com/rofl0r/proxychains-ng.git
+    ./configure && make && sudo make install
+    sudo make install-config
+    vi /usr/local/etc/proxychains.conf
+        socks5  127.0.0.1 1087
+    vi /etc/profile
+        alias pc=proxychains4
+    source /etc/profile
+    sudo ln -s /usr/local/etc/proxychains.conf /etc/proxychains.conf
 ## 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
