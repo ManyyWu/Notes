@@ -18,7 +18,7 @@
     sudo apt-get upgrade
 ## Windows时间同步
     sudo apt-get install ntpdate
-    sudo nptdate time.windows.com
+    sudo ntpdate time.windows.com
     sudo hwclock --localtime --systohc
 ## 美化
     sudo apt-get update
