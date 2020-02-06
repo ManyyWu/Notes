@@ -26,11 +26,20 @@
         cd ~/usr/bin
         chmod +x ssr-linux.AppImage
         右键运行、安装
+## proxychains4
+    git clone https://github.com/rofl0r/proxychains-ng.git
+    ./configure && make && sudo make install
+    sudo make install-config
+    vi /usr/local/etc/proxychains.conf
+        socks5  127.0.0.1 1087
+    vi /etc/profile
+        alias pc=proxychains4
+    source /etc/profile
 ## 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
 ## 常用工具
-    sudo apt-get install git curl wget proxycharins4 gcc g++ clang gdb cmake make net-tools
+    sudo apt-get install git curl wget gcc g++ clang gdb cmake make net-tools
 ## ~/ 英文目录
     STEP1: 将这些目录修改为英文名，如：mv 桌面 Desktop
     STEP2: 修改配置文件  ～/.config/user-dirs.dirs ，将对应的路径改为英文名（要和STEP1中修改的英文名对应）
@@ -81,7 +90,7 @@
         export JRE_HOME=$JAVA_HOME/jre
         export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
         export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
-    sudo source /etc/profile
+    source /etc/profile
     https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
     解压至/opt
     破解
