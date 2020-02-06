@@ -91,7 +91,7 @@ https://music.163.com/#/download
         export JRE_HOME=$JAVA_HOME/jre
         export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
         export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
-    sudo source /etc/profile
+    source /etc/profile
     https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
     解压至/opt
     破解
