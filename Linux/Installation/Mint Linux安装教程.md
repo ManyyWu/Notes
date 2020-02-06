@@ -1,4 +1,4 @@
-# Ubuntu Configure guide
+# Mint Linux Configure guide
 ## 0. mkdir ~/usr/bin
 ## 更换源
     更新管理器-编辑
@@ -35,6 +35,7 @@
     vi /etc/profile
         alias pc=proxychains4
     source /etc/profile
+    sudo ln -s /usr/local/etc/proxychains.conf /etc/proxychains.conf
 ## 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
     可以到～/.local/share/applications下看是否有xxx.desktop
