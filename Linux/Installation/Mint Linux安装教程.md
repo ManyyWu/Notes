@@ -96,8 +96,8 @@
     解压至/opt
     破解
     汉化 https://github.com/pingfangx/jetbrains-in-chinese/tree/master/CLion
-    图标
-    touch 
+   快捷方式
+    touch clion.desktop
          #!/usr/bin/env xdg-open
         [Desktop Entry]
         Type=Application
