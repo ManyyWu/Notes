@@ -96,3 +96,16 @@
     解压至/opt
     破解
     汉化 https://github.com/pingfangx/jetbrains-in-chinese/tree/master/CLion
+    图标
+    touch 
+         #!/usr/bin/env xdg-open
+        [Desktop Entry]
+        Type=Application
+        Version=1.0
+        Name=electron-ssr
+        Comment=clion
+        Exec=/opt/clion-2019.3.3/bin/clion.sh
+        Icon=/opt/clion-2019.3.3/bin/clion.png
+        StartupNotify=false
+        Terminal=false
+    快捷方式放入/usr/share/applications
