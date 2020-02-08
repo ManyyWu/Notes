@@ -46,9 +46,8 @@
     sudo make install-config
     vi /usr/local/etc/proxychains.conf
         socks5  127.0.0.1 1087
-    vi /etc/profile
+    vi ~/.bashrc
         alias pc=proxychains4
-    source /etc/profile
     sudo ln -s /usr/local/etc/proxychains.conf /etc/proxychains.conf
 ## 删除无效图标
     看/usr/share/applications下是否有xxx.desktop
@@ -73,8 +72,9 @@
 ## 安装完整版vim
     sudo apt-get remove vim-common
     sudo apt-get install vim
-    sudo echo "# add by manyy" >> /etc/profile
-    sudo echo "alias vi=vim" >> /etc/profile
+    sudo vi ~/.bashrc
+        alias vi=vim
+        alias sudo='sudo ' # 看清楚 sudo 后面有个空格
     vi /etc/vimrc
         内容如下：
         set nu
@@ -101,7 +101,6 @@
         export JRE_HOME=$JAVA_HOME/jre
         export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
         export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
-    source /etc/profile
     https://www.jetbrains.com/clion/download/download-thanks.html?platform=linux
     解压至/opt
     破解
