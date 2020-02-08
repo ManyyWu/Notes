@@ -86,7 +86,7 @@
         set softtabstop=4
         set hlsearce
 ## 开发库
-    sudo apt-get install libboost-dev
+    sudo apt-get install libboost-all-dev
 ## 安装独显驱动
     https://blog.csdn.net/Yan_Chou/article/details/72847943
 ## TIM
