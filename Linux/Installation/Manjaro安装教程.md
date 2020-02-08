@@ -61,7 +61,7 @@
         扩展－取消Dash to dock，勾选Dash to panel, 勾选Arc menu, 勾选Desktop icons
     sudo pacman -S proxychains
     # 配置proxychains
-    sudo vi /etc/proxychainsx.conf 
+    sudo vi /etc/proxychains.conf 
         socks5 127.0.0.1 1081
     sudo pacman -S ntfs-3g # arch 默认只读挂载
         关闭Windows快速启动
