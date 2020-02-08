@@ -76,7 +76,7 @@
     source /etc/.xprofile
     fcitx
 ## 开发库
-    sudo apt-get install libboost-dev
+    sudo apt-get install libboost-all-dev
 ## 安装独显驱动
     驱动管理器
 ## TIM
