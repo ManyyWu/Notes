@@ -22,6 +22,7 @@
 ## 更新代码：
     $git pull <url> <branch>
 ## 查看分支：
+    $git fetch            # 同步分区
     $git branch           # 查看本地分支
     $git branch -r        # 查看远程分支
     $git branch -a        # 查看本地分支和远程分支
