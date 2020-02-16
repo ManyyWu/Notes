@@ -33,6 +33,10 @@
     $git checkout b       # 切换到分支b
     $git merge master     # 合并b到master
     $git push -u origin b # push
+## 替换分支
+    $git checkout old            # 切换到旧分支
+    $git reset --hard new        # 将本地的旧分支重置成新分支
+    $git push origin new --force # 推送到远程仓库
 ## 克隆分支:
     $git clone -b b url directory
 ## 删除分支:
