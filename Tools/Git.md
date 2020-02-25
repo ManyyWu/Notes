@@ -95,3 +95,9 @@
 ### 全局
     git config --global http.proxy 'socks5://127.0.0.1:1080'
     git config --global https.proxy 'socks5://127.0.0.1:1080'
+## 克隆含子模块的仓库
+    git clone --recursive https://github.com/imtianx/MainProject.git
+    or
+    git clone  https://github.com/imtianx/MainProject.git
+    git submodule init
+    git submodule update
