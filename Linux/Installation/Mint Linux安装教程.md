@@ -6,6 +6,8 @@
     sudo apt-get install ntpdate
     sudo ntpdate time.windows.com
     sudo hwclock --localtime --systohc
+    
+    timedatectl set-timezone "Asia/Shanghai" -- 还原utc
 ## 美化
     sudo apt-get update
     sudo apt-get install gnome-tweak-tool
