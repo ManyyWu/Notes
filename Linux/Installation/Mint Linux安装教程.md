@@ -6,7 +6,8 @@
     sudo apt-get install ntpdate
     sudo ntpdate time.windows.com
     sudo hwclock --localtime --systohc
-    
+    或
+    Reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsUniversal /t REG_DWORD /d 1
     timedatectl set-timezone "Asia/Shanghai" -- 还原utc
 ## 美化
     sudo apt-get update
