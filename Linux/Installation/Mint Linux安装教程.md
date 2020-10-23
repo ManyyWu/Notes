@@ -81,8 +81,9 @@
     sudo apt-get install libboost-all-dev
 ## 安装独显驱动
     驱动管理器
-## TIM
+## TIM 徽信
     https://www.lulinux.com/archives/1319
+    https://zhuanlan.zhihu.com/p/144286142
 ## 网易云音乐
     https://music.163.com/#/download
 ## clion
