@@ -1,9 +1,9 @@
 ## 1. 教程
-1. [Install homebrew](https://zhuanlan.zhihu.com/p/90508170)
-2. [未知来源](https://www.jianshu.com/p/ec2572e3143d)
-3. [vim完整版]()
+* [未知来源](https://www.jianshu.com/p/ec2572e3143d)
 
 ## 2. 软件
+* [终端系统状态查看](https://github.com/nicolargo/glances)
+* [Install homebrew](https://zhuanlan.zhihu.com/p/90508170)
 * Hex_Fiend_2.8二进制编辑.dmg
 * 尘归尘
 * 拉力赛艺术 (art of rally)
