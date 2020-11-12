@@ -32,3 +32,5 @@ set hlsearch
 set incsearch
 " 共享剪切板
 set clipboard=unnamed
+" c程序自动缩进
+set si
