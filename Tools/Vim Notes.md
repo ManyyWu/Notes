@@ -119,14 +119,16 @@ gT               = 切换到下一个tab
 :tabm 0-n   = 移动tab
 :tabdo 命令 = 所有tab执行命令
 
-
 :e path          = 当前tab打开path
 
-vimdiff f1 f2    = 比较f1 f2
+$vimdiff f1 f2    = 比较f1 f2
 
 :w file          = 另存为file
 :r file          = 读取file中数据到光标后
 :n1,n2 w file    = n1-n2行另存为file
+
+:mksession file  = 创建会话
+$vim -S file     = 打开会话
 
 ~/.vimrc
 " 显示行号
