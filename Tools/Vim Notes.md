@@ -66,6 +66,9 @@ mx               = 标记x [a-zA-Z]
 "+yy             = 复制到系统剪切板
 "+p              = 从系统剪切板粘贴
 
+~                = 选择内容切换大小写
+U/u              = 选择内容切换成大/小写
+
 替换:
 :[range]s/pattern/string/[flags]
 range:
