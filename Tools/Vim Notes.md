@@ -152,13 +152,15 @@ $vimdiff f1 f2   = 比较f1 f2
 $vim -S file     = 打开会话
 
 十六进制修改
-vim -b file
+$vim -b file
 :%!xxd           = 进入xxd模式
 :%!xxd -r        = 反向dump
 
 ga               = 显示光标下字符的ascii/十进制/十六进制/八进制
 
 :sh              = 启动外壳，退出后回到vim
+
+$vim -o/-O f f1  = 打开多个文件时横向/纵向分割
 ```
 
 ## ~/.vimrc
