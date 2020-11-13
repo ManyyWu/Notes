@@ -147,6 +147,11 @@ $vimdiff f1 f2   = 比较f1 f2
 
 :mksession file  = 创建会话
 $vim -S file     = 打开会话
+
+十六进制修改
+vim -b file
+:%!xxd           = 进入xxd模式
+:%!xxd -r        = 反向dump
 ```
 
 ## ~/.vimrc
