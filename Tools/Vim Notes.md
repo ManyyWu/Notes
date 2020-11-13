@@ -1,4 +1,4 @@
-# Vim Notes
+## Vim Notes
 ```
 W                = 跳转到下一个字符串首部
 E/B              = 向前/向后跳转一个字符串的首部/尾部
@@ -147,8 +147,10 @@ $vimdiff f1 f2   = 比较f1 f2
 
 :mksession file  = 创建会话
 $vim -S file     = 打开会话
+```
 
-~/.vimrc
+## ~/.vimrc
+```
 " 显示行号
 set number
 " 高亮
