@@ -155,6 +155,10 @@ $vim -S file     = 打开会话
 vim -b file
 :%!xxd           = 进入xxd模式
 :%!xxd -r        = 反向dump
+
+ga               = 显示光标下字符的ascii/十进制/十六进制/八进制
+
+:sh              = 启动外壳，退出后回到vim
 ```
 
 ## ~/.vimrc
