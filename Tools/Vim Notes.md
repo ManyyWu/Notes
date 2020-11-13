@@ -119,6 +119,7 @@ c-w10>           = 窗口宽度增加10格
 c-w10-           = 窗口高度缩小10格
 c-w10=           = 窗口高度增加10格
 c-wT             = 移动到新tab
+windo            = 所有窗口执行命令
 
 :tabs            = 查看所有tab
 :tabnew file     = 新tab
@@ -128,8 +129,8 @@ c-wT             = 移动到新tab
 gt               = 切换到上一个tab
 gT               = 切换到下一个tab
 1gt              = 切换到第一个tab
-:tabm 0-n   = 移动tab
-:tabdo 命令 = 所有tab执行命令
+:tabm 0-n        = 移动tab
+:tabdo 命令      = 所有tab执行命令
 
 gf               = 编辑光标下的文件
 c-^              = 切换轮换文件
