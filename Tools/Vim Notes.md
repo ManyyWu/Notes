@@ -203,3 +203,8 @@ set clipboard=unnamed
 " 不自动换行
 set nowrap
 ```
+
+## Ctags
+MacOS默认使用XCode版本ctags
+$brew install ctags
+$echo '\nalias ctags="/usr/local/bin/ctags"' >> /etc/profile
