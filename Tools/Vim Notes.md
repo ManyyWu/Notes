@@ -17,6 +17,8 @@ Fx               = 查找上一个x
 vfx/zfx          = 选择/删除至下一个x
 *                = 向下搜索光标所在单词
 %                = 跳转到匹配的括号、注释、宏块
+[m               = 向下查找大括号
+]m               = 向上查找大括号
 
 d/word           = 删至下一个word前
 d?word           = 删至上一个word前
@@ -80,7 +82,7 @@ range,range      = 范围
 range-N          = range-N行
 range+N          = range+N行
 range-N, range+N = 范围
-%                = 所有行
+\                = 所有行
 flags:
 g                = 指定范围
 c                = 需要确认(y/n)
