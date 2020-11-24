@@ -40,3 +40,10 @@
 * VirtualBox-6.1.16-140961-OSX.dmg
 * VSCode-darwin-stable.zip
 * Wireshark 3.4.0 Intel 64.dmg
+
+## 3. 关闭自动更新
+```
+$sudo softwareupdate --ignore "macOS Catalina"
+$defaults write com.apple.systempreferences AttentionPrefBundleIDs 0
+$killall Dock
+```
