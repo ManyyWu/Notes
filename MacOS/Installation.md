@@ -47,3 +47,12 @@ $sudo softwareupdate --ignore "macOS Catalina"
 $defaults write com.apple.systempreferences AttentionPrefBundleIDs 0
 $killall Dock
 ```
+
+## 4. dislocker
+$brew install dislocker
+```
+#!/bin/bash
+
+sudo dislocker -v -V /dev/disk2s1  -u -- /Volumes/MyDocuments
+sudo hdiutil attach -imagekey diskimage-class=CRawDiskImage /Volumes/MyDocuments/dislocker-file
+```
