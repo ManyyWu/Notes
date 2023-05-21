@@ -53,31 +53,26 @@
   [常见的 Rust 生命周期误解](https://github.com/pretzelhammer/rust-blog/blob/master/posts/common-rust-lifetime-misconceptions.md)
   ```Rust
   static N: i32 = 1;
-
+  
+  struct Test<'a>(&'a i32);
+  static T: Test = Test(&N);
+  
   // T:'static: T可以被安全地无期限地持有，甚至可以直到程序结束。属于特征约束，即T类型不持有非'static生命周期的引用
-  fn ref_1<T: 'static>(_: &T) {}
+  fn ref_1<T: 'static>(_: &'static T) {}
   
   // &'static T: 引用必须要活得跟剩下的程序一样久，生命周期针对的是引用本身
   fn ref_2<T>(_: &'static T) {}
-  fn gen_n(n: &'static i32) -> &'static i32 { n }
   
-  fn main () {
-      struct Test<'a>(&'a i32);
+  fn main() {
+      ref_1(&T);
+  
+      // let t = Test(&N);
+      // ref_1(&t); // error[E0597]: `t` does not live long enough
+  
       let n = 1;
-  
-      let t = Test(&N);
-      ref_1(&t);
-  
-      //let t = Test(&n);
-      //ref_1(&t); // Error: `n` does not live long enough
-  
       ref_2(&N);
       ref_2(&1);
-      //ref_2(&n); // Error: `n` does not live long enough
-  
-      gen_n(&N);
-      gen_n(&1);
-      //gen_n(&n); // Error: `n` does not live long enoug
+      ref_2(&n); // error[E0597]: `n` does not live long enough
   }
   ```
   
