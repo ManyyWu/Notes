@@ -1,0 +1,5 @@
+if [ $# != 1 ]; then
+  echo "Invalid arguments!"
+fi
+
+ctags -I __THROW -I __attribute_pure__ -I __nonnull -I __attribute_ --langmap=c:+.h --languages=c,c++ --c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+liaS --extra=+q --c-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+liaS --extra=+q -R -f $1/tags && echo "Successed!" || echo "Failed!"

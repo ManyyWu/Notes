@@ -1,0 +1,8 @@
+下载CLion2023.1.3
+解压jetbra.rar到没有空格的路径，之后不要删除
+按顺序执行scripts/uninstall-current-user.vbs和install-current-user.vbs
+打开CLion，输入key
+
+教程：
+徐公
+https://mdnice.com/writing/6cbdf70125e74ccf94941e1f73924736
