@@ -837,7 +837,7 @@
 ## 实用工具
 ### Unsafe Rust工具
   * rust-bindgen: 生成用于Rust的C API接口
-  * cbindgen： 生成用于C的Rust API接口
+  * cbindgen: 生成用于C的Rust API接口
   * cxx: 无需使用unsafe双向调用C++和Rust
   * Miri: 检查执行路径中的未定义行为(UB)
   * Clippy: 有限的unsafe检查
@@ -846,6 +846,12 @@
 ### 
   * Tokio: 异步库
   * rayon: 并行库
+
+### Tokio
+#### std::sync::Mutex和tokio::sync::Mutex
+  * 锁竞争不多时可使用std::sync::Mutex，注意MutexGuard和.await在同一个作用域可能导致死锁
+  * tokio::sync::Mutex只有在跨多个异步过程时使用，但开销会更高
+  * 锁竞争多时可考虑使用性能更高的锁: parking_lot::Mutex
 
 ## Cargo
   * 镜像: ~/.cargo/config添加
