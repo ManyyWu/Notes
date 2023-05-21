@@ -1,0 +1,11 @@
+set clipboard+=unnamed
+set hlsearch
+set incsearch
+set showmatch
+set cursorline
+set ignorecase
+set visualbell
+set noerrorbells
+
+nmap <silent> gh :action QuickJavaDoc<CR>
+nmap <silent> gr :action QuickImplementations<CR>

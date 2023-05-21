@@ -1,0 +1,275 @@
+<keymap version="1" name="MyKeyMaps">
+  <action id="$Copy">
+    <keyboard-shortcut first-keystroke="ctrl c" />
+  </action>
+  <action id="$Cut">
+    <keyboard-shortcut first-keystroke="ctrl x" />
+  </action>
+  <action id="$Delete">
+    <keyboard-shortcut first-keystroke="delete" />
+  </action>
+  <action id="$Paste">
+    <keyboard-shortcut first-keystroke="ctrl v" />
+  </action>
+  <action id="$Redo">
+    <keyboard-shortcut first-keystroke="ctrl y" />
+  </action>
+  <action id="$Undo">
+    <keyboard-shortcut first-keystroke="ctrl z" />
+  </action>
+  <action id="ActivateStructureToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl alt s" />
+  </action>
+  <action id="ActivateVersionControlToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl alt g" />
+  </action>
+  <action id="BraceOrQuoteOut">
+    <keyboard-shortcut first-keystroke="tab" />
+  </action>
+  <action id="CIDR.Lang.ImportsHierarchy">
+    <keyboard-shortcut first-keystroke="ctrl alt i" />
+  </action>
+  <action id="CallHierarchy">
+    <keyboard-shortcut first-keystroke="ctrl alt c" />
+  </action>
+  <action id="ChooseRunConfiguration">
+    <keyboard-shortcut first-keystroke="ctrl 8" />
+  </action>
+  <action id="CloseGotItTooltip">
+    <keyboard-shortcut first-keystroke="escape" />
+  </action>
+  <action id="CodeCompletion">
+    <keyboard-shortcut first-keystroke="ctrl l" />
+  </action>
+  <action id="CollapsiblePanel-toggle">
+    <keyboard-shortcut first-keystroke="space" />
+  </action>
+  <action id="CommentByBlockComment">
+    <keyboard-shortcut first-keystroke="shift ctrl slash" />
+  </action>
+  <action id="CommentByLineComment">
+    <keyboard-shortcut first-keystroke="ctrl slash" />
+  </action>
+  <action id="Console.Execute">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="Console.TableResult.ColumnVisibility">
+    <keyboard-shortcut first-keystroke="space" />
+  </action>
+  <action id="Console.TableResult.EditValue">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="Debug">
+    <keyboard-shortcut first-keystroke="ctrl 7" />
+  </action>
+  <action id="DirDiffMenu.SynchronizeDiff">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="EditorBackSpace">
+    <keyboard-shortcut first-keystroke="back_space" />
+  </action>
+  <action id="EditorChooseLookupItem">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="EditorChooseLookupItemDot">
+    <keyboard-shortcut first-keystroke="ctrl period" />
+  </action>
+  <action id="EditorChooseLookupItemReplace">
+    <keyboard-shortcut first-keystroke="tab" />
+  </action>
+  <action id="EditorCopy">
+    <keyboard-shortcut first-keystroke="ctrl c" />
+  </action>
+  <action id="EditorCut">
+    <keyboard-shortcut first-keystroke="ctrl x" />
+  </action>
+  <action id="EditorDelete">
+    <keyboard-shortcut first-keystroke="delete" />
+  </action>
+  <action id="EditorDown">
+    <keyboard-shortcut first-keystroke="down" />
+    <keyboard-shortcut first-keystroke="ctrl n" />
+  </action>
+  <action id="EditorEnter">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="EditorEscape">
+    <keyboard-shortcut first-keystroke="escape" />
+  </action>
+  <action id="EditorIndentSelection">
+    <keyboard-shortcut first-keystroke="tab" />
+  </action>
+  <action id="EditorLeft">
+    <keyboard-shortcut first-keystroke="left" />
+  </action>
+  <action id="EditorLineEnd">
+    <keyboard-shortcut first-keystroke="end" />
+  </action>
+  <action id="EditorLineStart">
+    <keyboard-shortcut first-keystroke="home" />
+  </action>
+  <action id="EditorPageDown">
+    <keyboard-shortcut first-keystroke="page_down" />
+  </action>
+  <action id="EditorPageUp">
+    <keyboard-shortcut first-keystroke="page_up" />
+  </action>
+  <action id="EditorPaste">
+    <keyboard-shortcut first-keystroke="ctrl v" />
+  </action>
+  <action id="EditorRight">
+    <keyboard-shortcut first-keystroke="right" />
+  </action>
+  <action id="EditorScrollDown">
+    <keyboard-shortcut first-keystroke="ctrl down" />
+  </action>
+  <action id="EditorScrollLeft">
+    <keyboard-shortcut first-keystroke="ctrl left" />
+  </action>
+  <action id="EditorScrollRight">
+    <keyboard-shortcut first-keystroke="ctrl right" />
+  </action>
+  <action id="EditorScrollUp">
+    <keyboard-shortcut first-keystroke="ctrl up" />
+  </action>
+  <action id="EditorTab">
+    <keyboard-shortcut first-keystroke="tab" />
+  </action>
+  <action id="EditorUnindentSelection">
+    <keyboard-shortcut first-keystroke="shift tab" />
+  </action>
+  <action id="EditorUp">
+    <keyboard-shortcut first-keystroke="up" />
+    <keyboard-shortcut first-keystroke="ctrl p" />
+  </action>
+  <action id="FindInPath">
+    <keyboard-shortcut first-keystroke="shift ctrl f" />
+  </action>
+  <action id="FocusEditor">
+    <keyboard-shortcut first-keystroke="escape" />
+  </action>
+  <action id="Git.Log.Branches.Change.Branch.Filter">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="GotoFile">
+    <keyboard-shortcut first-keystroke="shift ctrl t" />
+  </action>
+  <action id="HideAllWindows">
+    <keyboard-shortcut first-keystroke="ctrl j" />
+  </action>
+  <action id="Images.Thumbnails.EnterAction">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="MethodDown">
+    <keyboard-shortcut first-keystroke="shift ctrl n" />
+  </action>
+  <action id="MethodHierarchy">
+    <keyboard-shortcut first-keystroke="ctrl alt f" />
+  </action>
+  <action id="MethodUp">
+    <keyboard-shortcut first-keystroke="shift ctrl p" />
+  </action>
+  <action id="NavBar-cancel">
+    <keyboard-shortcut first-keystroke="escape" />
+  </action>
+  <action id="NextParameter">
+    <keyboard-shortcut first-keystroke="tab" />
+  </action>
+  <action id="NextTab">
+    <keyboard-shortcut first-keystroke="alt right" />
+  </action>
+  <action id="PrevParameter">
+    <keyboard-shortcut first-keystroke="shift tab" />
+  </action>
+  <action id="PreviousTab">
+    <keyboard-shortcut first-keystroke="alt left" />
+  </action>
+  <action id="PreviousTemplateVariable">
+    <keyboard-shortcut first-keystroke="shift tab" />
+  </action>
+  <action id="QuickPreview">
+    <keyboard-shortcut first-keystroke="space" />
+  </action>
+  <action id="RecentFiles">
+    <keyboard-shortcut first-keystroke="shift ctrl comma" />
+  </action>
+  <action id="ReplaceInPath">
+    <keyboard-shortcut first-keystroke="shift ctrl r" />
+  </action>
+  <action id="Resume">
+    <keyboard-shortcut first-keystroke="alt 5" />
+  </action>
+  <action id="Run">
+    <keyboard-shortcut first-keystroke="ctrl 5" />
+  </action>
+  <action id="RunToCursor">
+    <keyboard-shortcut first-keystroke="alt 6" />
+  </action>
+  <action id="SearchEverywhere.CompleteCommand">
+    <keyboard-shortcut first-keystroke="tab" />
+  </action>
+  <action id="SearchEverywhere.NextTab">
+    <keyboard-shortcut first-keystroke="tab" />
+  </action>
+  <action id="SearchEverywhere.PrevTab">
+    <keyboard-shortcut first-keystroke="shift tab" />
+  </action>
+  <action id="SearchEverywhere.SelectItem">
+    <keyboard-shortcut first-keystroke="enter" />
+  </action>
+  <action id="SendEOF">
+    <keyboard-shortcut first-keystroke="ctrl d" />
+  </action>
+  <action id="ShowSettings">
+    <keyboard-shortcut first-keystroke="shift ctrl s" />
+  </action>
+  <action id="StepInto">
+    <keyboard-shortcut first-keystroke="alt minus" />
+  </action>
+  <action id="StepOut">
+    <keyboard-shortcut first-keystroke="alt equals" />
+  </action>
+  <action id="StepOver">
+    <keyboard-shortcut first-keystroke="alt 0" />
+  </action>
+  <action id="Stop">
+    <keyboard-shortcut first-keystroke="shift ctrl 5" />
+  </action>
+  <action id="Switcher">
+    <keyboard-shortcut first-keystroke="ctrl tab" />
+    <keyboard-shortcut first-keystroke="shift ctrl tab" />
+  </action>
+  <action id="Terminal.SwitchFocusToEditor">
+    <keyboard-shortcut first-keystroke="escape" />
+  </action>
+  <action id="ToggleLineBreakpoint">
+    <keyboard-shortcut first-keystroke="ctrl 9" />
+  </action>
+  <action id="ToggleTemporaryLineBreakpoint">
+    <keyboard-shortcut first-keystroke="shift ctrl 9" />
+  </action>
+  <action id="TypeHierarchy">
+    <keyboard-shortcut first-keystroke="ctrl alt t" />
+  </action>
+  <action id="ViewToolButtons">
+    <keyboard-shortcut first-keystroke="ctrl alt h" />
+  </action>
+  <action id="编辑器Copy">
+    <keyboard-shortcut first-keystroke="ctrl c" />
+  </action>
+  <action id="编辑器Cut">
+    <keyboard-shortcut first-keystroke="ctrl x" />
+  </action>
+  <action id="编辑器Delete">
+    <keyboard-shortcut first-keystroke="delete" />
+  </action>
+  <action id="编辑器Paste">
+    <keyboard-shortcut first-keystroke="ctrl v" />
+  </action>
+  <action id="编辑器Redo">
+    <keyboard-shortcut first-keystroke="ctrl y" />
+  </action>
+  <action id="编辑器Undo">
+    <keyboard-shortcut first-keystroke="ctrl z" />
+  </action>
+</keymap>
