@@ -9,3 +9,8 @@ set noerrorbells
 
 nmap <silent> gh :action QuickJavaDoc<CR>
 nmap <silent> gr :action QuickImplementations<CR>
+
+let mapleader=';'
+nmap <silent> <Leader>qo :action CloseAllEditorsButActive<CR>
+nmap <silent> <Leader>ql :action CloseAllToTheLeft<CR>
+nmap <silent> <Leader>qr :action CloseAllToTheRight<CR>
