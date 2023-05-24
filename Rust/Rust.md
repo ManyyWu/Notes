@@ -1,5 +1,9 @@
 # Rust
 
+## 基础
+### 切片
+  * 切片在Rust中是动态大小类型DST，只能使用其引用，无法直接使用
+
 ## 字符串转换
   ```
   &str    -> String--| String::from(s) or s.to_string() or s.to_owned()
