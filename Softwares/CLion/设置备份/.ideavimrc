@@ -7,10 +7,28 @@ set ignorecase
 set visualbell
 set noerrorbells
 
-nmap <silent> gh :action QuickJavaDoc<CR>
-nmap <silent> gr :action QuickImplementations<CR>
+# 防止误操作
+unmap <C-a>
+unmap <C-x>
+
+# 注释
+nmap <silent> <C-/> :action CommentByLineComment<CR>
+vmap <silent> <C-/> :action CommentByLineComment<CR>
+nmap <silent> <C-shift-/> :action CommentByBlockComment<CR>
+vmap <silent> <C-shift-/> :action CommentByBlockComment<CR>
+
+nmap <silent> gh :action QuickJavaDoc<CR>                         # 快速文档
+nmap <silent> gr :action QuickImplementations<CR>                 # 快速定义
+nmap <silent> gc :action CodeCompletion<CR>                       # 代码完成
+
+nmap <silent> g[ :action MethodUp<CR>                             # 上一个函数
+nmap <silent> g] :action MethodDown<CR>                           # 下一个函数
 
 let mapleader=';'
-nmap <silent> <Leader>qo :action CloseAllEditorsButActive<CR>
-nmap <silent> <Leader>ql :action CloseAllToTheLeft<CR>
-nmap <silent> <Leader>qr :action CloseAllToTheRight<CR>
+nmap <silent> <Leader>qo :action CloseAllEditorsButActive<CR>     # 关闭其他页签
+nmap <silent> <Leader>ql :action CloseAllToTheLeft<CR>            # 关闭左边页签
+nmap <silent> <Leader>qr :action CloseAllToTheRight<CR>           # 关闭右边页签
+nmap <silent> <leader>hi :action CIDR.Lang.ImportsHierarchy<CR>   # 导入层次结构
+nmap <silent> <leader>hc :action CallHierarchy<CR>                # 调用层层次结构
+nmap <silent> <leader>ht :action TypeHierarchy<CR>                # 类型层次结构
+nmap <silent> <leader>hf :action MethodHierarchy<CR>              # 方法层次结构

@@ -17,8 +17,23 @@
   <action id="$Undo">
     <keyboard-shortcut first-keystroke="ctrl z" />
   </action>
+  <action id="ActivateBookmarksToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl alt b" />
+  </action>
+  <action id="ActivateCommitToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl alt c" />
+  </action>
+  <action id="ActivateDebugToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl alt d" />
+  </action>
+  <action id="ActivateProjectToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl alt f" />
+  </action>
   <action id="ActivateStructureToolWindow">
     <keyboard-shortcut first-keystroke="ctrl alt s" />
+  </action>
+  <action id="ActivateTerminalToolWindow">
+    <keyboard-shortcut first-keystroke="ctrl alt t" />
   </action>
   <action id="ActivateVersionControlToolWindow">
     <keyboard-shortcut first-keystroke="ctrl alt g" />
@@ -26,11 +41,11 @@
   <action id="BraceOrQuoteOut">
     <keyboard-shortcut first-keystroke="tab" />
   </action>
-  <action id="CIDR.Lang.ImportsHierarchy">
-    <keyboard-shortcut first-keystroke="ctrl alt i" />
+  <action id="BuildProject">
+    <keyboard-shortcut first-keystroke="ctrl 4" />
   </action>
-  <action id="CallHierarchy">
-    <keyboard-shortcut first-keystroke="ctrl alt c" />
+  <action id="CIDR.Debugger.JumpToDebuggerConsole">
+    <keyboard-shortcut first-keystroke="ctrl alt l" />
   </action>
   <action id="ChooseRunConfiguration">
     <keyboard-shortcut first-keystroke="ctrl 8" />
@@ -38,17 +53,8 @@
   <action id="CloseGotItTooltip">
     <keyboard-shortcut first-keystroke="escape" />
   </action>
-  <action id="CodeCompletion">
-    <keyboard-shortcut first-keystroke="ctrl l" />
-  </action>
   <action id="CollapsiblePanel-toggle">
     <keyboard-shortcut first-keystroke="space" />
-  </action>
-  <action id="CommentByBlockComment">
-    <keyboard-shortcut first-keystroke="shift ctrl slash" />
-  </action>
-  <action id="CommentByLineComment">
-    <keyboard-shortcut first-keystroke="ctrl slash" />
   </action>
   <action id="Console.Execute">
     <keyboard-shortcut first-keystroke="enter" />
@@ -149,22 +155,13 @@
     <keyboard-shortcut first-keystroke="enter" />
   </action>
   <action id="GotoFile">
-    <keyboard-shortcut first-keystroke="shift ctrl t" />
+    <keyboard-shortcut first-keystroke="shift ctrl n" />
   </action>
   <action id="HideAllWindows">
     <keyboard-shortcut first-keystroke="ctrl j" />
   </action>
   <action id="Images.Thumbnails.EnterAction">
     <keyboard-shortcut first-keystroke="enter" />
-  </action>
-  <action id="MethodDown">
-    <keyboard-shortcut first-keystroke="shift ctrl n" />
-  </action>
-  <action id="MethodHierarchy">
-    <keyboard-shortcut first-keystroke="ctrl alt f" />
-  </action>
-  <action id="MethodUp">
-    <keyboard-shortcut first-keystroke="shift ctrl p" />
   </action>
   <action id="NavBar-cancel">
     <keyboard-shortcut first-keystroke="escape" />
@@ -189,6 +186,9 @@
   </action>
   <action id="RecentFiles">
     <keyboard-shortcut first-keystroke="shift ctrl comma" />
+  </action>
+  <action id="ReopenClosedTab">
+    <keyboard-shortcut first-keystroke="shift ctrl t" />
   </action>
   <action id="ReplaceInPath">
     <keyboard-shortcut first-keystroke="shift ctrl r" />
@@ -247,9 +247,6 @@
   </action>
   <action id="ToggleTemporaryLineBreakpoint">
     <keyboard-shortcut first-keystroke="shift ctrl 9" />
-  </action>
-  <action id="TypeHierarchy">
-    <keyboard-shortcut first-keystroke="ctrl alt t" />
   </action>
   <action id="ViewToolButtons">
     <keyboard-shortcut first-keystroke="ctrl alt h" />
