@@ -177,7 +177,7 @@
     $eval "$(ssh-agent -s)"
     $ssh-add ~/.ssh/id_rsa
     $ssh -T git@github.com # 测试是否生效
-    $git remote set-url origin git@github.com:<Username>/<Project>.git
+    $git remote set-url origin git@github.com:<Username>/<Project>.git # 必须设置才能免密
     
 ## 代理
 ### 只对github.com
