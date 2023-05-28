@@ -25,6 +25,9 @@ nmap <silent> gh :action QuickJavaDoc<CR>
 nmap <silent> gr :action QuickImplementations<CR>
 " 代码完成
 nmap <silent> gc :action CodeCompletion<CR>
+" 翻译
+nmap <silent> gt :action $EditorTranslateAction<CR>
+vmap <silent> gt :action $EditorTranslateAction<CR>
 
 " 上一个函数
 nmap <silent> g[ :action MethodUp<CR>

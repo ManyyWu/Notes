@@ -65,6 +65,9 @@
   <action id="Console.TableResult.EditValue">
     <keyboard-shortcut first-keystroke="enter" />
   </action>
+  <action id="Coverage">
+    <keyboard-shortcut first-keystroke="ctrl 3" />
+  </action>
   <action id="Debug">
     <keyboard-shortcut first-keystroke="ctrl 7" />
   </action>
