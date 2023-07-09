@@ -4,3 +4,6 @@
 
 ## expect
   [expect](https://github.com/ManyyWu/expect)
+
+## 根据进程名杀进程
+  TASKKILL //F //T //IM $name
