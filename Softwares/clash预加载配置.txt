@@ -1,0 +1,63 @@
+parsers: # array
+  - url: https://subconverter.speedupvpn.com/sub?target=clash&url=https%3A%2F%2Fcdn.cswalk.xyz%2Flink%2Fw8fYLAlbhjiwzFzY%3Fsub%3D1&insert=false&emoji=true&list=false&tfo=false&scv=false&fdn=false&sort=false&new_name=true
+    yaml:
+      prepend-rules: # 预处理（添加到前面）
+
+      append-proxies: # 添加到后面
+        # steam
+        - DOMAIN-SUFFIX,akamaihd.net,PROXY
+        - DOMAIN-SUFFIX,steamstatic.com,PROXY
+        - DOMAIN-SUFFIX,steamcontent.com,PROXY
+        - DOMAIN-SUFFIX,steamusercontent.com,PROXY
+        - DOMAIN-SUFFIX,steamgames.com,PROXY
+        - DOMAIN-SUFFIX,steampowered.com,PROXY
+        # china
+        - DOMAIN-KEYWORD,douyu,DIRECT
+        - DOMAIN-KEYWORD,douyin,DIRECT
+        - DOMAIN-SUFFIX,zhibo.tv,DIRECT
+        # global 全局选美国线路
+        - DOMAIN-SUFFIX,chat.openai.com,GLOBAL
+        - DOMAIN-SUFFIX,racedepartment.com,GLOBAL
+        - DOMAIN-SUFFIX,xiaobaotv.net,GLOBAL
+        - DOMAIN-SUFFIX,iyf.tv,GLOBAL
+        - DOMAIN-SUFFIX,s6-e1.dnvodcdn.me,GLOBAL
+        - DOMAIN-SUFFIX,anygate.vip,GLOBAL
+        # proxy
+        - DOMAIN-KEYWORD,reddit,PROXY
+        - DOMAIN-KEYWORD,gstatic,PROXY
+        - DOMAIN-KEYWORD,google,PROXY
+        - DOMAIN-KEYWORD,patreon,PROXY
+        # bitclout
+        - DOMAIN-SUFFIX,070429.xyz,GLOBAL
+        - DOMAIN-KEYWORD,bitclout,GLOBAL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+#DOMAIN-SUFFIX：域名后缀匹配
+#DOMAIN：域名匹配
+#DOMAIN-KEYWORD：域名关键字匹配
+#IP-CIDR：IP段匹配
+#SRC-IP-CIDR：源IP段匹配
+#GEOIP：GEOIP数据库（国家代码）匹配
+#DST-PORT：目标端口匹配
+#SRC-PORT：源端口匹配
+#PROCESS-NAME：源进程名匹配
+#RULE-SET：Rule Provider规则匹配
+#MATCH：全匹配
+
+#GLOBAL：全局
+#DIRECT：直连
+#REJECT：禁止连接
