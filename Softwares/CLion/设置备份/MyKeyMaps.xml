@@ -8,6 +8,9 @@
   <action id="$Delete">
     <keyboard-shortcut first-keystroke="delete" />
   </action>
+  <action id="$EditorTranslateAction">
+    <keyboard-shortcut first-keystroke="alt a" />
+  </action>
   <action id="$Paste">
     <keyboard-shortcut first-keystroke="ctrl v" />
   </action>
@@ -262,6 +265,9 @@
   </action>
   <action id="编辑器Delete">
     <keyboard-shortcut first-keystroke="delete" />
+  </action>
+  <action id="编辑器EditorTranslateAction">
+    <keyboard-shortcut first-keystroke="alt a" />
   </action>
   <action id="编辑器Paste">
     <keyboard-shortcut first-keystroke="ctrl v" />
