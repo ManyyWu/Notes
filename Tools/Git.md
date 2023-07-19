@@ -170,7 +170,10 @@
     $git tag newtag # 新建tag
     $git push --tag newtag # 提交到tag
 
-## 免密
+## 保存密码
+    $git config --global credential.helper store
+
+## github免密
     $ssh-keygen -t rsa -C "email"
     $cat ~/.ssh/id_rsa.pub
     复制到Github-SSH keys
