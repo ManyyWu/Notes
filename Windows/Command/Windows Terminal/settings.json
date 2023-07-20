@@ -4,12 +4,14 @@
     "actions": 
     [
         {
-            "command": "unbound",
-            "keys": "ctrl+c"
+            "command": 
+            {
+                "action": "copy",
+                "singleLine": false
+            }
         },
         {
-            "command": "unbound",
-            "keys": "ctrl+v"
+            "command": "paste"
         },
         {
             "command": 
@@ -21,59 +23,78 @@
             "keys": "alt+shift+d"
         },
         {
-            "command": 
-            {
-                "action": "copy",
-                "singleLine": false
-            }
-        },
-        {
-            "command": "paste"
-        },
-        {
             "command": "find",
             "keys": "ctrl+shift+f"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+c"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+v"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+c"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+t"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+v"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+a"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+n"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+d"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+m"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+p"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+w"
         }
     ],
     "alwaysOnTop": false,
     "alwaysShowNotificationIcon": false,
     "copyFormatting": "none",
     "copyOnSelect": true,
-    "defaultProfile": "{d15b228a-05d7-50d1-8472-f60aaba86efc}",
-    "experimental.detectURLs": true,
+    "defaultProfile": "{b453ae62-4e3d-5e58-b989-0a998ec441c8}",
+    "newTabMenu": 
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
     "profiles": 
     {
-        "defaults": 
-        {
-            "bellStyle": "taskbar",
-            "colorScheme": "Campbell",
-            "cursorShape": "filledBox",
-            "font": 
-            {
-                "face": "Consolas"
-            },
-            "opacity": 90,
-            "padding": "8",
-            "scrollbarState": "visible"
-        },
+        "defaults": {},
         "list": 
         [
             {
-                "colorScheme": "Campbell",
-                "font": 
-                {
-                    "face": "JetBrainsMono Nerd Font Mono",
-                    "size": 11.0
-                },
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": false,
                 "name": "Windows PowerShell"
             },
             {
-                "font": 
-                {
-                    "face": "Consolas"
-                },
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "hidden": false,
                 "name": "\u547d\u4ee4\u63d0\u793a\u7b26"
@@ -85,29 +106,13 @@
                 "source": "Windows.Terminal.Azure"
             },
             {
-                "guid": "{91f026e8-e64c-5a03-af44-fd3ffd63a511}",
-                "hidden": false,
-                "name": "Developer Command Prompt for VS 2019",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "commandline": "%ProgramFiles%/Git/bin/bash.exe -li",
-                "font": 
-                {
-                    "face": "JetBrainsMono Nerd Font Mono",
-                    "size": 10.0
-                },
-                "guid": "{d15b228a-05d7-50d1-8472-f60aaba86efc}",
-                "hidden": false,
-                "icon": "%ProgramFiles%/Git/mingw64/share/git/git-for-windows.ico",
-                "name": "Git Bash",
-                "startingDirectory": "%USERPROFILE%"
-            },
-            {
+                "closeOnExit": "always",
                 "commandline": "D:\\cygwin64\\bin\\bash.exe -i -l",
+                "cursorShape": "filledBox",
                 "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441c8}",
                 "hidden": false,
-                "name": "Bash"
+                "name": "Bash",
+                "opacity": 85
             }
         ]
     },
@@ -322,6 +327,7 @@
         }
     ],
     "themes": [],
+    "useAcrylicInTabRow": false,
     "windowingBehavior": "useExisting",
     "wordDelimiters": "()\"',;<~!@#$%^&*|+=[]{}~\u2502:"
 }
