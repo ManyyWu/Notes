@@ -329,5 +329,5 @@
     "themes": [],
     "useAcrylicInTabRow": false,
     "windowingBehavior": "useExisting",
-    "wordDelimiters": "()\"',;<~!@#$%^&*|+=[]{}~\u2502:"
+    "wordDelimiters": "()\"',;<!@#$%^&*|+=[]{}\u2502:"
 }
