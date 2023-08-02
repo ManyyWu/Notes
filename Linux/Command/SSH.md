@@ -13,6 +13,14 @@
     * ssh -o "StrictHostKeyChecking no" user@hostname
     
 ## ssh免密
+    * ~/.ssh/config
+    ```
+    Host name
+    HostName hostname
+    User user
+    Port port
+    IdentityFile ~/.ssh/id_rsa
+    ```
     * client$ ssh-keygen -t rsa -C "邮件"
     * cat ~/.ssh/id_rsa.pub
     * target# vi /etc/ssh/sshd_config
@@ -20,8 +28,9 @@
         RSAAuthentication yes # 这个参数可能没有 没关系
         PubkeyAuthentication yes
         AuthorizedKeysFile .ssh/authorized_keys
-    * target$ echo '公钥' >> authorized_keys
+    * ssh-copy-id -i ~/.ssh/id_rsa.pub host
     * target$ chmod 700 ~/.ssh; chmod 600 ~/.ssh/authorized_keys
+    
 
 ## 跳转
   ~/.ssh/config
