@@ -107,7 +107,7 @@
             },
             {
                 "closeOnExit": "always",
-                "commandline": "D:\\cygwin64\\bin\\bash.exe -i -l",
+                "commandline": "d:\\cygwin64\\bin\\env.exe CHERE_INVOKING=1 /bin/bash -i -l",
                 "cursorShape": "filledBox",
                 "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441c8}",
                 "hidden": false,
