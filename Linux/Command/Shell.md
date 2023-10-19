@@ -333,3 +333,8 @@ echo result:$str
     -f 从文件读取多个命令
     https://www.yiibai.com/sed
     https://www.twle.cn/c/yufei/sed/sed-basic-loops.html
+
+## 问题记录
+### `=~`无法正常匹配
+  1. 不要使用引号包裹
+  2. 空格使用`\ `或`[[:space:]]`匹配
