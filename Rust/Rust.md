@@ -847,7 +847,13 @@
   * Clippy: 有限的unsafe检查
   * Prusti: 验证给定特定条件的代码的安全性
   * Fuzzers: 模糊测试器
-### 
+ 
+## 库
+## CLI
+  * pico_args: 轻量参数解析器
+  * clap: 功能齐全的参数解析器
+## 日志
+## 异步
   * Tokio: 异步库
   * rayon: 并行库
 
@@ -857,6 +863,9 @@
   * tokio::sync::Mutex只有在跨多个异步过程时使用，但开销会更高
   * 锁竞争多时可考虑使用性能更高的锁: parking_lot::Mutex
 
+## rustup
+  * 卸载: rustup self uninstall
+ 
 ## Cargo
   * 镜像: ~/.cargo/config添加
     ```
@@ -866,6 +875,7 @@
     [source.ustc]
     registry = "git://mirrors.ustc.edu.cn/crates.io-index"
     ```
+  * error[E0635]: unknown feature `proc_macro_span_shrink`: 删除`Cargo.lock`和`target/`
 
 ## 书
   * [Rust学习笔记](https://skyao.io/learning-rust/)
