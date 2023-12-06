@@ -166,9 +166,17 @@
 
 ## Trait
 ### Move、Clone和Copy
-  * Move: 相当于浅拷贝, 但会使源对象不可用; Copy未实现时会优先使用Move语义
-  * Clone: 深拷贝，为类型实现Clone，所有字段实现Clone时才能派生Clone
-  * Copy: 浅拷贝，直接复制值，所有字段实现Copy时才能派生Copy(一个类型如果要实现Copy它必须先实现Clone)；可Copy的类型: 基本类型、基本类型组成的元组、&T
+#### Move
+  * Move相当于浅拷贝, 但会使源对象不可用
+  * 赋值时, 未实现时Copy特征会优先使用Move语义, Copy特征实现后优先使用Copy
+  * Move对象的成员时, 会使对象及被Move的成员不可用, 但其他成员可用, 重新赋值可以使其可用
+#### Copy
+  * Copy是浅拷贝，直接复制值
+  * 所有字段实现Copy特征时才能派生Copy(一个类型如果要实现Copy特征它必须先实现Clone特征)
+  * 默认支持Copy的类型: 基本类型、基本类型组成的元组、&T
+#### Clone
+  * Clone是深拷贝，为类型实现Clone特征
+  * 所有字段实现Clone特征时才能派生Clone
 
 ## 异步
 ### async/await
@@ -829,23 +837,23 @@
   
 ## 疑难杂症
 ### * Rc<RefCell<T>>.as_ref().map返回Ref<T>时无法自动推导，报错: "type annotations needed for Option<&Borrowed>"
-    Rc<T>通过实现trait std::borrow::Borrow实现了borrow()，Ref通过方法实现borrow()  
+    Rc<T>通过实现std::borrow::Borrow特征实现了borrow()，Ref通过方法实现borrow()  
     vscode自动导入"use std::borrow::Borrow;"，导致Rc<T>不会自动解引用调用Ref<T>的borrow()
 
 ## Unsafe
   * 解引用裸指针，就如上例所示
-  * 调用一个unsafe或外部的函数
+  * 调用一个Unsafe或外部的函数
   * 访问或修改一个可变的静态变量
-  * 实现一个unsafe特征
+  * 实现一个Unsafe特征
   * 访问union中的字段
 
 ## 实用工具
 ### Unsafe Rust工具
   * rust-bindgen: 生成用于Rust的C API接口
   * cbindgen: 生成用于C的Rust API接口
-  * cxx: 无需使用unsafe双向调用C++和Rust
+  * cxx: 无需使用Unsafe双向调用C++和Rust
   * Miri: 检查执行路径中的未定义行为(UB)
-  * Clippy: 有限的unsafe检查
+  * Clippy: 有限的Unsafe检查
   * Prusti: 验证给定特定条件的代码的安全性
   * Fuzzers: 模糊测试器
  
