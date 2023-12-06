@@ -170,7 +170,7 @@
 ### Move、Clone和Copy
 #### Move
   * Move相当于浅拷贝, 但会使源对象不可用
-  * 赋值时, 若类型未实现Copy特征, 会优先使用Move语义, Copy特征实现后优先使用Copy
+  * 赋值时, 若类型未实现Copy特征, 会优先使用Move语义。Copy特征实现后优先使用Copy
   * Move对象的成员时, 会使对象及被Move的成员不可用, 但其他成员可用, 重新赋值可以使其可用
   * `let x = "".to_string(); x;`中的`x;`相当于`let _temp = x;`
 #### Copy
@@ -180,7 +180,7 @@
 #### Clone
   * Clone是深拷贝，为类型实现Clone特征
   * 所有字段实现Clone特征时才能派生Clone
-  * 未实现Clone时，引用类型的clone()等价于Copy, 实现了Clone时，引用类型的clone()将克隆并得到引用所指向的类型
+  * 未实现Clone时，引用类型的clone()等价于Copy。实现了Clone时，引用类型的clone()将克隆并自动解引用为引用所指类型
 
 ## 异步
 ### async/await
