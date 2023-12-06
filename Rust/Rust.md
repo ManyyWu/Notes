@@ -5,6 +5,10 @@
   * 一个对象在同一时间只能有一个可变借用或者多个不可变借用，不能同时拥有可变借用和不可变借用
 ### 切片
   * 切片在Rust中是动态大小类型DST，只能使用其引用，无法直接使用
+### 标签
+  * `'label loop { break 'label; }`
+### 函数
+  * 函数内可以定义函数
 ### 自动解引用
   Rust自动解引用的情况:
   * 函数调用
@@ -12,31 +16,87 @@
   * 比较操作符两边是同类型引用
 
 ## 模式匹配
-  * [参考](https://rustwiki.org/zh-CN/reference/patterns.html)
-  * match的范围匹配目前只支持全闭合区间`match 1u32 { 0..=1 => true, _ => false };`
-  * match需要穷举所有分支, 而if let是match的语法糖，只关心指定分支，其他分支(`_分支`)由else负责
+  [参考](https://rustwiki.org/zh-CN/reference/patterns.html)
   ```Rust
+  #[derive(Copy, Clone)]
+  struct Tuple(i32, i32);
+  
+  #[derive(Copy, Clone)]
+  struct Test {
+      a: i32,
+      b: Option<(i32, i32)>,
+      d: Tuple,
+  }
+  
+  enum MyEnum {
+      A(i32, i32, i32),
+      B,
+  }
+  
+  #[allow(unused)]
   fn main() {
-      enum MyEnum {
-          A,
-          B,
-          C,
-      }
-      let v = MyEnum::C;
+      let mut t = Test {
+          a: 0,
+          b: Some((1, 2)),
+          d: Tuple(1, 2),
+      };
+      let e = MyEnum::A(1, 2, 3);
+      let v = ['h', 'e', 'l', 'l', 'o', '!'];
   
-      if let MyEnum::A = v {
-          println!("A");
-      } else if let MyEnum::B = v {
-          println!("B");
-      } else {
-          println!("C");
+      // 解构
+      match t {
+          Test { a, b, d } => {} // 因为Test实现了Copy特征，t的成员不会转移所有权
+          Test { ref a, b: Some((ref mut b1, mut b2)), d } => {} // a为不可变借用，b1为可变借用，b2为可变变量(转移所有权)
       }
+      match &t {
+          Test { a, b: Some((b1, b2)), d } => {} // 对引用解构，被匹配的变量也将被赋值为对应元素的引用
+          _ => {}
+      }
+      match e {
+          MyEnum::A(a, b, _) => {} // 省略第3个成员
+          MyEnum::A(a, ..) => {} // 省略后2个成员
+          MyEnum::A(.., c) => {} // 省略前2个成员
+          MyEnum::B => {}
+          //MyEnum::A(ab @ .., c) => {} // error: `ab @ ` is not allowed in a tuple struct
+          _ => {}
+      }
+      let ref mut i = &0; // ref修饰变量名时相当于强行加上引用
   
+      // 范围匹配模式
       match v {
-          MyEnum::A => println!("A"),
-          MyEnum::B => println!("B"),
-          _ => println!("C"),
+          ['h', .., '!'] => {} // 匹配以'!'结尾的切片
+          [start @ .., '!'] => {} // 开头匹配并绑定变量名, start = ['h', 'e', 'l', 'l', 'o']
+          ['h', mid @ .., '!'] => {} // 部分匹配并绑定变量名, mid = ['e', 'l', 'l', 'o']
+          ['h', .., '!'] if v[1] == 'e' => {} // 匹配守卫
+          _ => {}
       }
+  
+      // or模式
+      match (1, 2) {
+          (1 | 2, 1 | 2) => {}
+          (1, _) | (_, 2) => {}
+          (x @ 1, _) | (_, x @ 2) => println!("{}", x),
+          _ => {}
+      }
+  
+      // 字面量匹配
+      match 1 {
+          1 | 2 => {}
+          _ => {}
+      }
+  
+      // 范围匹配
+      // 支持类型: 整型(u8、i8、u16、i16、usize、isize...)，字符型(char)，浮点类型(f32和f64) [已弃用]
+      match 1 {
+          0..=10 => {}, // 范围匹配，目前只支持全闭合区间
+          0..=10 if 1 % 2 == 0 => {} // 匹配守卫，匹配分支后再检查后置条件
+          _ => {}
+      };
+
+      // match需要穷举所有分支, 而if let是match的语法糖，只关心指定分支，其他分支(`_分支`)由else负责
+      if let MyEnum::A(a, b, c) = e {}
+      else if let MyEnum::B = e {}
+      else {}
   }
   ```
 
@@ -886,7 +946,235 @@
   }
   ```
 ### Unsafe实现的双链表
+  ```Rust
+  use std::ptr::{null_mut};
   
+  type Link<T> = Option<Box<Node<T>>>;
+  
+  #[derive(Debug)]
+  struct Node<T> {
+      data: T,
+      next: Link<T>,
+  }
+  
+  #[derive(Debug)]
+  struct List<T> {
+      head: Link<T>,
+      tail: *mut Node<T>
+  }
+  
+  impl<T> List<T> {
+      fn new () -> Self {
+          List { head: None, tail: null_mut() }
+      }
+  
+      fn push_front (&mut self, data: T) {
+          self.head = Some(Box::new(Node {
+              data: data,
+              next: self.head.take()
+          }));
+          if self.tail.is_null() {
+              self.tail = self.head.as_mut().unwrap().as_mut();
+          }
+      }
+      
+      fn push_back (&mut self, data: T) {
+          let new = Box::new(Node {
+              data: data,
+              next: None
+          });
+          let old_tail = self.tail;
+          self.tail = if old_tail.is_null() {
+              self.head = Some(new);
+              self.head.as_mut().unwrap().as_mut()
+          } else {
+              unsafe {
+                  (*old_tail).next = Some(new);
+                  (*old_tail).next.as_mut().unwrap().as_mut()
+              }
+          }
+      }
+  
+      fn pop_front (&mut self) -> Option<T> {
+          match &self.head {
+              None => None,
+              Some(_) => {
+                  let Node { data, next } = *self.head.take().unwrap();
+                  if next.is_none() {
+                      self.tail = null_mut();
+                  }
+                  self.head = next;
+                  Some(data)
+              },
+          }
+      }
+  
+      fn peek_front (&self) -> Option<&T> {
+          self.head.as_ref().map(|node| {
+              &node.data
+          })
+      }
+  
+      fn peek_front_mut (&mut self) -> Option<&mut T> {
+          self.head.as_mut().map(|node| {
+              &mut node.data
+          })
+      }
+  
+      fn peek_back (&self) -> Option<&T> {
+          if self.tail.is_null() {
+              None
+          } else {
+              unsafe {
+                  Some(&(*self.tail).data)
+              }
+          }
+      }
+  
+      fn peek_back_mut (&mut self) -> Option<&mut T> {
+          if self.tail.is_null() {
+              None
+          } else {
+              unsafe {
+                  Some(&mut (*self.tail).data)
+              }
+          }
+      }
+  
+      fn iter<'a> (&'a self) -> ListIter<'a, T> {
+          //ListIter(self.head.as_ref().map(|node| { node.deref() }))
+          ListIter(self.head.as_deref()) // v1.40.0
+      }
+  
+      fn iter_mut<'a> (&'a mut self) -> ListIterMut<'a, T> {
+          ListIterMut(self.head.as_deref_mut())
+      }
+  }
+  
+  struct ListIntoIter<T>(List<T>);
+  
+  impl<T> Iterator for ListIntoIter<T> {
+      type Item = T;
+  
+      fn next(&mut self) -> Option<Self::Item> {
+          self.0.pop_front()
+      }
+  }
+  
+  impl<T> IntoIterator for List<T> {
+      type Item     = T;
+      type IntoIter = ListIntoIter<T>;
+  
+      fn into_iter(self) -> Self::IntoIter {
+          ListIntoIter(self)
+      }
+  }
+  
+  struct ListIter<'a, T>(Option<&'a Node<T>>);
+  
+  impl<'a, T> Iterator for ListIter<'a, T> {
+      type Item = &'a T;
+  
+      fn next(&mut self) -> Option<Self::Item> {
+          self.0.map(|next | {
+              self.0 = next.next.as_deref();
+              &next.data
+          })
+      }
+  }
+  
+  struct ListIterMut<'a, T>(Option<&'a mut Node<T>>);
+  
+  impl<'a, T> Iterator for ListIterMut<'a, T> {
+      type Item = &'a mut T;
+  
+      fn next(&mut self) -> Option<Self::Item> {
+          self.0.take().map(|next | {
+              self.0 = next.next.as_deref_mut();
+              &mut next.data
+          })
+      }
+  }
+  
+  // 自动实现的drop是递归析构，改成循环析构防止栈溢出 
+  impl<T> Drop for List<T> {
+      fn drop(&mut self) {
+          while self.pop_front().is_some() { }
+      }
+  }
+  
+  #[cfg(test)]
+  mod test {
+      use super::List;
+      use super::ListIntoIter;
+  
+      #[derive(Debug,PartialEq)]
+      struct Test {
+          value: i32,
+      }
+  
+      #[test]
+      fn push () {
+          type MyList<'a> = List<Test>;
+          let mut list = MyList::new();
+  
+          list.push_front(Test { value: 2 });
+          list.push_front(Test { value: 1 });
+          list.push_back(Test { value: 3 });
+  
+          assert_eq!(list.pop_front().unwrap().value, 1);
+          assert_eq!(list.pop_front().unwrap().value, 2);
+          assert_eq!(list.pop_front().unwrap().value, 3);
+      }
+  
+      #[test]
+      fn peek () {
+          type MyList<'a> = List<Test>;
+          let mut list = MyList::new();
+  
+          assert!(list.peek_front_mut().is_none());
+          assert!(list.peek_back_mut().is_none());
+  
+          list.push_front(Test{ value: 1 });
+          list.push_front(Test{ value: 2 });
+  
+          assert_eq!(list.peek_front().unwrap().value, 2);
+          assert_eq!(list.peek_back().unwrap().value, 1);
+      }
+  
+      #[test]
+      fn iter () {
+          type MyList<'a> = List<Test>;
+          let mut list = MyList::new();
+          let mut list1 = MyList::new();
+  
+          for i in 1..=10 {
+              list.push_front(Test{ value: i });
+          }
+  
+          let mut it = list.into_iter();
+          while let Some(data) = it.next() {
+              list1.push_back(data);
+          }
+  
+          let mut it = list1.iter_mut();
+          while let Some(data) = it.next() {
+              data.value = data.value + 1;
+          }
+  
+          let mut it = list1.iter();
+          while let Some(data) = it.next() {
+              if it.0.is_some() {
+                  assert_eq!(it.0.unwrap().data.value , data.value - 1);
+              }
+          }
+          
+          let mut it = ListIntoIter(list1);
+          while it.next().is_some() { }
+      }
+  }
+  ```
+
 ## 疑难杂症
 ### * Rc<RefCell<T>>.as_ref().map返回Ref<T>时无法自动推导，报错: "type annotations needed for Option<&Borrowed>"
     Rc<T>通过实现std::borrow::Borrow特征实现了borrow()，Ref通过方法实现borrow()  
