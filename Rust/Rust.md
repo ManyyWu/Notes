@@ -857,7 +857,7 @@
   * cbindgen: 生成用于C的Rust API接口
   * cxx: 无需使用Unsafe双向调用C++和Rust
   * Miri: 检查执行路径中的未定义行为(UB)
-  * Clippy: 有限的Unsafe检查
+  * Clippy: 代码检查工具
   * Prusti: 验证给定特定条件的代码的安全性
   * Fuzzers: 模糊测试器
  
