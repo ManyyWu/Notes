@@ -2,7 +2,7 @@
 
 ## 基础
 ### 借用
-  * 一个对象在同一时间只能有一个可变借用或者多个不可变借用, 不能同时拥有可变借用和不可变借用
+  * 一个对象在同一时间只能有一个可变借用或者多个不可变借用，不能同时拥有可变借用和不可变借用
 ### 切片
   * 切片在Rust中是动态大小类型DST，只能使用其引用，无法直接使用
 
@@ -18,36 +18,36 @@
   &[u8]   -> String--| std::str::from_utf8(s).unwrap(), but don't**
   &[u8]   -> Vec<u8>-| String::from_utf8(s).unwrap(), but don't**
   Vec<u8> -> &str----| &s if possible* else s.as_slice()
-  Vec<u8> -> String--| std::str::from_utf8(&s).unwrap(), but don't**
-  Vec<u8> -> &[u8]---| String::from_utf8(s).unwrap(), but don't**
+  Vec<u8> -> String--| std::str::from_utf8(&s).unwrap()，but don't**
+  Vec<u8> -> &[u8]---| String::from_utf8(s).unwrap()，but don't**
   ```
   
 ## 不太聪明的生命周期检查
   ```Rust
-  fn get_value<K, V> (map: &mut HashMap<K, V>, key: K) -> &mut V
+  fn get_value<K，V> (map: &mut HashMap<K，V>，key: K) -> &mut V
       where
           K: Clone + Eq + Hash,
           V: Default
       {
       let mut v = map.get_mut(&key);
       if v.is_none() {
-          map.insert(key.clone(), V::default());
+          map.insert(key.clone()，V::default());
           //v = map.get_mut(&key);
       }
       //v.unwrap() // Error: cannot borrow `*map` as mutable more than once at a time
       map.get_mut(&key).unwrap()
   }
   
-  fn get_value1<K, V> (map: &mut HashMap<K, V>, key: K) -> &mut V
+  fn get_value1<K，V> (map: &mut HashMap<K，V>，key: K) -> &mut V
       where
           K: Clone + Eq + Hash,
           V: Default
       {
       match map.get_mut(&key) {
           Some(_) => map.get_mut(&key).unwrap(),
-          //Some(v) => v, // Error: cannot borrow `*map` as mutable more than once at a time
+          //Some(v) => v，// Error: cannot borrow `*map` as mutable more than once at a time
           None => {
-              map.insert(key.clone(), V::default());
+              map.insert(key.clone()，V::default());
               map.get_mut(&key).unwrap()
           }
       }
@@ -84,7 +84,7 @@
   
 ## 闭包
   ```Rust
-  fn test<'a, F> (f: F) -> &'a mut String
+  fn test<'a，F> (f: F) -> &'a mut String
   where
       F: FnOnce () -> &'a mut String {
       f()
@@ -116,11 +116,11 @@
       // 没有移出所捕获变量的所有权的闭包自动实现了FnMut特征
       // 不需要对捕获变量进行改变的闭包自动实现了Fn特征
   
-      println!("{:?}", test(|| &mut a));                    // FnOnce
-      println!("{:?}", test1(|| { a += "!"; a.clone() }));  // FnMut
-      println!("{:?}", test3(|| { let b = a.clone(); b })); // Fn
-      println!("{:?}", test2(|| { let b = a.clone(); b })); // Fn
-      println!("{:?}", test2(move || { let b = a; b }));    // FnOnce
+      println!("{:?}"，test(|| &mut a));                    // FnOnce
+      println!("{:?}"，test1(|| { a += "!"; a.clone() }));  // FnMut
+      println!("{:?}"，test3(|| { let b = a.clone(); b })); // Fn
+      println!("{:?}"，test2(|| { let b = a.clone(); b })); // Fn
+      println!("{:?}"，test2(move || { let b = a; b }));    // FnOnce
   }
   ```
 
@@ -138,7 +138,7 @@
   ```
   * RefCell: RefCell可以对不可变值进行可变借用，RefCell只是将借用规则从编译期推迟到程序运行期，违背借用规则会导致运行期的panic
   ```Rust
-  let a = RefCell::new(String::from("hello, world"));
+  let a = RefCell::new(String::from("hello，world"));
   let b = a.borrow();
   let c = a.borrow_mut(); // panic
   ```
@@ -163,15 +163,16 @@
   for i in vc.iter().filter(|&num| num.get() % 2 == 0 ) {
       vc[i.get() as usize].set(i.get() * 2);
   }
-  println!("{:?}", v);
+  println!("{:?}"，v);
   ```
 
 ## Trait
 ### Move、Clone和Copy
 #### Move
   * Move相当于浅拷贝, 但会使源对象不可用
-  * 赋值时, 未实现时Copy特征会优先使用Move语义, Copy特征实现后优先使用Copy
+  * 赋值时, 若类型未实现Copy特征, 会优先使用Move语义, Copy特征实现后优先使用Copy
   * Move对象的成员时, 会使对象及被Move的成员不可用, 但其他成员可用, 重新赋值可以使其可用
+  * `let x = "".to_string(); x;`中的`x;`相当于`let _temp = x;`
 #### Copy
   * Copy是浅拷贝，直接复制值
   * 所有字段实现Copy特征时才能派生Copy(一个类型如果要实现Copy特征它必须先实现Clone特征)
@@ -179,6 +180,7 @@
 #### Clone
   * Clone是深拷贝，为类型实现Clone特征
   * 所有字段实现Clone特征时才能派生Clone
+  * 未实现Clone时，引用类型的clone()等价于Copy, 实现了Clone时，引用类型的clone()将克隆并得到引用所指向的类型
 
 ## 异步
 ### async/await
