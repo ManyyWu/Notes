@@ -12,6 +12,7 @@
   * 比较操作符两边是同类型引用
 
 ## 模式匹配
+  * [参考](https://rustwiki.org/zh-CN/reference/patterns.html)
   * match需要穷举所有分支, 而if let是match的语法糖，只关心指定分支，其他分支(`_分支`)由else负责
   ```Rust
   fn main() {
