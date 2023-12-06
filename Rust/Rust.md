@@ -27,40 +27,50 @@
   &[u8]   -> String--| std::str::from_utf8(s).unwrap(), but don't**
   &[u8]   -> Vec<u8>-| String::from_utf8(s).unwrap(), but don't**
   Vec<u8> -> &str----| &s if possible* else s.as_slice()
-  Vec<u8> -> String--| std::str::from_utf8(&s).unwrap()，but don't**
-  Vec<u8> -> &[u8]---| String::from_utf8(s).unwrap()，but don't**
+  Vec<u8> -> String--| std::str::from_utf8(&s).unwrap(), but don't**
+  Vec<u8> -> &[u8]---| String::from_utf8(s).unwrap(), but don't**
   ```
   
 ## 不太聪明的生命周期检查
   ```Rust
-  fn get_value<K，V> (map: &mut HashMap<K，V>，key: K) -> &mut V
+  // 编译错误
+  fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
       where
           K: Clone + Eq + Hash,
           V: Default
       {
-      let mut v = map.get_mut(&key);
-      if v.is_none() {
-          map.insert(key.clone()，V::default());
-          //v = map.get_mut(&key);
+      match map.get_mut(&key) {
+          Some(v) => v, // v对map的可变借用会保持到match结束
+          None => {
+              map.insert(key.clone(), V::default()); // error[E0499]: cannot borrow `*map` as mutable more than once at a time
+              map.get_mut(&key).unwrap()
+          }
       }
-      //v.unwrap() // Error: cannot borrow `*map` as mutable more than once at a time
-      map.get_mut(&key).unwrap()
   }
-  
-  fn get_value1<K，V> (map: &mut HashMap<K，V>，key: K) -> &mut V
+  // 编译通过
+  fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
       where
           K: Clone + Eq + Hash,
           V: Default
       {
       match map.get_mut(&key) {
           Some(_) => map.get_mut(&key).unwrap(),
-          //Some(v) => v，// Error: cannot borrow `*map` as mutable more than once at a time
           None => {
-              map.insert(key.clone()，V::default());
+              map.insert(key.clone(), V::default());
               map.get_mut(&key).unwrap()
           }
       }
-      // *map的可变借用持续到函数结束
+  }
+  // 编译通过(建议用该写法)
+  fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
+      where
+          K: Clone + Eq + Hash,
+          V: Default
+      {
+      if !map.contains_key(&key) {
+          map.insert(key.clone(), V::default());
+      }
+      return map.get_mut(&key).unwrap();
   }
   ```
   
@@ -93,7 +103,7 @@
   
 ## 闭包
   ```Rust
-  fn test<'a，F> (f: F) -> &'a mut String
+  fn test<'a, F> (f: F) -> &'a mut String
   where
       F: FnOnce () -> &'a mut String {
       f()
@@ -125,11 +135,11 @@
       // 没有移出所捕获变量的所有权的闭包自动实现了FnMut特征
       // 不需要对捕获变量进行改变的闭包自动实现了Fn特征
   
-      println!("{:?}"，test(|| &mut a));                    // FnOnce
-      println!("{:?}"，test1(|| { a += "!"; a.clone() }));  // FnMut
-      println!("{:?}"，test3(|| { let b = a.clone(); b })); // Fn
-      println!("{:?}"，test2(|| { let b = a.clone(); b })); // Fn
-      println!("{:?}"，test2(move || { let b = a; b }));    // FnOnce
+      println!("{:?}", test(|| &mut a));                    // FnOnce
+      println!("{:?}", test1(|| { a += "!"; a.clone() }));  // FnMut
+      println!("{:?}", test3(|| { let b = a.clone(); b })); // Fn
+      println!("{:?}", test2(|| { let b = a.clone(); b })); // Fn
+      println!("{:?}", test2(move || { let b = a; b }));    // FnOnce
   }
   ```
 
@@ -147,7 +157,7 @@
   ```
   * RefCell: RefCell可以对不可变值进行可变借用，RefCell只是将借用规则从编译期推迟到程序运行期，违背借用规则会导致运行期的panic
   ```Rust
-  let a = RefCell::new(String::from("hello，world"));
+  let a = RefCell::new(String::from("hello, world"));
   let b = a.borrow();
   let c = a.borrow_mut(); // panic
   ```
@@ -172,7 +182,7 @@
   for i in vc.iter().filter(|&num| num.get() % 2 == 0 ) {
       vc[i.get() as usize].set(i.get() * 2);
   }
-  println!("{:?}"，v);
+  println!("{:?}", v);
   ```
 
 ## Trait
