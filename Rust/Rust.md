@@ -165,7 +165,8 @@
   ```
 
 ## Trait
-### Clone与Copy
+### Move、Clone和Copy
+  * Move: 相当于浅拷贝, 但会使源对象不可用; Copy未实现时会优先使用Move语义
   * Clone: 深拷贝，为类型实现Clone，所有字段实现Clone时才能派生Clone
   * Copy: 浅拷贝，直接复制值，所有字段实现Copy时才能派生Copy(一个类型如果要实现Copy它必须先实现Clone)；可Copy的类型: 基本类型、基本类型组成的元组、&T
 
