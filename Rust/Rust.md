@@ -12,7 +12,8 @@
   * 比较操作符两边是同类型引用
 
 ## 属性
-  * [参考](https://rustwiki.org/zh-CN/reference/attributes.html?highlight=repr#%E5%86%85%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%9A%84%E7%B4%A2%E5%BC%95%E8%A1%A8)
+  [参考](https://rustwiki.org/zh-CN/reference/attributes.html?highlight=repr#%E5%86%85%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%9A%84%E7%B4%A2%E5%BC%95%E8%A1%A8)
+  * 指定枚举数值范围: `#[repr(u8) enum MyEnum {}`
 
 ## 字符串转换
   ```
