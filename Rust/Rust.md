@@ -13,6 +13,7 @@
 
 ## 模式匹配
   * [参考](https://rustwiki.org/zh-CN/reference/patterns.html)
+  * match的范围匹配目前只支持全闭合区间`match 1u32 { 0..=1 => true, _ => false };`
   * match需要穷举所有分支, 而if let是match的语法糖，只关心指定分支，其他分支(`_分支`)由else负责
   ```Rust
   fn main() {
@@ -36,7 +37,7 @@
           MyEnum::B => println!("B"),
           _ => println!("C"),
       }
- }
+  }
   ```
 
 ## 属性
