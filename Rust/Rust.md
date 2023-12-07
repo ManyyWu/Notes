@@ -191,6 +191,51 @@
     * `pub fn notify<T: Summary + Display>(item: &T) {}`
     * `pub fn notify<T>(item: &T) where T: Summary + Display {}`
 ### 有条件地实现方法
+  ```Rust
+  use std::fmt::{Debug};
+
+  struct Test<T>(T);
+
+  impl<T: Default + Clone> Test<T> {
+      fn new() -> Test<T> {
+          Test(T::default())
+      }
+
+      fn from(t: T) -> Test<T> {
+          Test(t.clone())
+      }
+  }
+
+  impl<T: std::ops::Add<Output=T> + Copy> Test<T> {
+      fn add(&mut self, t: &Self) {
+          self.0 = self.0 + t.0
+      }
+  }
+
+  impl<T: Debug> Test<T> {
+      fn print(&self) {
+          println!("{:?}", self.0);
+      }
+  }
+
+  impl<T: PartialEq> PartialEq for Test<T> {
+      fn eq(&self, other: &Self) -> bool {
+          self.0 == other.0
+      }
+  }
+
+  fn main() {
+      let mut a = Test::<String>::new();
+      //a.add(&Test::from("".to_string())); // String未实现std::ops::Add和Copy
+      assert_eq!(true, a.eq(&Test::<String>::new()));
+      a.print();
+
+      let mut b = Test::<i32>::new();
+      b.add(&Test::from(3));
+      assert_eq!(false, b.ne(&Test::<i32>::from(3)));
+      b.print();
+  }
+  ```
 ### 有条件地实现特征
 
 ## 属性
