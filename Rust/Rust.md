@@ -1259,6 +1259,99 @@
   }
   ```
 
+## 模块与包
+### 文件分层
+  ```文件层次
+  src/
+    |-- mod_0/
+    |   |-- mod.rs
+    |   `-- mod_1.rs
+    `-- main.rs
+  ```
+  src/mod_0/mod.rs
+  ```Rust
+  // 当前作用域是mod_0
+  
+  pub mod mod_1;
+  
+  mod mod_2 {}
+  ```
+  src/mod_0/mod_1.rs
+  ```Rust
+  // 当前作用域是mod_1
+  
+  #[allow(unused)]
+  fn f() {}
+  
+  #[allow(unused)]
+  pub mod mod_2 {
+      pub fn f() {}
+  }
+  
+  ```
+  src/main.rs
+  ```Rust
+  // 在当前作用域声明mod_0，会自动查找mod_0.rs或mod_0/mod.rs
+  // 只能在函数或模块外声明
+  mod mod_0;
+  
+  #[allow(unused)]
+  mod mod_1 {
+      pub struct MyStruct {
+          v: i32,
+      }
+  
+      // impl不需要使用pub
+      impl MyStruct {
+          pub fn new(v: i32) -> MyStruct { MyStruct { v } }
+      }
+  
+      pub enum MyEnum {
+          A(i32),
+      }
+  
+      fn f() {}
+  
+      mod mod_2 {
+          pub fn f() {}
+      }
+  
+      pub mod mod_3 {
+          pub fn f() {}
+      }
+  }
+  
+  #[allow(unused)]
+  mod mod_2 {
+      mod mod_3 {
+          mod mod_4 {
+              fn f() {
+                  { use self::f; } // self代表自身模块create::mod_2::mod_3::mod_mod_4
+                  { use super::mod_4::f; } // super代表父模块create::mod_2::mod_3
+                  { use crate::mod_2::mod_3::mod_4; } // crate代表包根
+              }
+          }
+      }
+  }
+
+  #[allow(unused)]
+  fn main() {
+      // { use mod_1::f; } // 不可见
+      // { use mod_1::mod_2; } // 不可见
+      { use mod_1; } // 同层级可见
+      { use mod_1::mod_3::f; } // 相对路径
+      { use crate::mod_1::mod_3::f; } // 绝对路径，优点是模块移动位置时不需要修改路径
+      { use mod_1::MyEnum::A; } // 将枚举设置为pub，其字段也对外可见
+      {
+          let v = mod_1::MyStruct::new(0);
+          // v.v // 将结构体设置为pub，其字段对外不可见
+      }
+      // { use mod_0::mod_2; } // 不可见
+      // { use mod_0::mod_1::f; } // 不可见
+      { use mod_0::mod_1::mod_2::f; }
+  }
+  ```
+
 ## 疑难杂症
 ### * Rc<RefCell<T>>.as_ref().map返回Ref<T>时无法自动推导，报错: "type annotations needed for Option<&Borrowed>"
     Rc<T>通过实现std::borrow::Borrow特征实现了borrow()，Ref通过方法实现borrow()  
