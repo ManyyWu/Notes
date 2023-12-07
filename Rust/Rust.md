@@ -17,6 +17,7 @@
 
 ## 泛型
   * 泛型支持指定默认类型
+  * 约束条件尽量在impl中指定，除非该类型没有impl实现才在定义时指定(因为即使在定义时指定了，impl中也需要再次指定)
 
 ## 模式匹配
   [参考](https://rustwiki.org/zh-CN/reference/patterns.html)
