@@ -39,6 +39,10 @@
       B,
   }
   
+  enum MyEnum1 {
+      A = 1, B, C,
+  }
+  
   #[allow(unused)]
   fn main() {
       let mut t = Test {
@@ -60,6 +64,7 @@
       }
       match e {
           MyEnum::A(a, b, _) => {} // 省略第3个成员
+          MyEnum::A(a, b, _c) => {} //_c会绑定到变量，而_不会绑定
           MyEnum::A(a, ..) => {} // 省略后2个成员
           MyEnum::A(.., c) => {} // 省略前2个成员
           MyEnum::B => {}
@@ -112,7 +117,8 @@
       for (index, value) in s.iter().enumerate() {}
   
       // while let
-      while let Some(top) = s.pop() {}
+      let mut s1 = s.clone();
+      while let Some(top) = s1.pop() {}
   
       // 函数参数本身也是模式
       fn test(&(x, y): &(i32, i32)) {}
@@ -122,6 +128,9 @@
       assert!(matches!(foo, 'A'..='Z' | 'a'..='z'));
       let bar = Some(4);
       assert!(matches!(bar, Some(x) if x > 2));
+      let mut s1 = Vec::from([MyEnum1::A, MyEnum1::B, MyEnum1::C]);
+      // for x in s1.iter().filter(|x| **x == MyEnum1::A) {} // must implement `PartialEq`
+      for x in s1.iter().filter(|x| matches!(x, MyEnum1::A | MyEnum1::B | MyEnum1::C)) {}
   }
   ```
 
