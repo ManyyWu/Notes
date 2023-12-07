@@ -136,6 +136,54 @@
   }
   ```
 
+## Trait
+  ```Rust
+  fn main() {
+      trait Vehicle {
+          fn name(&self) -> &str;
+      }
+  
+      struct Car;
+      impl Vehicle for Car {
+          fn name(&self) -> &str {
+              "car"
+          }
+      }
+  
+      struct Trunk;
+      impl Vehicle for Trunk {
+          fn name(&self) -> &str {
+              "trunk"
+          }
+      }
+  
+      struct Person<'a> {
+          vehicle: Option<&'a dyn Vehicle>,
+      }
+  
+      impl<'a /*T不可在此定义，impl中定义必须在Person中使用*/> Person<'a> {
+          fn new() -> Person<'a> {
+              Person { vehicle: None }
+          }
+  
+          fn set_car<T: Vehicle>(&mut self, v: &'a T) {
+              self.vehicle = Some(v);
+          }
+  
+          fn get_car_name(&self) -> &str {
+              match self.vehicle {
+                  Some(v) => v.name(),
+                  None => "",
+              }
+          }
+      }
+  
+      let mut p = Person::new();
+      p.set_car(&Trunk {});
+      p.get_car_name();
+  }
+  ```
+
 ## 属性
   [参考](https://rustwiki.org/zh-CN/reference/attributes.html?highlight=repr#%E5%86%85%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%9A%84%E7%B4%A2%E5%BC%95%E8%A1%A8)
   * 指定枚举数值范围: `#[repr(u8) enum MyEnum {}`
