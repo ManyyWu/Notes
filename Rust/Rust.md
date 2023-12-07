@@ -1241,4 +1241,5 @@
   * [Rust 语言圣经 - Rust语言圣经(Rust Course)](https://course.rs/about-book.html)
   * [起步 - Rust 中的异步编程](https://huangjj27.github.io/async-book/index.html)
   * [理解tokio的核心(1): runtime - Rust入门秘籍](https://rust-book.junmajinlong.com/ch100/01_understand_tokio_runtime.html)
+  * [Rust入门秘籍](https://rust-book.junmajinlong.com/about.html)
 ##
