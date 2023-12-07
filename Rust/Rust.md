@@ -31,7 +31,7 @@
   struct Test {
       a: i32,
       b: Option<(i32, i32)>,
-      d: Tuple,
+      c: Tuple,
   }
   
   enum MyEnum {
@@ -44,18 +44,18 @@
       let mut t = Test {
           a: 0,
           b: Some((1, 2)),
-          d: Tuple(1, 2),
+          c: Tuple(1, 2),
       };
       let e = MyEnum::A(1, 2, 3);
       let v = ['h', 'e', 'l', 'l', 'o', '!'];
   
       // 解构
       match t {
-          Test { a, b, d } => {} // 因为Test实现了Copy特征，t的成员不会转移所有权
-          Test { ref a, b: Some((ref mut b1, mut b2)), d } => {} // a为不可变借用，b1为可变借用，b2为可变变量(转移所有权)
+          Test { a, b, c } => {} // 因为Test实现了Copy特征，t的成员不会转移所有权
+          Test { ref a, b: Some((ref mut b1, mut b2)), c } => {} // a为不可变借用，b1为可变借用，b2为可变变量(转移所有权)
       }
       match &t {
-          Test { a, b: Some((b1, b2)), d } => {} // 对引用解构，被匹配的变量也将被赋值为对应元素的引用
+          Test { a, b: Some((b1, b2)), c } => {} // 对引用解构，被匹配的变量也将被赋值为对应元素的引用
           _ => {}
       }
       match e {
@@ -66,7 +66,6 @@
           //MyEnum::A(ab @ .., c) => {} // error: `ab @ ` is not allowed in a tuple struct
           _ => {}
       }
-      let ref mut i = &0; // ref修饰变量名时相当于强行加上引用
   
       // 范围匹配模式
       match v {
@@ -94,17 +93,31 @@
       // 范围匹配
       // 支持类型: 整型(u8、i8、u16、i16、usize、isize...)，字符型(char)，浮点类型(f32和f64) [已弃用]
       match 1 {
-          0..=10 => {}, // 范围匹配，目前只支持全闭合区间
+          0..=10 => {} // 范围匹配，目前只支持全闭合区间
           0..=10 if 1 % 2 == 0 => {} // 匹配守卫，匹配分支后再检查后置条件
           _ => {}
       };
-
+  
+      // if let
       // match需要穷举所有分支, 而if let是match的语法糖，只关心指定分支，其他分支(`_分支`)由else负责
-      if let MyEnum::A(a, b, c) = e {}
-      else if let MyEnum::B = e {}
-      else {}
-
-      // matches
+      if let MyEnum::A(a, b, c) = e {} else if let MyEnum::B = e {} else {}
+  
+      // let
+      let (ref x, ref y, ref z) = (1, 2, 3);
+      let Test {ref a, ref b, ref c} = t;
+      let ref mut i = &0; // ref修饰变量名时相当于强行加上引用
+  
+      //for
+      let mut s = Vec::from([1, 2, 3]);
+      for (index, value) in s.iter().enumerate() {}
+  
+      // while let
+      while let Some(top) = s.pop() {}
+  
+      // 函数参数本身也是模式
+      fn test(&(x, y): &(i32, i32)) {}
+  
+      // matches宏
       let foo = 'f';
       assert!(matches!(foo, 'A'..='Z' | 'a'..='z'));
       let bar = Some(4);
