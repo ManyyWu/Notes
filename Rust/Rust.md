@@ -136,8 +136,7 @@
   }
   ```
 
-## Trait
-  * 示例
+## 多态
   ```Rust
   fn main() {
       trait Vehicle {
@@ -184,10 +183,15 @@
       p.get_car_name();
   }
   ```
+
+## trait
+### 约束条件
   * 以下三种写法等效
     * `pub fn notify(item: &(impl Summary + Display)) {}`
     * `pub fn notify<T: Summary + Display>(item: &T) {}`
     * `pub fn notify<T>(item: &T) where T: Summary + Display {}`
+### 有条件地实现方法
+### 有条件地实现特征
 
 ## 属性
   [参考](https://rustwiki.org/zh-CN/reference/attributes.html?highlight=repr#%E5%86%85%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%9A%84%E7%B4%A2%E5%BC%95%E8%A1%A8)
