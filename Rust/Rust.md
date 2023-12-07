@@ -15,6 +15,9 @@
   * 成员访问
   * 比较操作符两边是同类型引用
 
+## 泛型
+  * 泛型支持指定默认类型
+
 ## 模式匹配
   [参考](https://rustwiki.org/zh-CN/reference/patterns.html)
   ```Rust
