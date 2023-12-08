@@ -1469,6 +1469,42 @@
   }
   ```
 
+## 错误处理
+### panic!
+  * panic!打印堆栈并退出程序
+  * RUST_BACKTRACE=1 cargo run可以输出更详细的堆栈信息
+  * 示例
+  ```Rust
+  mod test {
+      #[test]
+      fn hock() {
+          // 设置勾子函数
+          std::panic::set_hook(Box::new(|ctx| {
+              println!("Callback\n{:?}", ctx);
+          }));
+          // std::panic::take_hook(); // 取消hock
+          std::panic::panic_any("Error");
+      }
+  
+      #[test]
+      fn catch_unwind() {
+          // 捕获闭包中的panic
+          let result = std::panic::catch_unwind(|| {
+              panic!("Error");
+          });
+          // 恢复panic
+          if let Err(ctx) = result {
+              std::panic::resume_unwind(Box::new(ctx))
+          }
+      }
+  
+      #[test]
+      fn panic() {
+          panic!("Error Info");
+      }
+  }
+  ```
+
 ## 疑难杂症
 ### * Rc<RefCell<T>>.as_ref().map返回Ref<T>时无法自动推导，报错: "type annotations needed for Option<&Borrowed>"
     Rc<T>通过实现std::borrow::Borrow特征实现了borrow()，Ref通过方法实现borrow()  
