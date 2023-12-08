@@ -137,6 +137,8 @@
   ```
 
 ## trait
+### 
+  * Rust中无法为外部类型实现外部特征，比如无法为Vec实现Display，但可以通过newtype实现`struct MyVec(Vec<i32>); impl Display for Myvec {}`
 ### 约束条件
   * 以下三种写法等效
     * `pub fn notify(item: &(impl Summary + Display)) {}`
