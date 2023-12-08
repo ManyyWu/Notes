@@ -236,6 +236,48 @@
       b.print();
   }
   ```
+### 多态
+  ```Rust
+  use std::fmt::Debug;
+  
+  fn main() {
+      // impl Trait是静态多态，在编译时单态化展开
+      {
+          fn make_string() -> impl Debug {
+              String::default()
+          }
+          fn make_vec() -> impl Debug {
+              Vec::<&str>::default()
+          }
+  
+          let obj1 = make_string();
+          let obj2 = make_vec();
+          //let v = [obj1, obj2]; // obj1, obj2是不同类型
+          println!("{:?} {:?}", obj1, obj2);
+      }
+      // 泛型是静态多态，编译时展开
+      {
+          fn make_obj<T: Debug + Default>() -> T {
+              T::default()
+          }
+          let obj1: String = make_obj::<String>();
+          let obj2: Vec<&str> = make_obj::<Vec<&str>>();
+          println!("{:?} {:?}", obj1, obj2);
+      }
+      // dyn Trait是动态多态
+      {
+          fn make_obj<T: Debug + Default + 'static>() -> Box<dyn Debug>{
+              Box::new(T::default())
+          }
+          fn make_obj_ref<T: Debug + Default>(obj: &dyn Debug) -> Box<&dyn Debug> {
+              Box::new(obj)
+          }
+          let v = [make_obj::<String>(), make_obj::<Vec<&str>>()];
+          let vr = [make_obj_ref::<String>(&v[0]), make_obj_ref::<Vec<&str>>(&v[1])];
+          println!("{:?} {:?} {:?} {:?}", v[0], v[1], vr[0], vr[1]);
+      }
+  }
+  ```
 
 ## 属性
   [参考](https://rustwiki.org/zh-CN/reference/attributes.html?highlight=repr#%E5%86%85%E7%BD%AE%E5%B1%9E%E6%80%A7%E7%9A%84%E7%B4%A2%E5%BC%95%E8%A1%A8)
