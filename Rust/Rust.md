@@ -136,54 +136,6 @@
   }
   ```
 
-## 多态
-  ```Rust
-  fn main() {
-      trait Vehicle {
-          fn name(&self) -> &str;
-      }
-  
-      struct Car;
-      impl Vehicle for Car {
-          fn name(&self) -> &str {
-              "car"
-          }
-      }
-  
-      struct Trunk;
-      impl Vehicle for Trunk {
-          fn name(&self) -> &str {
-              "trunk"
-          }
-      }
-  
-      struct Person<'a> {
-          vehicle: Option<&'a dyn Vehicle>,
-      }
-  
-      impl<'a /*T不可在此定义，impl中定义必须在Person中使用*/> Person<'a> {
-          fn new() -> Person<'a> {
-              Person { vehicle: None }
-          }
-  
-          fn set_car<T: Vehicle>(&mut self, v: &'a T) {
-              self.vehicle = Some(v);
-          }
-  
-          fn get_car_name(&self) -> &str {
-              match self.vehicle {
-                  Some(v) => v.name(),
-                  None => "",
-              }
-          }
-      }
-  
-      let mut p = Person::new();
-      p.set_car(&Trunk {});
-      p.get_car_name();
-  }
-  ```
-
 ## trait
 ### 约束条件
   * 以下三种写法等效
@@ -237,6 +189,7 @@
   }
   ```
 ### 多态
+#### 静态多态与动态多态
   ```Rust
   use std::fmt::Debug;
   
@@ -275,6 +228,75 @@
           let v = [make_obj::<String>(), make_obj::<Vec<&str>>()];
           let vr = [make_obj_ref::<String>(&v[0]), make_obj_ref::<Vec<&str>>(&v[1])];
           println!("{:?} {:?} {:?} {:?}", v[0], v[1], vr[0], vr[1]);
+      }
+  }
+  ```
+#### 动态多态
+  ```Rust
+  trait Vehicle {
+      fn name(&self) -> &str;
+  }
+
+  struct Car;
+  impl Vehicle for Car {
+      fn name(&self) -> &str {
+          "car"
+      }
+  }
+
+  struct Trunk;
+  impl Vehicle for Trunk {
+      fn name(&self) -> &str {
+          "trunk"
+      }
+  }
+
+  struct Person<'a> {
+      vehicle: Option<&'a dyn Vehicle>,
+  }
+
+  impl<'a /*T不可在此定义，impl中定义必须在Person中使用*/> Person<'a> {
+      fn new() -> Person<'a> {
+          Person { vehicle: None }
+      }
+
+      fn set_car<T: Vehicle>(&mut self, v: &'a T) {
+          self.vehicle = Some(v);
+      }
+
+      fn get_car_name(&self) -> &str {
+          match self.vehicle {
+              Some(v) => v.name(),
+              None => "",
+          }
+      }
+  }
+
+  fn main() {
+      let mut p = Person::new();
+      p.set_car(&Trunk {});
+      p.get_car_name();
+  }
+  ```
+#### trait中使用关联类型代替泛型
+  ```Rust
+  use std::fmt::{Debug};
+  
+  #[allow(unused)]
+  fn main() {
+      trait MyTrait: Debug + Copy + Clone/*对派生类型的约束*/ {
+          type Type: Debug + Copy + Clone; // 对关联类型的约束
+  
+          fn f(v: Self::Type);
+      }
+  
+      #[derive(Debug, Copy, Clone)]
+      struct MyStruct;
+  
+      impl MyTrait for MyStruct {
+          type Type = ();
+  
+          fn f(v: Self::Type) {}
       }
   }
   ```
