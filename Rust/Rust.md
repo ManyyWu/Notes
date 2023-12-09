@@ -13,11 +13,11 @@
   * 函数内可以定义函数
 ### 自动解引用
   自动解引用的情况:
-  * 函数调用
+  * 方法调用
   * 成员访问
   * 比较操作符两边是同类型引用
 ### 枚举
-  * 枚举也可以定义函数、实现trait
+  * 枚举也可以定义方法、实现trait
 
 ## 泛型
   * 泛型支持指定默认类型
@@ -326,43 +326,51 @@
 ## 不太聪明的生命周期检查
   ```Rust
   // 编译错误
-  fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
-      where
-          K: Clone + Eq + Hash,
-          V: Default
+  use std::collections::HashMap;
+  use std::hash::Hash;
+  
+  #[allow(unused)]
+  fn main() {
+      // 编译错误
       {
-      match map.get_mut(&key) {
-          Some(v) => v, // v对map的可变借用会保持到match结束
-          None => {
-              map.insert(key.clone(), V::default()); // error[E0499]: cannot borrow `*map` as mutable more than once at a time
-              map.get_mut(&key).unwrap()
+          fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
+              where
+                  K: Clone + Eq + Hash,
+                  V: Default {
+              match map.get_mut(&key) {
+                  //Some(v) => v, // 当v作为返回值时，v与map具有相同的生命周期，v在生命周期内会保持对map的可变借用
+                  Some(v) => {
+                      // v在这里可以使用，但不能返回
+                      map.get_mut(&key).unwrap()
+                  },
+                  None => {
+                      map.insert(key.clone(), V::default()); // error[E0499]: cannot borrow `*map` as mutable more than once at a time
+                      map.get_mut(&key).unwrap()
+                  }
+              }
           }
       }
-  }
-  // 编译通过
-  fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
-      where
-          K: Clone + Eq + Hash,
-          V: Default
+      // 编译通过
       {
-      match map.get_mut(&key) {
-          Some(_) => map.get_mut(&key).unwrap(),
-          None => {
-              map.insert(key.clone(), V::default());
-              map.get_mut(&key).unwrap()
+          fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
+              where
+                  K: Clone + Eq + Hash,
+                  V: Default {
+              if !map.contains_key(&key) {
+                  map.insert(key.clone(), V::default());
+              }
+              return map.get_mut(&key).unwrap();
           }
       }
-  }
-  // 编译通过(建议用该写法)
-  fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
-      where
-          K: Clone + Eq + Hash,
-          V: Default
+      // 编译通过(更简洁的写法)
       {
-      if !map.contains_key(&key) {
-          map.insert(key.clone(), V::default());
+          fn get_value<K, V>(map: &mut HashMap<K, V>, key: K) -> &mut V
+              where
+                  K: Clone + Eq + Hash,
+                  V: Default {
+              map.entry(key).or_default()
+          }
       }
-      return map.get_mut(&key).unwrap();
   }
   ```
   
@@ -396,26 +404,26 @@
 ## 闭包
   ```Rust
   fn test<'a, F> (f: F) -> &'a mut String
-  where
-      F: FnOnce () -> &'a mut String {
+      where
+          F: FnOnce () -> &'a mut String {
       f()
   }
   
   fn test1<F>(mut f: F) -> String
-  where
-      F: FnMut () -> String {
+      where
+          F: FnMut () -> String {
       f()
   }
   
   fn test2<F>(f: F) -> String
-  where
-      F: FnOnce () -> String {
+      where
+          F: FnOnce () -> String {
       f()
   }
   
   fn test3<F>(f: F) -> String
-  where
-      F: Fn () -> String {
+      where
+          F: Fn () -> String {
       f()
   }
   
@@ -954,25 +962,33 @@
   type Link<T> = Option<Rc<RefCell<Node<T>>>>;
   
   #[derive(Debug)]
-  struct Node<T> where T: std::fmt::Debug {
+  struct Node<T>
+      where
+          T: std::fmt::Debug {
       data: T,
       next: Link<T>,
       prev: Link<T>,
   }
   
-  impl<T> Node<T> where T: std::fmt::Debug {
+  impl<T> Node<T>
+      where
+          T: std::fmt::Debug {
       fn new (data: T) -> Rc<RefCell<Node<T>>> {
           Rc::new(RefCell::new(Node { data: data, next: None, prev: None }))
       }
   }
   
   #[derive(Debug)]
-  struct List<T> where T : std::fmt::Debug {
+  struct List<T>
+      where
+          T : std::fmt::Debug {
       head: Link<T>,
       tail: Link<T>,
   }
   
-  impl<T> List<T> where T: std::fmt::Debug {
+  impl<T> List<T>
+      where
+          T: std::fmt::Debug {
       fn new () -> Self {
           List { head: None, tail: None }
       }
@@ -1074,7 +1090,9 @@
   }
   struct ListIntoIter<T>(List<T>) where T: std::fmt::Debug;
   
-  impl<T> Iterator for ListIntoIter<T> where T: std::fmt::Debug {
+  impl<T> Iterator for ListIntoIter<T>
+      where
+          T: std::fmt::Debug {
       type Item = T;
   
       fn next(&mut self) -> Option<Self::Item> {
@@ -1082,7 +1100,9 @@
       }
   }
   
-  impl<T> IntoIterator for List<T> where T: std::fmt::Debug {
+  impl<T> IntoIterator for List<T>
+      where
+          T: std::fmt::Debug {
       type Item     = T;
       type IntoIter = ListIntoIter<T>;
   
@@ -1091,7 +1111,9 @@
       }
   }
   
-  impl<T> Drop for List<T> where T : std::fmt::Debug{
+  impl<T> Drop for List<T>
+      where
+          T : std::fmt::Debug{
       fn drop(&mut self) {
           while self.pop_front().is_some() { }
       }
@@ -1472,14 +1494,168 @@
   ```
 
 ## 错误处理
-### 错误码枚举
+### 枚举实现错误码
+  ```Rust
+  use std::fs::File;
+  use std::io::{Error, ErrorKind};
+
+  // 缺点是为了使用?运算符需要为每种错误类型实现From、Display等特征
+  enum MyError {
+      Succeed,
+      SystemError,
+      FileNotFound(String),
+      IOError(std::io::Error),
+  }
+  
+  fn main() {
+      {
+          fn test(e: MyError) -> Result<(), MyError> { Err(e) }
+  
+          assert!(matches!(test(MyError::Succeed), Err(MyError::Succeed)));
+          assert!(matches!(test(MyError::SystemError), Err(MyError::SystemError)));
+          assert!(matches!(test(MyError::FileNotFound("".to_string())), Err(MyError::FileNotFound(_))));
+          assert!(matches!(test(MyError::IOError(ErrorKind::AddrInUse.try_into().unwrap())), Err(MyError::IOError(_))));
+      }
+  
+      {
+          impl From<std::io::Error> for MyError {
+              fn from(value: Error) -> Self {
+                  MyError::IOError(value)
+              }
+          }
+  
+          fn test() -> Result<(), MyError> {
+              File::open("")?; // 未实现From<std::io::Error>特征时报错 error[E0277]: `?` couldn't convert the error to `MyError`
+              Ok(())
+          }
+          assert!(matches!(test(), Err(MyError::IOError(_))));
+      }
+  }
+  ```
   * https://juejin.cn/post/7130619933251076126
 ### 自定义错误类型
+  ```Rust
+  use std::error::Error;
+  use std::fmt::{Debug, Display, Formatter};
+  
+  struct MyError;
+  
+  impl Debug for MyError {
+      fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+          write!(f, "{}", "MyError")
+      }
+  }
+  
+  impl Display for MyError {
+      fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+          write!(f, "{}", "MyError")
+      }
+  }
+  
+  impl Error for MyError {}
+  
+  fn main() {
+      {
+          fn test() -> impl Error {
+              MyError
+          }
+      }
+      {
+          fn test() -> Result<(), Box<dyn Error>> {
+              Err(Box::new(MyError))
+          }
+      }
+  }
+  ```
+### 错误处理库
+  * thiserror
+  * anyhow
+  * 关于如何选用thiserror和anyhow只需要遵循一个原则即可：是否关注自定义错误消息，关注则使用thiserror(常见业务代码)，否则使用anyhow(编写第三方库代码)
+  ```Rust
+  fn main() {
+      {
+          // anyhow
+          use anyhow::Result;
+  
+          fn test_anyhow() -> Result<()> {
+              std::fs::read("")?;
+              Ok(())
+          }
+          println!("0.\n{:?}\n", test());
+  
+          // thiserror
+          use std::error::Error;
+          use thiserror::Error;
+          // #[error(fmt)]用于实现Display特征
+          // 支持但不仅限于:
+          // #[error("{var}")]   -> write!("{}", self.var)
+          // #[error("{0}")]     -> write!("{}", self.0)
+          // #[error("{var:?}")] -> write!("{:?}", self.var)
+          // #[error("{0:?}")]   -> write!("{:?}", self.0)
+          //
+          // #[from]属性用于实现From特征
+          // #[source]属性或将字段命名为source用于实现返回底层的错误类型的source方法，#[from]属性始终包含#[source]属性
+          // #[backtrace]属性用于实现返回std::backtrace::Backtrace类型的provide方法(需要添加backtrace字段)
+          // #[error(transparent)]属性将Display方法直接转发到底层错误，用于无需添加其他信息的场景
+          #[derive(Error, Debug)]
+          enum MyError {
+              #[error("Succeed")]
+              Succeed,
+              #[error("System error")]
+              SystemError,
+              #[error("file {} not found", .0)]
+              FileNotFound(String),
+              #[error("IO error: {}", .err)]
+              IOError{
+                  #[from] // #[from]也会自动实现source()函数
+                  err: std::io::Error,
+              },
+              #[error("Invalid Param: {}, expected: {}", .expected, .found)]
+              InvalidParam {
+                  expected: String,
+                  found: String,
+              },
+              #[error(transparent)]
+              UnknowError(
+                  #[from]
+                  anyhow::Error
+              ),
+          }
+          fn test() -> Result<(), MyError> {
+              std::fs::read("")?;
+              Ok(())
+          }
+          println!("1.\n{}\n", MyError::Succeed);
+          println!("2.\n{}\n", MyError::SystemError);
+          println!("3.\n{}\n", MyError::FileNotFound("/etc/bashrc".to_string()));
+          println!("4.\n{}\n{:?}\n", test().unwrap_err(), test().unwrap_err().source());
+          println!("5.\n{}\n", MyError::InvalidParam { expected: "-1".to_string(), found: "[0, i32::Max]".to_string() });
+          println!("6.\n{}\n", test_anyhow().unwrap_err())
+      }
+      {
+          // thiserror
+          use std::error::Error;
+          use thiserror::Error;
+  
+          #[derive(Error, Debug)]
+          #[error("MyError happened, source: {}, param: {}", .err, .param)]
+          struct MyError {
+              #[source]
+              err: std::io::Error,
+  
+              param: String,
+          }
+          let e = MyError { err: std::fs::read("").unwrap_err(), param: "".to_string() };
+          println!("9.\n{:#?}\n{:#?}", e, e.source());
+      }
+  }
+  ```
 ### panic!
   * panic!打印堆栈并退出程序
   * RUST_BACKTRACE=1 cargo run可以输出更详细的堆栈信息
   * 示例
   ```Rust
+  #[cfg(test)]
   mod test {
       #[test]
       fn hock() {
@@ -1507,6 +1683,18 @@
       fn panic() {
           panic!("Error Info");
       }
+  }
+  ```
+
+## 类型测试
+  ```Rust
+  fn type_of<T: 'static>(_: &T) -> &'static str { std::any::type_name::<T>() }
+  
+  fn main() {
+      assert_eq!(type_of(&""), "&str");
+      assert_eq!(std::any::TypeId::of::<i32>(), std::any::Any::type_id(&0));
+      assert_eq!(std::any::TypeId::of::<&str>(), std::any::Any::type_id(&""));
+      assert_eq!(std::any::TypeId::of::<String>(), std::any::Any::type_id(&"".to_string()));
   }
   ```
 
@@ -1551,7 +1739,12 @@
   * 卸载: rustup self uninstall
  
 ## Cargo
-  * 镜像: ~/.cargo/config添加
+  * rustup镜像
+    ```
+    echo 'export RUSTUP_UPDATE_ROOT=https://mirrors.tuna.tsinghua.edu.cn/rustup/rustup' >> ~/.bash_profile
+    echo 'export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup' >> ~/.bash_profile
+    ```
+  * cargo镜像: ~/.cargo/config添加
     ```
     [source.crates-io]
     registry = "https://github.com/rust-lang/crates.io-index"
