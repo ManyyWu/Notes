@@ -1,23 +1,98 @@
 # Rust
 
 ## 基础
-### 字面量
+### 类型
+#### 字面量
   * 可以使用任意数量下划线分割数字，提高可读性，比如: `123_456_789`
-### 借用
-  * 一个对象在同一时间只能有一个可变借用或者多个不可变借用，不能同时拥有可变借用和不可变借用
-### 切片
-  * 切片在Rust中是动态大小类型DST，只能使用其引用，无法直接使用
+#### 枚举
+  * 枚举也可以定义方法、实现trait
+#### 类型别名和newtype
+  * 类型别名: `type NewType = ExistType;`
+  * newtype: `struct NewType(ExistType);`
+#### 动态大小类型DST
+  切片`str`、`[T]`和trait对象`dyn Trait`在编译期无法确定大小或布局  
+  DST无法直接使用，但可以通过引用或Box间接使用
+  ```Rust
+  #[allow(unused)]
+  fn main() {
+      let a: &str = "";
+      let b: &[i32; 1] = &[1];
+      let c: Box<str> = "".into();
+      let c: Box<[u8]> = Box::new([1]);
+  }
+  ```
+#### 零大小类型ZST
+  ZST在内存中不占空间，但可以实例化
+  ```Rust
+  use std::mem::size_of;
+
+  fn main() {
+      {
+          struct Test;
+          assert_eq!(0, size_of::<Test>());
+      }
+      {
+          struct Test();
+          assert_eq!(0, size_of::<Test>());
+      }
+      {
+          assert_eq!(0, size_of::<[u8; 0]>());
+      }
+  }
+  ```
+#### 空类型
+  空类型不允许实例化，主要作用是使类型不可达
+  ```Rust
+  enum Void {}
+  
+  fn main() {
+      fn test() -> Result<(), Void> {
+          Ok(())
+      }
+      match test() {
+          Ok(_) => {}
+          Err(_) => {} // 不可到达分支，因为Void不能实例化
+      }
+  }
+  ```
 ### 标签
-  * `'label loop { break 'label; }`
+  `'label loop { break 'label; }`
 ### 函数
   * 函数内可以定义函数
+### 借用
+  * 一个对象在同一时间只能有一个可变借用或者多个不可变借用，不能同时拥有可变借用和不可变借用
+  * 再借用
+    ```Rust
+    fn main() {
+        {
+            let mut a = String::from("");
+            let r = &mut a;
+            let rr = r; // move
+            println!("{}", rr);
+        }
+        {
+            let mut a = String::from("");
+            let r = &mut a;
+            let rr = &*r;
+            println!("{}", r); // reborrow后允许不可变借用
+            // r.push('!'); // reborrow后不允许可变借用
+            println!("{}", rr);
+        }
+        {
+            fn test(str: &mut String) { }
+            let mut a = String::from("");
+            let mut r = &mut a;
+            test(r); // reborrow
+        }
+    }
+    ```
 ### 自动解引用
   自动解引用的情况:
   * 方法调用
   * 成员访问
   * 比较操作符两边是同类型引用
-### 枚举
-  * 枚举也可以定义方法、实现trait
+### 内存对齐
+  * 为了避免浪费空间，Rust中数据结构布局不保证顺序
 
 ## 泛型
   * 泛型支持指定默认类型
