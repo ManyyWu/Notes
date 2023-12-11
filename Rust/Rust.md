@@ -213,8 +213,27 @@
   }
   ```
 
-## trait
-### 
+## Trait
+### 常用特征
+#### Drop特征
+  离开作用域时自动调用析构方法drop
+#### From/Into
+  
+#### Move、Clone和Copy
+##### Move
+  * Move相当于浅拷贝, 但会使源对象不可用
+  * 赋值时, 若类型未实现Copy特征, 会优先使用Move语义。Copy特征实现后优先使用Copy
+  * Move对象的成员时, 会使对象及被Move的成员不可用, 但其他成员可用, 重新赋值可以使其可用
+  * `let x = "".to_string(); x;`中的`x;`相当于`let _temp = x;`
+##### Copy
+  * Copy是浅拷贝，直接复制值
+  * 所有字段实现Copy特征时才能派生Copy(一个类型如果要实现Copy特征它必须先实现Clone特征)
+  * 默认支持Copy的类型: 基本类型、基本类型组成的元组、&T(这些类型不会赋值时Move是因为实现了Copy)
+##### Clone
+  * Clone是深拷贝，为类型实现Clone特征
+  * 所有字段实现Clone特征时才能派生Clone
+  * 未实现Clone时，引用类型的clone()等价于Copy。实现了Clone时，引用类型的clone()将克隆并自动解引用为引用所指类型
+### 外部特征
   * Rust中无法为外部类型实现外部特征，比如无法为Vec实现Display，但可以通过newtype实现`struct MyVec(Vec<i32>); impl Display for Myvec {}`
 ### 约束条件
   * 以下三种写法等效
@@ -523,21 +542,55 @@
 ## 智能指针
 ### 区别
   * Box: 简单的智能指针
+    * 使用Box::leak可以泄漏Box管理的对象，并且该对象具体与程序相同的生命周期
+      ```Rust
+      struct Test;
+
+      impl Test {
+          fn new() -> Test {
+              println!("new Test");
+              Test
+          }
+      }
+      
+      impl Drop for Test {
+          fn drop(&mut self) {
+              println!("drop Test");
+          }
+      }
+      
+      fn convert_to_static<T>(v: Box<T>) -> &'static mut T { Box::leak(v) }
+      
+      fn main() {
+          {
+              let _ = Test::new(); // 离开作用域会销毁
+          }
+          {
+              let _ = Box::leak(Box::new(Test::new())); // 离开作用域不会销毁
+          }
+          {
+              let _ = convert_to_static(Box::new(Test::new())); // 离开作用域不会销毁
+          }
+          {
+              let _ = Box::from(Box::leak(Box::new(Test::new()))); // 回收泄漏的对象
+          }
+      }
+      ```
   * Rc/Arc: 带引用计数的智能指针，内部不可变；Rc不能跨线程使用；Arc可跨线程使用
   * Cell: Cell可以对不可变值的内部进行修改，适用于可Copy类型的智能指针
-  ```Rust
-  let a = Cell::new(1);
-  let b = &a;
-  let c = &a;
-  b.set(2);
-  c.set(3);
-  ```
+    ```Rust
+    let a = Cell::new(1);
+    let b = &a;
+    let c = &a;
+    b.set(2);
+    c.set(3);
+    ```
   * RefCell: RefCell可以对不可变值进行可变借用，RefCell只是将借用规则从编译期推迟到程序运行期，违背借用规则会导致运行期的panic
-  ```Rust
-  let a = RefCell::new(String::from("hello, world"));
-  let b = a.borrow();
-  let c = a.borrow_mut(); // panic
-  ```
+    ```Rust
+    let a = RefCell::new(String::from("hello, world"));
+    let b = a.borrow();
+    let c = a.borrow_mut(); // panic
+    ```
   * Pin:
     * 如果Pin<T>不能被移动，T必须实现!Unpin特征
     * !Unpin只是保证在Safe Rust下拿到&mut T
@@ -561,22 +614,6 @@
   }
   println!("{:?}", v);
   ```
-
-## Trait
-### Move、Clone和Copy
-#### Move
-  * Move相当于浅拷贝, 但会使源对象不可用
-  * 赋值时, 若类型未实现Copy特征, 会优先使用Move语义。Copy特征实现后优先使用Copy
-  * Move对象的成员时, 会使对象及被Move的成员不可用, 但其他成员可用, 重新赋值可以使其可用
-  * `let x = "".to_string(); x;`中的`x;`相当于`let _temp = x;`
-#### Copy
-  * Copy是浅拷贝，直接复制值
-  * 所有字段实现Copy特征时才能派生Copy(一个类型如果要实现Copy特征它必须先实现Clone特征)
-  * 默认支持Copy的类型: 基本类型、基本类型组成的元组、&T(这些类型不会赋值时Move是因为实现了Copy)
-#### Clone
-  * Clone是深拷贝，为类型实现Clone特征
-  * 所有字段实现Clone特征时才能派生Clone
-  * 未实现Clone时，引用类型的clone()等价于Copy。实现了Clone时，引用类型的clone()将克隆并自动解引用为引用所指类型
 
 ## 异步
 ### async/await
@@ -1477,6 +1514,9 @@
   }
   ```
 
+## 宏
+  https://zjp-cn.github.io/tlborm/
+
 ## 模块与包
 ### 文件分层
   ```文件层次
@@ -1765,13 +1805,32 @@
 
 ## 类型测试
   ```Rust
-  fn type_of<T: 'static>(_: &T) -> &'static str { std::any::type_name::<T>() }
+  fn type_of<T>(_: &T) -> &str { std::any::type_name::<T>() }
   
   fn main() {
       assert_eq!(type_of(&""), "&str");
       assert_eq!(std::any::TypeId::of::<i32>(), std::any::Any::type_id(&0));
       assert_eq!(std::any::TypeId::of::<&str>(), std::any::Any::type_id(&""));
       assert_eq!(std::any::TypeId::of::<String>(), std::any::Any::type_id(&"".to_string()));
+  }
+  ```
+
+## 所有权
+### take/replace
+  ```Rust
+  #[derive(Default, Debug)]
+  struct Test {
+      v: i32,
+  }
+  
+  fn main() {
+      let mut a = Test { v: 1 };
+      let b = std::mem::take(&mut a);
+      assert_eq!(0, a.v);
+      assert_eq!(1, b.v);
+      let c = std::mem::replace(&mut a, b);
+      assert_eq!(1, a.v);
+      assert_eq!(0, c.v);
   }
   ```
 
