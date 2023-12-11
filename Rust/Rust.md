@@ -1779,11 +1779,37 @@
     vscode自动导入"use std::borrow::Borrow;"，导致Rc<T>不会自动解引用调用Ref<T>的borrow()
 
 ## Unsafe
-  * 解引用裸指针，就如上例所示
+### Unsafe的作用
+  * 解引用裸指针
   * 调用一个Unsafe或外部的函数
   * 访问或修改一个可变的静态变量
   * 实现一个Unsafe特征
   * 访问union中的字段
+### Unsafe实现类型强制转换
+#### transmuter
+  * 延长和缩短生命周期
+  * 强制类型转换(注意：使用transmute时要保证源类型和目标类型的内存布局和大小相同)
+    ```Rust
+    #[repr(i32)]
+    enum Test {
+        A = 1,
+    }
+    
+    impl Test {
+        fn from(v: i32) -> Test {
+            unsafe { std::mem::transmute(v) }
+        }
+    }
+    
+    fn main() {
+        // 枚举转i32，有大小检查
+        let _a: i32 = unsafe { std::mem::transmute(Test::A) };
+        // 枚举转i32，无大小检查
+        let a: i32 = unsafe { std::mem::transmute_copy(&Test::A) };
+        // i32转枚举
+        let _b: Test = Test::from(a);
+    }
+    ```
 
 ## 实用工具
 ### Unsafe Rust工具
