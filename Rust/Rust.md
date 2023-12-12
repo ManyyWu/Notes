@@ -91,6 +91,27 @@
   * 方法调用
   * 成员访问
   * 比较操作符两边是同类型引用
+### 隐式Deref转换
+  ```Rust
+  struct Test;
+  
+  fn test(_s: &str) {}
+  
+  fn main() {
+      {
+          let s: &str = &String::from(""); // Deref自动解引用
+          test(&s);
+      }
+      {
+          let s: String = String::from("");
+          test(&s); // Deref自动解引用
+      }
+      {
+          let s: Box<String> = Box::new(String::from(""));
+          test(&s); // Deref自动解引用
+      }
+  }
+  ```
 ### 内存对齐
   * 为了避免浪费空间，Rust中数据结构布局不保证顺序
 ### 堆栈
