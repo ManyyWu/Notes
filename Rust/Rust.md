@@ -112,6 +112,46 @@
       }
   }
   ```
+### 全局变量
+  ```Rust
+  #[allow(unused)]
+  fn main() {
+      {
+          // 静态常量
+          // 静态常量可能会被内联到代码，因此各处不保证引用的地址相同
+          const MAX_COUNT: i32 = 2;
+      }
+      {
+          // 静态变量可以在unsafe块中修改
+          // 静态变量必须实现Sync特征
+          // 静态变量不会被内联，地址唯一
+          static mut G_COUNT: i32 = 0;
+          unsafe { G_COUNT += 1; }
+          std::thread::spawn(|| { unsafe { G_COUNT = G_COUNT + 1; } }).join(); // 非线程安全
+          unsafe { assert_eq!(G_COUNT, 2); }
+      }
+      {
+          // 原子类型
+          use std::sync::atomic;
+          static G_COUNT: atomic::AtomicI32 = atomic::AtomicI32::new(0);
+          G_COUNT.compare_exchange(0, 1, atomic::Ordering::SeqCst, atomic::Ordering::Relaxed);
+          assert_eq!(G_COUNT.load(atomic::Ordering::Relaxed), 1);
+      }
+      {
+          // 使用全局变量管理动态分配的变量
+          static mut G_COUNT: Option<&mut i32> = None;
+          unsafe { G_COUNT = Some(Box::leak(Box::new(0))); }
+          unsafe { assert_eq!(*G_COUNT.as_deref_mut().unwrap(), 0); }
+      }
+      {
+          // lazy_static第三方库
+          // 运行时初始化
+      }
+      {
+          // OnceCell/OnceLock
+      }
+  }
+  ```
 ### 内存对齐
   * 为了避免浪费空间，Rust中数据结构布局不保证顺序
 ### 堆栈
