@@ -660,22 +660,27 @@
     ```Rust
     use std::marker::PhantomPinned;
     use std::ops::DerefMut;
-    use std::pin::Pin;
+    use std::pin::pin;
     
+    #[allow(unused)]
     fn main() {
         {
             struct Test { _marker: PhantomPinned, } // 未实现Unpin
     
-            let mut p = Pin::from(Box::new(Test { _marker: PhantomPinned }));
-            //let _r = p.deref_mut(); // the method `deref_mut` exists for struct `Pin<Box<Test>>`, but its trait bounds were not satisfied
+            let mut p = pin!(Test { _marker: PhantomPinned }); // 固定到栈上
+            // p.deref_mut(); // 禁止可变借用
+            // p.get_mut(); // 禁止move
+    
+            pin!(Box::new(Test { _marker: PhantomPinned })); // 固定到堆上
         }
         {
             struct Test; // 实现Unpin
     
-            let mut p = Pin::from(Box::new(Test));
-            let _r = p.deref_mut();
+            let mut p = pin!(Box::new(Test));
+            p.deref_mut(); // 允许可变借用
+            let _p = p.get_mut(); // 允许move
         }
-}
+    }
     ```
 ### 组合使用
   * Rc<RefCell<T>>: 多个所有者+单线程内部可变性
