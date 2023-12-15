@@ -654,9 +654,29 @@
     let c = a.borrow_mut(); // panic
     ```
   * Pin:
+    * 与Sync/Send类似，标记特征，绝大多数类型都自动实现了Unpin
     * 如果Pin<T>不能被移动，T必须实现!Unpin特征
-    * !Unpin只是保证在Safe Rust下拿到&mut T
-    * 如果实现了Unpin特征还是可以Pin的，但是不再有任何效果
+    * Unpin只是保证在Safe Rust下拿到&mut T，如果实现了Unpin特征还是可以Pin的，但是不再有任何效果
+    ```Rust
+    use std::marker::PhantomPinned;
+    use std::ops::DerefMut;
+    use std::pin::Pin;
+    
+    fn main() {
+        {
+            struct Test { _marker: PhantomPinned, } // 未实现Unpin
+    
+            let mut p = Pin::from(Box::new(Test { _marker: PhantomPinned }));
+            //let _r = p.deref_mut(); // the method `deref_mut` exists for struct `Pin<Box<Test>>`, but its trait bounds were not satisfied
+        }
+        {
+            struct Test; // 实现Unpin
+    
+            let mut p = Pin::from(Box::new(Test));
+            let _r = p.deref_mut();
+        }
+}
+    ```
 ### 组合使用
   * Rc<RefCell<T>>: 多个所有者+单线程内部可变性
   * Arc<Mutex<T>>: 多线程内部可变性
@@ -680,6 +700,8 @@
 ## 异步
 ### async闭包
   `async move {}`相当于普通闭包的`move || {}`
+### Pin
+  Pin<Future>
 ### async/await
   ```Rust
   use std::{
@@ -1958,11 +1980,11 @@
   * Fuzzers: 模糊测试器
  
 ## 库
-## CLI
+### CLI
   * pico_args: 轻量参数解析器
   * clap: 功能齐全的参数解析器
-## 日志
-## 异步
+### 日志
+### 异步库
   * Tokio: 异步库
   * rayon: 并行库
 
