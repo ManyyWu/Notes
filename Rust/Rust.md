@@ -678,6 +678,8 @@
   ```
 
 ## 异步
+### async闭包
+  `async move {}`相当于普通闭包的`move || {}`
 ### async/await
   ```Rust
   use std::{
