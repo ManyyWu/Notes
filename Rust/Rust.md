@@ -119,12 +119,15 @@
       {
           // 静态常量
           // 静态常量可能会被内联到代码，因此各处不保证引用的地址相同
-          const MAX_COUNT: i32 = 2;
+          const MAX_COUNT: i32 = i32::MAX;
+  
+          // 静态变量
+          // 静态变量必须实现Sync特征
+          // 静态变量不会被内联，地址唯一
+          // static G_COUNT: Rc<i32> = Rc::new(0);
       }
       {
           // 静态变量可以在unsafe块中修改
-          // 静态变量必须实现Sync特征
-          // 静态变量不会被内联，地址唯一
           static mut G_COUNT: i32 = 0;
           unsafe { G_COUNT += 1; }
           std::thread::spawn(|| { unsafe { G_COUNT = G_COUNT + 1; } }).join(); // 非线程安全
@@ -144,11 +147,22 @@
           unsafe { assert_eq!(*G_COUNT.as_deref_mut().unwrap(), 0); }
       }
       {
-          // lazy_static第三方库
-          // 运行时初始化
+          // OnceCell: 单线程的全局变量，只能初始化一次
+          use std::cell::OnceCell;
+          struct Logger;
+          let count: OnceCell<Logger> = OnceCell::new();
+          count.get_or_init(|| Logger);
       }
       {
-          // OnceCell/OnceLock
+          // OnceLock: 多线程的全局变量，只能初始化一次
+          use std::sync::OnceLock;
+          struct Logger;
+          static G_COUNT: OnceLock<Logger> = OnceLock::new();
+          G_COUNT.get_or_init(|| Logger);
+      }
+      {
+          // lazy_static第三方库
+          // 运行时初始化
       }
   }
   ```
