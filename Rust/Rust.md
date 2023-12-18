@@ -65,13 +65,13 @@
     ```Rust
     fn main() {
         {
-            let mut a = String::from("");
+            let mut a = String::default();
             let r = &mut a;
             let rr = r; // move
             println!("{}", rr);
         }
         {
-            let mut a = String::from("");
+            let mut a = String::default();
             let r = &mut a;
             let rr = &*r;
             println!("{}", r); // reborrow后允许不可变借用
@@ -80,7 +80,7 @@
         }
         {
             fn test(str: &mut String) { }
-            let mut a = String::from("");
+            let mut a = String::default();
             let mut r = &mut a;
             test(r); // reborrow
         }
@@ -99,15 +99,15 @@
   
   fn main() {
       {
-          let s: &str = &String::from(""); // Deref自动解引用
+          let s: &str = &String::default(); // Deref自动解引用
           test(&s);
       }
       {
-          let s: String = String::from("");
+          let s: String = String::default();
           test(&s); // Deref自动解引用
       }
       {
-          let s: Box<String> = Box::new(String::from(""));
+          let s: Box<String> = Box::new(String::default());
           test(&s); // Deref自动解引用
       }
   }
@@ -366,30 +366,28 @@
 #### 静态多态与动态多态
   ```Rust
   use std::fmt::Debug;
-  
+
+  fn type_of<T>(_: &T) -> &str { std::any::type_name::<T>() }
+
+  #[allow(unused)]
   fn main() {
       // impl Trait是静态多态，在编译时单态化展开
       {
-          fn make_string() -> impl Debug {
-              String::default()
-          }
-          fn make_vec() -> impl Debug {
-              Vec::<&str>::default()
-          }
-  
-          let obj1 = make_string();
-          let obj2 = make_vec();
-          //let v = [obj1, obj2]; // obj1, obj2是不同类型
-          println!("{:?} {:?}", obj1, obj2);
+          fn make_string() -> impl Debug { String::default() }
+          fn make_vec() -> impl Debug { Vec::<&str>::default() }
+          assert_eq!("alloc::vec::Vec<&str>", type_of(&make_vec()));
+          assert_eq!("alloc::string::String", type_of(&make_string()));
+
+          fn from(v: &impl Debug) { println!("{:?}", v) }
+          from(&"");
       }
       // 泛型是静态多态，编译时展开
       {
           fn make_obj<T: Debug + Default>() -> T {
               T::default()
           }
-          let obj1: String = make_obj::<String>();
-          let obj2: Vec<&str> = make_obj::<Vec<&str>>();
-          println!("{:?} {:?}", obj1, obj2);
+          assert_eq!("alloc::vec::Vec<&str>", type_of(&make_obj::<Vec<&str>>()));
+          assert_eq!("alloc::string::String", type_of(&make_obj::<String>()));
       }
       // dyn Trait是动态多态
       {
@@ -400,8 +398,8 @@
               Box::new(obj)
           }
           let v = [make_obj::<String>(), make_obj::<Vec<&str>>()];
-          let vr = [make_obj_ref::<String>(&v[0]), make_obj_ref::<Vec<&str>>(&v[1])];
-          println!("{:?} {:?} {:?} {:?}", v[0], v[1], vr[0], vr[1]);
+          let r = [make_obj_ref::<String>(&v[0]), make_obj_ref::<Vec<&str>>(&v[1])];
+          assert_eq!("alloc::boxed::Box<dyn core::fmt::Debug>", type_of(&make_obj::<String>()));
       }
   }
   ```
@@ -754,10 +752,10 @@
   impl Executor {
       fn new() -> Self {
           let (s, r) = sync_channel::<Arc<Task>>(10);
-          Executor { sender: Some(s), recver: Some(r)}
+          Executor { sender: Some(s), recver: Some(r) }
       }
   
-      fn spawn(&self, future: impl Future<Output = ()> + 'static + Send) -> Arc<Task> {
+      fn spawn(&self, future: impl Future<Output=()> + 'static + Send) -> Arc<Task> {
           let task = Arc::new(Task {
               future: Mutex::new(Some(future.boxed())),
               sender: self.sender.as_ref().unwrap().clone(),
@@ -768,22 +766,35 @@
   
       fn run(&mut self) {
           self.sender.take();
-          while let Ok(task) = self.recver.as_ref().unwrap().recv() {
+          while let Ok(task) = self.recver.as_ref().unwrap().recv() { // 移出队列
               let mut future = task.future.lock().unwrap();
               if future.is_none() {
                   continue;
               }
-              let waker = waker_ref(&task);
+              let waker = waker_ref(&task); // 放入队列
               let ctx = &mut Context::from_waker(&*waker);
               if future.as_mut().unwrap().as_mut().poll(ctx).is_ready() {
-                  *future = None;
+                  *future = None; // 任务已完成，下次poll时会直接从列队移出
               }
           }
+      }
+  
+      fn create_timer<F>(name: &'static str, duration: Duration, cb: F)
+          where
+              F: FnOnce() + Send + 'static {
+          thread::spawn(move || {
+              thread::sleep(Duration::from_secs(1));
+              println!("timer {} begin", name);
+              thread::sleep(duration);
+              cb();
+              println!("timer {} end", name);
+          });
       }
   }
   
   struct MyFuture {
       complete: Arc<Mutex<bool>>,
+      name: &'static str,
   }
   
   impl Future for MyFuture {
@@ -791,16 +802,15 @@
   
       fn poll(self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<Self::Output> {
           if *self.complete.lock().unwrap() {
-              println!("ready");
+              println!("future {} ready", self.name);
               Poll::Ready(())
           } else {
-              println!("pending");
+              println!("future {} pending", self.name);
               Poll::Pending
           }
       }
   }
   
-  #[test]
   fn test1() {
       let mut e = Executor::new();
   
@@ -809,51 +819,33 @@
       let b = Arc::new(Mutex::new(false));
       let bb = b.clone();
   
-      // 不会按预期挂起。可能是因为async语法糖创建的Future，返回给poll的结果恒为Complete
-      async fn f(complete: Arc<Mutex<bool>>) -> Poll<()> {
-          if *complete.lock().unwrap() {
-              println!("ready");
-              Poll::Ready(())
-          } else {
-              println!("pending");
-              Poll::Pending
-          }
+      // 不会按预期挂起。没有走Excuter
+      async fn f(name: &'static str, a: Arc<Mutex<bool>>) {
+          println!("future {} begin", name);
+          MyFuture { complete: a, name: name }.await;
+          println!("future {} end", name);
       }
   
       async fn ff(a: Arc<Mutex<bool>>, b: Arc<Mutex<bool>>) {
-          println!("1");
-          f(a).await;
-          println!("2");
-          f(b).await;
-          println!("3");
+          f("a", a).await;
+          f("b", b).await;
       }
       let t = e.spawn(ff(a, b));
       let tt = t.clone();
   
-      e.spawn(async move {
-          thread::spawn(move || {
-              println!("11");
-              thread::sleep(Duration::from_secs(1));
-              *aa.lock().unwrap() = true;
-              t.wake();
-              println!("22");
-          });
+      Executor::create_timer("1", Duration::from_secs(1), move || {
+          *aa.lock().unwrap() = true;
+          t.wake();
       });
   
-      e.spawn(async move {
-          thread::spawn(move || {
-              println!("33");
-              thread::sleep(Duration::from_secs(3));
-              *bb.lock().unwrap() = true;
-              tt.wake();
-              println!("44");
-          });
+      Executor::create_timer("2", Duration::from_secs(5), move || {
+          *bb.lock().unwrap() = true;
+          tt.wake();
       });
   
       e.run();
   }
   
-  #[test]
   fn test2() {
       let mut e = Executor::new();
   
@@ -863,39 +855,30 @@
       let bb = b.clone();
   
       async fn ff(a: Arc<Mutex<bool>>, b: Arc<Mutex<bool>>) {
-          println!("1");
-          MyFuture { complete: a }.await;
-          println!("2");
-          MyFuture { complete: b }.await;
-          println!("3");
+          println!("future a begin");
+          MyFuture { complete: a, name: "a"}.await;
+          println!("future a end");
+          println!("future b begin");
+          MyFuture { complete: b, name: "b" }.await;
+          println!("future b end");
       }
       let t = e.spawn(ff(a, b));
       let tt = t.clone();
   
-      e.spawn(async move {
-          thread::spawn(move || {
-              println!("11");
-              thread::sleep(Duration::from_secs(1));
-              *aa.lock().unwrap() = true;
-              t.wake();
-              println!("22");
-          });
+      Executor::create_timer("1", Duration::from_secs(1), move || {
+          *aa.lock().unwrap() = true;
+          t.wake();
       });
   
-      e.spawn(async move {
-          thread::spawn(move || {
-              println!("33");
-              thread::sleep(Duration::from_secs(3));
-              *bb.lock().unwrap() = true;
-              tt.wake();
-              println!("44");
-          });
+      Executor::create_timer("2", Duration::from_secs(3), move || {
+          *bb.lock().unwrap() = true;
+          tt.wake();
       });
+  
   
       e.run();
   }
   
-  #[test]
   fn test3() {
       let mut e = Executor::new();
   
@@ -905,35 +888,33 @@
       let bb = b.clone();
   
       let t = e.spawn(async {
-          println!("1");
-          MyFuture { complete: a }.await;
-          println!("2");
-          MyFuture { complete: b }.await;
-          println!("3");
+          println!("future a begin");
+          MyFuture { complete: a, name: "a"}.await;
+          println!("future a end");
+          println!("future b begin");
+          MyFuture { complete: b, name: "b" }.await;
+          println!("future b end");
       });
       let tt = t.clone();
   
-      e.spawn(async move {
-          thread::spawn(move || {
-              println!("11");
-              thread::sleep(Duration::from_secs(1));
-              *aa.lock().unwrap() = true;
-              t.wake();
-              println!("22");
-          });
+      Executor::create_timer("1", Duration::from_secs(1), move || {
+          *aa.lock().unwrap() = true;
+          t.wake();
       });
   
-      e.spawn(async move {
-          thread::spawn(move || {
-              println!("33");
-              thread::sleep(Duration::from_secs(3));
-              *bb.lock().unwrap() = true;
-              tt.wake();
-              println!("44");
-          });
+      Executor::create_timer("2", Duration::from_secs(3), move || {
+          *bb.lock().unwrap() = true;
+          tt.wake();
       });
+  
   
       e.run();
+  }
+  
+  fn main() {
+      test1(); println!();
+      test2(); println!();
+      test3(); println!();
   }
   ```
 
