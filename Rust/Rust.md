@@ -564,9 +564,47 @@
   
       //fn increase(&mut self) {
       //    let b = &mut self.b;
-      //    self.increase_a(); // Error: 对结构的重复借用
+      //    self.increase_a(); // Error: 对结构的重复可变借用
       //    *b += 1;
       //}
+  }
+  ```
+  ```Rust
+  use std::cell::RefCell;
+  use std::io::Write;
+  
+  struct Data {
+      string: String,
+  }
+  
+  struct Writer {
+      data: Data,
+      writer: Vec<u8>,
+  }
+  
+  #[allow(unused)]
+  fn write(s: RefCell<Writer>) {
+      // 重复借用问题
+      {
+          // let mut mut_s = s.borrow_mut();
+          // let str = &mut_s.data.string; // mut_s deref时会借用
+          // mut_s.writer.write(str.as_bytes()); // mut_s deref时会可变借用
+      }
+      // 解决办法: 先对mut_s解引用，再对结构的不同字段借用
+      {
+          let mut mut_s = s.borrow_mut();
+          let tmp = &mut *mut_s;
+          let str = &tmp.data.string;
+          tmp.writer.write(str.as_bytes());
+      }
+      // 类似的还有:
+      // Box
+      // MutexGuard(来源于 Mutex)
+      // PeekMut(来源于 BinaryHeap)
+      // RwLockWriteGuard(来源于 RwLock)
+      // String
+      // Vec
+      // Pin
   }
   ```
   
