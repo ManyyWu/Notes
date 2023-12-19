@@ -93,9 +93,7 @@
   * 成员访问
   * 比较操作符两边是同类型引用
 ### 隐式Deref转换
-  ```Rust
-  struct Test;
-  
+  ```Rust  
   fn test(_s: &str) {}
   
   fn main() {
