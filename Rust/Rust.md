@@ -763,18 +763,22 @@
   
 ## 使用Cell解决借用冲突
   ```Rust
-  let mut v = Vec::<i32>::new();
-  for i in 0 .. 9 {
-      v.push(i);
+  use std::cell::Cell;
+  
+  fn main() {
+      let mut v = Vec::<i32>::new();
+      for i in 0..9 {
+          v.push(i);
+      }
+      // for i in v.iter().filter(|&num| num %2 == 0 ) {
+      //     v[*i as usize] *= 2; // cannot borrow `v` as mutable because it is also borrowed as immutable
+      // }
+      let vc = Cell::from_mut(&mut v[..]).as_slice_of_cells();
+      for i in vc.iter().filter(|&num| num.get() % 2 == 0) {
+          vc[i.get() as usize].set(i.get() * 2);
+      }
+      println!("{:?}", v);
   }
-  //for i in v.iter().filter(|&num| num %2 == 0 ) {
-  //    v[*i as usize] *= 2; // cannot borrow `v` as mutable because it is also borrowed as immutable
-  //}
-  let vc = Cell::from_mut(&mut v[..]).as_slice_of_cells();
-  for i in vc.iter().filter(|&num| num.get() % 2 == 0 ) {
-      vc[i.get() as usize].set(i.get() * 2);
-  }
-  println!("{:?}", v);
   ```
 
 ## 异步
