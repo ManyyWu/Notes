@@ -564,7 +564,7 @@
   
       //fn increase(&mut self) {
       //    let b = &mut self.b;
-      //    self.increase_a(); // Error: 重复借用
+      //    self.increase_a(); // Error: 对结构的重复借用
       //    *b += 1;
       //}
   }
