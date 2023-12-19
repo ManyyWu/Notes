@@ -630,7 +630,7 @@
       let n = 1;
       ref_2(&N);
       ref_2(&1);
-      ref_2(&n); // error[E0597]: `n` does not live long enough
+      // ref_2(&n); // error[E0597]: `n` does not live long enough
   }
   ```
   
