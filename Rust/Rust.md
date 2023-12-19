@@ -63,6 +63,7 @@
   * 一个对象在同一时间只能有一个可变借用或者多个不可变借用，不能同时拥有可变借用和不可变借用
   * 再借用
     ```Rust
+    #[allow(unused)]
     fn main() {
         {
             let mut a = String::default();
