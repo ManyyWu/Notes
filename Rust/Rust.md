@@ -543,6 +543,32 @@
       }
   }
   ```
+  ```Rust
+  struct Test {
+      a: u32,
+      b: u32
+  }
+  
+  impl Test {
+      fn increase(&mut self) {
+          // 允许对结构不同字段同时可变引用
+          let mut a = &mut self.a;
+          let mut b = &mut self.b;
+          *b += 1;
+          *a += 1;
+      }
+  
+      //fn increase_a(&mut self) {
+      //    self.a += 1;
+      //}
+  
+      //fn increase(&mut self) {
+      //    let b = &mut self.b;
+      //    self.increase_a(); // Error: 重复借用
+      //    *b += 1;
+      //}
+  }
+  ```
   
 ## `T:'static` vs `&'static T`
   [常见的 Rust 生命周期误解](https://github.com/pretzelhammer/rust-blog/blob/master/posts/common-rust-lifetime-misconceptions.md)
