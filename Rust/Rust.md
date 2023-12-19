@@ -563,7 +563,7 @@
   
       //fn increase(&mut self) {
       //    let b = &mut self.b;
-      //    self.increase_a(); // Error: 对结构的重复可变借用
+      //    self.increase_a(); // error: 对结构的重复可变借用
       //    *b += 1;
       //}
   }
@@ -604,6 +604,14 @@
       // String
       // Vec
       // Pin
+  }
+  ```
+  ```Rust
+  fn main() {
+      // 闭包中返回引用时，编译器无法推测生命周期，且很被解决，最好用普通函数代替
+      // let _ = |x: &i32| -> &i32 { x }; // Error: lifetime may not live long enough
+  
+      fn f(x: &i32) -> &i32 { x }
   }
   ```
   
