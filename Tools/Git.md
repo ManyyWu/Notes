@@ -144,6 +144,9 @@
     $git reset HEAD filename
 ### 取某个版本的文件覆盖工作区(暂存区和工作区会同时改变)
     $git checkout HEAD filename
+### 用远程分支覆盖当前分支(注意不要切错分支)
+    $git reset --hard origin/master
+    $git push -f
 ### 撤销工作区中的修改(工作区回到暂存区中的版本)
     $git checkout -- filename # 先从缓存区中拉取版本还原，如果缓存区中没有对应的文件则版本库中拉取还原
     或
