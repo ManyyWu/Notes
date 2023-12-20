@@ -2049,7 +2049,7 @@
 ## 性能优化
   * 循环尽量使用迭代器代替索引访问，使用map转换、filter过滤、fold聚合、chain链接等方法代替if判断，不仅有更多多编译器优化空间，还可提高运行效率
   * 编译器优化时会消除多层函数调用，所以不需要过多操心函数嵌套的问题
-  * (警惕UTF-8引发的性能隐患)[https://course.rs/compiler/pitfalls/utf8-performance.html]
+  * [警惕UTF-8引发的性能隐患](https://course.rs/compiler/pitfalls/utf8-performance.html)
 
 ## 实用工具
 ### Unsafe Rust工具
