@@ -480,18 +480,45 @@
 
 ## 字符串转换
   ```
-  &str    -> String--| String::from(s) or s.to_string() or s.to_owned()
-  &str    -> &[u8]---| s.as_bytes()
-  &str    -> Vec<u8>-| s.as_bytes().to_vec() or s.as_bytes().to_owned()
-  String  -> &str----| &s if possible* else s.as_str()
-  String  -> &[u8]---| s.as_bytes()
-  String  -> Vec<u8>-| s.into_bytes()
-  &[u8]   -> &str----| s.to_vec() or s.to_owned()
-  &[u8]   -> String--| std::str::from_utf8(s).unwrap(), but don't**
-  &[u8]   -> Vec<u8>-| String::from_utf8(s).unwrap(), but don't**
-  Vec<u8> -> &str----| &s if possible* else s.as_slice()
-  Vec<u8> -> String--| std::str::from_utf8(&s).unwrap(), but don't**
-  Vec<u8> -> &[u8]---| String::from_utf8(s).unwrap(), but don't**
+  fn main() {
+      // char, 参考: https://doc.rust-lang.org/beta/std/primitive.char.html
+      println!("{}", char::from_u32(0x1d54f).unwrap());
+  
+      // &str为起点
+      let s: &str = "Hello world!";
+      let _: &[u8] = s.as_bytes();
+      let s: String = s.to_string();
+      let s: String = s.to_owned();
+      let _: Vec<u8> = s.as_bytes().to_vec();
+      let _: Vec<u8> = s.as_bytes().to_owned();
+      let _: Vec<char> = s.chars().collect();
+  
+      // String为起点
+      let s: String = String::from("Hello world!");
+      let _: &str = &s;
+      let _: &str = s.as_str();
+      let _: &str = &s[0..];
+      let _: &[u8] = s.as_bytes();
+      let _: Vec<char> = s.chars().collect();
+      let _: Vec<u8> = s.as_bytes().to_vec();
+  
+      // &[u8]为起点
+      let s: &[u8] = br"Hello world!";
+      let _: String = s.iter().map(|b| *b as char).collect();
+      let _: Vec<u8> = s.to_vec();
+      let _: Vec<u8> = s.to_owned();
+  
+      // Vec<u8>为起点
+      let s: Vec<u8> = br"Hello world!".to_vec();
+      let _: &[u8] = s.as_slice();
+      let _: String = String::from_utf8(s.clone()).unwrap();
+      let _: Vec<char> = s.iter().map(|b| *b as char).collect();
+  
+      // Vec<char>为起点
+      let s: Vec<char> = vec!['H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!'];
+      let _: &[char] = s.as_slice();
+      let _: String = s.iter().collect();
+  }
   ```
   
 ## 不太聪明的生命周期检查
