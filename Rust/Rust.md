@@ -2071,6 +2071,29 @@
   * rayon: 并行库
 
 ### Tokio
+#### Runtime
+  以下两种方式等价
+  ```Rust
+  #[tokio::main]
+  async fn main() {
+      println!("Hello world");
+  }
+  ```
+  ```Rust
+  fn main() {
+      tokio::runtime::Builder::new_multi_thread()
+          .enable_all()
+          .build()
+          .unwrap()
+          .block_on(async {
+              println!("Hello world");
+          })
+  }
+  ```
+  `#[tokio::main]`支持的属性:
+  * 多个线程运行时: `#[tokio::main(flavor = "multi_thread", worker_threads = 10)]`或`#[tokio::main(worker_threads = 2)]`
+  * 单线程运行时: `#[tokio::main(flavor = "current_thread")]`
+  * 启动时暂停时钟: `#[tokio::main(flavor = "current_thread", start_paused = true)]`
 #### std::sync::Mutex和tokio::sync::Mutex
   * 锁竞争不多时可使用std::sync::Mutex，注意MutexGuard和.await在同一个作用域可能导致死锁
   * tokio::sync::Mutex只有在跨多个异步过程时使用，但开销会更高
