@@ -2098,7 +2098,8 @@
   * rayon: 并行库
 
 ### Tokio
-#### 创建Runtime的两种方式
+#### Runtime
+##### 创建Runtime的两种方式
   以下两种方式等价
   ```Rust
   #[tokio::main]
@@ -2127,17 +2128,14 @@
   use std::sync::atomic::{AtomicU8, Ordering};
   use std::time::Duration;
   use chrono::Local;
-  use tokio;
-  use tokio::time;
-  use tokio::task::yield_now;
+  use tokio::{task, time};
   
   fn now() -> String {
       Local::now().format("%F %T").to_string()
   }
   
   fn main() {
-      // 没有创建运行时，panic
-      // spawn(async {});
+      println!("[{}]start", now());
   
       let runtime = tokio::runtime::Builder::new_current_thread()
           .enable_all()
@@ -2150,15 +2148,64 @@
           .build()
           .unwrap();
   
+      // panic: 必须在runtime上下文调用
+      // spawn(async {});
+  
       {
-          // 以非阻塞方式进入runtime
+          // 在当前线程中执行同步任务，并且把其他异步任务转换到其他worker thread
+          // block_in_place对比spawn_blocking有一个优点是不要求参数具有'static生命周期，因此在block_in_place中也可以进入runtime上下文，而spawn_blocking则不行
+          // task::spawn_blocking(|| { //error: function requires argument type to outlive `'static`
+          //     let _ctx = runtime.enter();
+          // });
+          task::block_in_place(|| {
+              let _ctx = runtime.enter();
+  
+              // 因为当前运行时是单线程，会阻塞直至任务完成
+              runtime.block_on(async {
+                  time::sleep(Duration::from_secs(3)).await;
+                  println!("[{}]out block_in_place", now());
+              });
+          });
+  
+          // 向runtime添加一个只在当前线程执行的本地任务（添加到独立的列队）
+          let local_set = task::LocalSet::new();
+          local_set.spawn_local(async {
+              println!("[{}]spawn_local", now());
+          });
+          // 与JoinSet不同，LocalSet会把异步任务另入独立的队列，因此只有对LocalSet调用await时才会开始执行该列表的任务
+          runtime.block_on(async {
+              time::sleep(Duration::from_secs(3)).await;
+          });
+          runtime.block_on(async {
+              local_set.await;
+          });
+  
+          // 在LocalSet上下文内部使用task::spawn_local也可以创建本地任务
+          task::LocalSet::new().block_on(&runtime, async {
+              task::spawn_local(async {}).await.unwrap();
+          })
+      }
+      {
+          // 以非阻塞方式进入runtime上下文
+          // _ctx离开作用域时不会移除队列中未完成的异步任务，在下次进入runtime时会继续执行
           let _ctx = runtime.enter();
   
-          // 向runtime添加异步任务(不是创建新线程)
-          // _ctx离开作用域时不会移除，而是在runtime离开作用时移除
-          runtime.spawn(async {
-              time::sleep(Duration::from_secs(10)).await;
+          let mut set = task::JoinSet::new();
+          // 使用JoinSet创建并收集异步任务
+          set.spawn(async {
+              // 创建一个不受调度器控制（不会挂起）的异步任务，该任务执行完前会阻塞线程
+              // unconstrained会导致当前线程内其他异步任务饥饿，尽量使用block_in_place和spawn_blocking代替
+              task::unconstrained(async {
+                  time::sleep(Duration::from_secs(1)).await;
+                  println!("[{}]out unconstrained", now())
+              }).await;
+  
+              time::sleep(Duration::from_secs(1)).await;
               println!("[{}]async timer has expired", now());
+          });
+          runtime.block_on(async {
+              // 使用JoinSet等待任务完成
+              set.join_next().await;
           });
       }
       {
@@ -2167,6 +2214,7 @@
           let f = Arc::new(AtomicU8::new(0));
           let ff = f.clone();
           let fff = f.clone();
+          // 向runtime添加异步任务(不是创建新线程)
           runtime.spawn(async move {
               time::sleep(Duration::from_secs(3)).await;
               fff.compare_exchange(0, 1, Ordering::Acquire, Ordering::Relaxed).unwrap();
@@ -2183,13 +2231,13 @@
               // 因为设置了淘汰时间为0，该线程执行完马上销毁
           });
   
-          // 以阻塞方式进入runtime
+          // 以阻塞方式进入runtime上下文
           runtime.block_on(async move {
               while 2 != f.load(Ordering::Relaxed) {
                   time::sleep(Duration::from_secs(1)).await;
   
                   // 让出CPU，等待下次调度
-                  yield_now().await;
+                  task::yield_now().await;
                   println!("[{}]yield", now());
               }
               println!("[{}]2->end", now());
@@ -2197,50 +2245,42 @@
       }
   
       runtime.spawn_blocking(|| {
-          std::thread::sleep(Duration::from_secs(10));
+          std::thread::sleep(Duration::from_secs(3));
           println!("[{}]sync timer has expired", now());
-      });
-  
-      runtime.block_on(async {
-          // 等待async timer执行完闭
-          time::sleep(Duration::from_secs(5)).await;
       });
   
       // runtime离开作用域、drop时自动释放，关闭过程:
       // 1. 移除任务队列，不再调度新任务
       // 2. 移除正在执行但尚未完成的异步任务，终止所有worker thread
       // 3. 移除Reactor，禁止接收事件
-      // blocking thread以及阻塞的线程不受tokio控制仍会执行，这里的drop会阻塞直至所有blocking thread执行完成
+      // blocking thread以及阻塞的线程因不受调度器控制仍会继续执行，这里的drop会阻塞直至所有blocking thread执行完成
       drop(runtime);
+  
+      println!("[{}]end", now());
   }
   ```
-#### 在不同线程创建runtime
+##### 等待任务完成
+##### 在不同线程创建runtime
   ```Rust
-  use tokio;
-  use std::thread;
-  
   fn main() {
-      let t1 = thread::spawn(|| {
-          let rt = tokio::runtime::Builder::new_current_thread()
-              .enable_all()
-              .build()
-              .unwrap();
-          rt.block_on(async {})
+      let t1 = std::thread::spawn(|| {
+          let rt = tokio::runtime::Runtime::new().unwrap();
+          rt.block_on(async {});
       });
   
-      let t2 = thread::spawn(|| {
-          let rt = tokio::runtime::Builder::new_current_thread()
-              .enable_all()
-              .build()
-              .unwrap();
-          rt.block_on(async {})
+      let t2 = std::thread::spawn(|| {
+          let rt = tokio::runtime::Runtime::new().unwrap();
+          rt.block_on(async {});
       });
   
       t1.join().unwrap();
       t2.join().unwrap();
   }
   ```
-#### std::sync::Mutex和tokio::sync::Mutex
+#### time
+#### IO
+#### 线程同步
+##### std::sync::Mutex和tokio::sync::Mutex
   * 锁竞争不多时可使用std::sync::Mutex，注意MutexGuard和.await在同一个作用域可能导致死锁
   * tokio::sync::Mutex只有在跨多个异步过程时使用，但开销会更高
   * 锁竞争多时可考虑使用性能更高的锁: parking_lot::Mutex
