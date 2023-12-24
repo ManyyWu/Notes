@@ -2259,6 +2259,63 @@
       println!("[{}]end", now());
   }
   ```
+##### select!/join!/try_join!
+  ```Rust
+  use std::time::Duration;
+  use tokio::{time, join, try_join, select};
+  
+  #[tokio::main]
+  async fn main() {
+      async fn task1() -> Result<(), ()> {
+          time::sleep(Duration::from_secs(1)).await;
+          println!("f1 end");
+          Err(())
+      }
+      async fn task2() -> Result<(), ()> {
+          time::sleep(Duration::from_secs(2)).await;
+          println!("f2 end");
+          Err(())
+      }
+      async fn task3() -> Result<(), ()> {
+          time::sleep(Duration::from_secs(3)).await;
+          println!("f3 end");
+          Err(())
+      }
+      // 等待所有任务完成
+      join!(task1(), task2(), task3());
+  
+      // 等待所有任务完成或第一个返回Err的任务
+      try_join!(task1(), task2(), task3());
+  
+      // 等待任意一个任务完成
+      // tokio::select! {
+      //     <pattern1> = <async expression> (, if <precondition>)? => <handler1>,
+      //     <pattern2> = <async expression> (, if <precondition>)? => <handler2>,
+      //     ...
+      //     (else => <handler_else>)?
+      // };
+      //
+      // 工作流程:
+      // 1. 评估分支中的if前置条件，禁用返回false的分支
+      // 2. 收集所有分支中的异步表达式（包括禁用的分支），在同一线程中轮询所有未被禁用的异步任务
+      // 3. 当某个分支的异步任务完成时，返回值匹配成功时执行对应分支的handler，如果匹配失败，则禁用当前分支
+      // 4. 如果所有分支都被禁用，则执行else分支（如果没有else分支，则panic）
+      // 详情参考: https://docs.rs/tokio/latest/tokio/macro.select.html
+      select!{
+          biased; // select!默认为伪随机公平地轮询，biased选项可使select!按顺序轮询
+  
+          Ok(_) = task1(), if false => {},
+          Ok(_) = task2(), if false => {},
+          Ok(_) = task3(), if false => {},
+          else => { // else的handler必须用花括号包裹
+              println!("else");
+          }
+      }
+  
+      let task1 = tokio::spawn(async {  });
+      while !task1.is_finished() {} // 考虑使用JoinSet和join!/try_join!等代替
+  }
+  ```
 ##### 等待任务完成
 ##### 在不同线程创建runtime
   ```Rust
@@ -2278,6 +2335,103 @@
   }
   ```
 #### time
+  ```Rust
+  use std::sync::OnceLock;
+  use std::time::Duration;
+  use tokio::time;
+  
+  static START: OnceLock<time::Instant> = OnceLock::new();
+  
+  fn now() -> String {
+      START.get_or_init(|| time::Instant::now());
+      format!("+{}ms", (time::Instant::now() - *START.get().unwrap()).as_secs_f64()).to_string()
+  }
+  
+  #[tokio::main]
+  async fn main() {
+      {
+          println!("[{}]sleep", now());
+  
+          let s = time::sleep(Duration::from_secs(1));
+          tokio::pin!(s);
+  
+          // 修改终点
+          s.as_mut().reset(time::Instant::now() + Duration::from_secs(2));
+  
+          // 开始执行
+          s.await;
+          println!("[{}]resume", now());
+          println!();
+      }
+      {
+          // 带超时的异步任务
+          let t = time::timeout(Duration::from_secs(1), async {
+              time::sleep(Duration::from_secs(3)).await;
+          });
+          assert!(matches!(t.await, Err(_)));
+      }
+      {
+          // 间隔任务
+          // 第一个参数为最早开始时间，第一个tick不早于这个时间返回
+          let mut itv = time::interval_at(time::Instant::now() + Duration::from_secs(3), Duration::from_secs(1));
+          println!("[{}]start", now()); // +0s
+          itv.tick().await;
+          println!("[{}]tick 1", now()); // +3s
+          itv.tick().await;
+          println!("[{}]tick 2", now()); // +4s
+          itv.tick().await;
+          println!("[{}]tick 3", now()); // +5s
+          println!();
+      }
+      {
+          // Interval默认是冲刺型策略(Burst策略)，当出现延迟后，接下来的tick会尽快赶上正常计时
+          let mut itv = time::interval_at(time::Instant::now() + Duration::from_secs(1)/*最早开始时间*/, Duration::from_secs(1));
+          itv.set_missed_tick_behavior(time::MissedTickBehavior::Burst);
+          time::sleep(Duration::from_secs(3)).await;
+          println!("[{}]start", now()); // +3s
+          itv.tick().await;
+          println!("[{}]tick 1", now()); // +3s
+          itv.tick().await;
+          println!("[{}]tick 2", now()); // +3s
+          itv.tick().await;
+          println!("[{}]tick 3", now()); // +3s
+          println!();
+      }
+      {
+          // 延迟性计时策略(Delay策略)，当出现延迟后仍接指定间隔计时
+          let mut itv = time::interval_at(time::Instant::now() + Duration::from_secs(1)/*最早开始时间*/, Duration::from_secs(1));
+          itv.set_missed_tick_behavior(time::MissedTickBehavior::Delay);
+          println!("[{}]start", now()); // +0s
+          itv.tick().await;
+          println!("[{}]tick 1", now()); // +1s
+          itv.tick().await;
+          println!("[{}]tick 2", now()); // +2s
+          itv.tick().await;
+          println!("[{}]tick 3", now()); // +3s
+          println!();
+      }
+      {
+          // 忽略型计时策略(Skip策略)，当出现延迟后tick会尽可能在下一个interval倍数周期时间返回，使其符合start+N*interval
+          let mut itv = time::interval_at(time::Instant::now() + Duration::from_secs(1)/*最早开始时间*/, Duration::from_secs(1));
+          itv.set_missed_tick_behavior(time::MissedTickBehavior::Skip);
+          println!("[{}]start", now()); // +0s
+          itv.tick().await;
+          println!("[{}]tick 1", now()); // +1s
+          time::sleep(Duration::from_millis(2900)).await;
+          itv.tick().await;
+          println!("[{}]tick 2", now()); // +3.9xxs
+          time::sleep(Duration::from_millis(100)).await;
+          itv.tick().await;
+          println!("[{}]tick 3", now()); // +4s
+          time::sleep(Duration::from_millis(100)).await;
+          itv.tick().await;
+          println!("[{}]tick 4", now()); // +5s
+          time::sleep(Duration::from_millis(100)).await;
+          itv.tick().await;
+          println!("[{}]tick 5", now()); // +6s
+      }
+  }
+  ```
 #### IO
 #### 线程同步
 ##### std::sync::Mutex和tokio::sync::Mutex
