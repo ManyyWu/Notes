@@ -14,3 +14,5 @@
 
   * [libtranslate-rust](https://github.com/ManyyWu/libtranslate-rust)
   * [rss-monitor](https://github.com/ManyyWu/rss-monitor)
+  * [TinyPedal](https://github.com/ManyyWu/TinyPedal)
+  * [nvim-config](https://github.com/ManyyWu/nvim-config)
