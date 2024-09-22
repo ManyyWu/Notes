@@ -20,6 +20,9 @@
     sudo apt-get install ntpdate
     sudo ntpdate time.windows.com
     sudo hwclock --localtime --systohc
+## 开机默认进入命令行
+    sudo systemctl set-default multi-user.target # graphical.target为图行界面
+## [合盖不休眠](https://linux.cn/article-15015-1.html)
 ## 美化
     sudo apt-get update
     sudo apt-get install gnome-tweak-tool
