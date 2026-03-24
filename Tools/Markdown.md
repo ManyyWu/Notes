@@ -2,7 +2,7 @@
 
 [笔记](#笔记)
 <br>
-[Markdown格式建议](#md格式建议)
+[Markdown格式建议](#Markdown格式建议)
 
 
 # 笔记
@@ -196,7 +196,9 @@ Linux
 
 ## 锚点
 
-[跳转到结尾](#jump_start)
+[跳转到开头](#jump_start)
+<br>
+[跳转到开头](#目录)
 
 ## 分隔线
 
