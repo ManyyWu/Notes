@@ -1,8 +1,16 @@
 # <span id="jump_start">目录</span>
 
+[参考](#参考)
 [笔记](#笔记)
 <br>
 [Markdown格式建议](#Markdown格式建议)
+
+
+# 参考
+
+[Markdown手册](https://www.markdownlang.com/zh/advanced/#%E6%8A%98%E5%8F%A0%E5%86%85%E5%AE%B9)
+[Markdown教程](https://markdown.com.cn/extended-syntax/)
+[Markdown编辑器](https://markdown.com.cn/editor/)
 
 
 # 笔记
@@ -173,7 +181,7 @@ Linux
 </p>
 
 -------------------------------------------------------------------------------------------------------------------------------------
-* 利用标签将文字与图片对齐，图片和文字各占一个单元格(只支持左右对齐)
+* 利用区块标签将文字与图片对齐，图片和文字各占一个单元格(只支持左右对齐)
 <table>
   <tr>
     <td>Linux</td>
