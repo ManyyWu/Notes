@@ -1,7 +1,7 @@
 # My Notes
 
   * [Linux Commands](https://github.com/ManyyWu/Notes/tree/master/Linux/Command)
-  * [Vim](https://github.com/ManyyWu/Notes/blob/master/Tools/Vim.md)
+  * [Vim](https://github.com/ManyyWu/Notes/blob/master/Vim/Vim.md)
   * [Git](https://github.com/ManyyWu/Notes/blob/master/Tools/Git.md)
   * [GDB](https://github.com/ManyyWu/Notes/blob/master/Tools/GDB.md)
   * [正则](https://github.com/ManyyWu/Notes/blob/master/Tools/Regular%20exp.md)
