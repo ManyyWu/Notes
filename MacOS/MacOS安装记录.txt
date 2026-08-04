@@ -1,0 +1,96 @@
+X99-F8d
+
+==================安装==================
+双屏无法识别：
+换成DP试试？
+
+临时打开-v（Recovery模式）：
+  打开
+    nvram boot-args="-v $(nvram boot-args 2>/dev/null | cut -f 2-)"
+  还原：
+    nvram -d boot-args
+
+==================备份==================
+使用Paragon Hard Disk Manager Advanced v17.10.4制作启动u盘备份EFI和APFS
+
+==================设置==================
+解锁“任何来源”：
+  $ sudo spctl --master-disable
+  系统设置 - 隐私与安全性 - 安全性 - 切换“任何来源”
+
+打开root（不建议）:
+  $ dsenableroot
+
+Terminal：
+  1. 主题：导入描述文件Solarized Darcula.terminal; 设为默认; 当shell退出时 - 当shell完全退出后关闭
+  2. echo "export CLICOLOR=1\nexport LSCOLORS=ExGxFxdaCxDaDahbadeche\nalias ls='ls -G'\nalias ll='ls -lhG'" >> ~/.zprofile
+  3. echo "PROMPT='%F{036}%n@%m%f %F{032}%1~%f %# '" >> .zshrc
+
+安装homebrew
+  /bin/bash -c "$(curl -fsSL https://gitee.com/ineo6/homebrew-install/raw/master/install.sh)"
+  echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+  eval "$(/usr/local/bin/brew shellenv)"
+
+默认网格对齐：
+  访达 - 右键“查看显示选项” - 排序方式选择“吸附到网络” - 设为默认
+
+关闭鼠标自然滚动
+
+访达  
+  1. 自定义工具栏
+  
+  2. 设置：
+    通用：
+      在桌面上显示这些项目 - 勾选：
+        外置磁盘
+        CD、DVD和iPod
+        已连接的服务器
+      开启新“访达”窗口时打开 - 勾选：
+        $HOME
+    边栏：
+      个人收藏 - 勾选：
+        最近使用
+        隔空投送
+        应用程序
+        桌面
+        下载
+        manyy
+      位置：
+        【全部勾选】
+    高级：
+      勾选“显示所有文件扩展名”
+      将以下位置的文件夹保持在顶部 - 勾选“按名称排序的窗口中”
+
+外置软件盘：
+  1. App Store - 设置 - 下载并安装大型App到独立存储盘
+  2. 第三方app拖到指定目录，创建替身（快捷方式）到Applications
+
+触发角：
+  左上 - 调度中心
+
+快捷键：
+  启动台 - command+ctrl+esc
+  显示桌面 - 右command
+
+声音：
+  播放声音效果的设备 - 选择“所选声音输出设备”
+
+输入法：
+  1. 安装鼠须管（必须是系统盘）
+  2. 替换虎码
+  3. 替换配置(https://github.com/ManyyWu/Notes/blob/master/Windows/Softwares/%E5%B0%8F%E7%8B%BC%E6%AF%AB%EF%BC%88%E9%BC%A0%E9%A1%BB%E7%AE%A1%EF%BC%89%E9%85%8D%E7%BD%AE.md)
+  4. ctrl+`切换方案
+  5. 重新部署
+  
+Shell切换输入法（im-select）：
+brew tap daipeihust/tap
+brew trust --formula daipeihust/tap/im-select
+brew install im-selec
+           
+关闭两个空格插入句号功能：
+  系统设置 - 键盘 - 文本输入 - 编辑，关闭"连按两次空格键插入句号"
+
+TODO:
+logi
+睡眠
+自动关闭显示器

@@ -1,0 +1,418 @@
+A	ctrl	EditorLineStart
+A	meta	Terminal.SelectAll|$SelectAll
+A	shift meta	GotoAction
+A	ctrl meta	VcsHistory.ShowAllAffected
+A	meta alt	Diagram.DeselectAll|ChangesView.AddUnversioned
+B	shift	Graph.AlignNodes.Bottom
+B	ctrl	EditorLeft
+B	meta	GotoDeclaration|org.intellij.plugins.markdown.ui.actions.styling.ToggleBoldAction
+B	shift ctrl	GotoTypeDeclaration
+B	ctrl alt	EditorPreviousWord
+B	shift meta	GotoTypeDeclaration
+B	shift alt	sql.SelectInDatabaseView|tasks.open.in.browser
+B	shift ctrl alt	EditorPreviousWordWithSelection
+B	shift meta alt	DatabaseView.OpenDdlInConsole
+B	meta alt	GotoImplementation
+C	none	Uml.CollapseNodes
+C	shift	Graph.AlignNodes.Center
+C	ctrl	Terminal.ClearPrompt
+C	meta	Terminal.CopyBlock|Terminal.CopySelectedText|$Copy
+C	shift meta	CopyPaths|DatabaseView.CopyDdlAction|org.intellij.plugins.markdown.ui.actions.styling.ToggleCodeSpanAction
+C	shift alt	RecentChanges
+C	shift meta alt	CopyReference
+C	meta alt	IntroduceConstant
+D	ctrl	UsageGrouping.DirectoryStructure|Terminal.CloseSession|Debug
+D	meta	EditorDuplicate|CompareTwoFiles|SendEOF|FileChooser.GotoDesktop|Diff.ShowDiff|Compare.SameVersion
+D	shift ctrl	DebugClass
+D	ctrl alt	ChooseDebugConfiguration
+D	shift meta	DownloadBackendFileToClient|Console.TableResult.CompareCells|Diff.ShowSettingsPopup|Uml.ShowDiff|JavaScript.ShowComponentUsages
+D	shift meta alt	UML.ShowChanges|Console.TableResult.CloneColumn
+D	meta alt	Console.TableResult.SetDefault
+E	none	Uml.ExpandNodes
+E	ctrl	EditorLineEnd
+E	meta	SwitcherIterateItems|SwitcherRecentEditedChangedToggleCheckBox|RecentFiles
+E	ctrl alt	ToggleFindInSelection
+E	shift meta	RecentLocations
+E	shift meta alt	TextSearchAction
+E	meta alt	Console.History.Browse
+F	ctrl	TodoViewGroupByFlattenPackage|EditorRight
+F	meta	Find
+F	ctrl alt	ShowFilterPopup|EditorNextWord
+F	shift meta	FindInPath
+F	ctrl meta	ToggleFullScreen
+F	shift ctrl alt	EditorNextWordWithSelection
+F	shift meta alt	Console.TableResult.EditFilterCriteria|DatabaseView.FullTextSearch
+F	meta alt	IntroduceField
+G	ctrl	SelectNextOccurrence
+G	meta	FindNext
+G	shift ctrl	UnselectPreviousOccurrence
+G	shift meta	FindPrevious
+G	ctrl meta	SelectAllOccurrences
+G	shift alt	EditorAddCaretPerSelectedLine
+G	shift meta alt	DatabaseView.CopyDdlAction
+G	meta alt	DatabaseView.SqlGenerator
+H	shift	Graph.DistributeNodes.Horizontally
+H	ctrl	TypeHierarchy
+H	ctrl alt	CallHierarchy
+H	shift meta	ChangesView.ShelveSilently|MethodHierarchy
+H	shift meta alt	PopupHector
+I	ctrl	UsageFiltering.Imports|ImplementMethods
+I	meta	DatabaseView.PropertiesAction|org.intellij.plugins.markdown.ui.actions.styling.ToggleItalicAction
+I	ctrl alt	AutoIndentLines
+I	shift meta	ExternalSystem.ProjectRefreshAction
+I	shift alt	CodeInspection.OnEditor
+I	shift meta alt	RunInspection
+J	ctrl	QuickJavaDoc
+J	meta	InsertLiveTemplate
+J	shift ctrl	EditorJoinLines
+J	shift meta	Jdbc.OpenConsole.Scratch
+J	meta alt	SurroundWithLiveTemplate
+K	ctrl	EditorCutLineEnd
+K	meta	Terminal.ClearBuffer|CheckinProject
+K	shift meta	Vcs.Push
+K	meta alt	Git.Commit.And.Push.Executor
+L	shift	Graph.AlignNodes.Left
+L	ctrl	EditorScrollToCenter
+L	meta	GotoLine|Vcs.Log.FocusTextFilter
+L	shift meta	Jdbc.OpenConsole.New
+L	shift meta alt	ShowReformatFileDialog
+L	meta alt	ReformatCode
+M	shift	Graph.AlignNodes.Middle
+M	ctrl	TodoViewGroupByShowModules|ChangesView.GroupBy.Module|Vcs.ShowMessageHistory|UsageGrouping.Module|EditorMatchBrace
+M	meta	MinimizeCurrentWindow
+M	ctrl alt	Vcs.ToggleAmendCommitMode
+M	shift meta	ChangesView.Move|Vcs.MoveChangedLinesToChangelist
+M	shift meta alt	Console.TableResult.MaximizeEditingCell
+M	meta alt	ExtractMethod
+N	ctrl	EditorDown|Vcs.CombinedDiff.CaretToNextBlock
+N	meta	Generate|NewElement|FileChooser.NewFolder
+N	ctrl alt	NewElementSamePlace
+N	shift meta	NewScratchFile
+N	shift alt	tasks.goto
+N	meta alt	Inline|Git.CreateNewBranch|Console.TableResult.SetNull|Git.New.Branch.In.Log
+O	ctrl	UsageGrouping.FlattenModules|OverrideMethods|ChangesView.ShowCommitOptions|ExportToTextFile
+O	meta	GotoClass
+O	shift ctrl	ForceOthersToFollowAction
+O	ctrl alt	OptimizeImports
+O	shift meta	GotoFile
+O	shift alt	SelectVirtualTemplateElement
+O	meta alt	GotoSymbol
+P	ctrl	UsageGrouping.Directory|EditorUp|ChangesView.GroupBy.Directory|TodoViewGroupByShowPackages|Vcs.CombinedDiff.CaretToPrevBlock
+P	meta	FileChooser.TogglePathBar|ParameterInfo
+P	shift ctrl	ExpressionTypeInfo
+P	shift meta alt	ReformatWithPrettierAction
+P	meta alt	IntroduceParameter
+Q	meta	Exit
+Q	shift ctrl	EditorContextInfo
+Q	ctrl alt	ToggleRenderedDocPresentation
+Q	shift alt	WD.UploadCurrentRemoteFileAction
+R	shift	Graph.AlignNodes.Right
+R	ctrl	UsageFiltering.ReadAccess|Run|Terminal.SearchInCommandHistory
+R	meta	Refresh|Rerun|Replace
+R	shift ctrl	RunClass
+R	ctrl alt	ChooseRunConfiguration
+R	shift meta	ReplaceInPath
+R	ctrl meta	RerunTests
+R	shift alt	RerunTests
+R	shift meta alt	ForceRefresh
+R	meta alt	Resume
+S	ctrl	UsageGrouping.FileStructure
+S	meta	SaveAll
+S	shift meta	org.intellij.plugins.markdown.ui.actions.styling.ToggleStrikethroughAction|Github.PullRequest.Changed.MarkViewed.Toggle
+T	shift	Graph.AlignNodes.Top
+T	ctrl	UsageGrouping.UsageType|ServiceView.GroupByContributor|Refactorings.QuickListPopupAction
+T	meta	Terminal.NewTab|Vcs.UpdateProject
+T	shift meta	ServiceView.ShowServices|GotoTest
+T	shift alt	tasks.switch
+T	meta alt	SurroundWith
+U	meta	org.intellij.plugins.markdown.ui.actions.styling.InsertImageAction|GotoSuperMethod
+U	shift meta	Markdown.Styling.CreateLink|ShelveChanges.UnshelveWithDialog|EditorToggleCase
+U	shift meta alt	ShowUmlDiagram
+U	meta alt	ChangesView.UnshelveSilently|ShowUmlDiagramPopup|Frontend.ChangesView.UnshelveSilently
+V	shift	Graph.DistributeNodes.Vertically
+V	ctrl	Vcs.QuickListPopupAction
+V	meta	Terminal.Paste|$Paste
+V	shift meta	PasteMultiple
+V	shift meta alt	EditorPasteSimple
+V	meta alt	IntroduceVariable
+W	ctrl	UsageFiltering.WriteAccess|Terminal.DeletePreviousWord
+W	meta	CloseContent
+W	shift alt	tasks.close
+W	shift meta alt	DumpLookupElementWeights
+X	meta	$Cut
+X	shift meta	Code.Review.Editor.New.Comment
+X	shift alt	context.clear
+X	shift meta alt	PublishGroup.UploadTo
+X	meta alt	XPathView.Actions.Evaluate|XPathView.Actions.ShowPath|XPathView.Actions.FindByExpression
+Y	meta	QuickImplementations
+Y	shift ctrl	CWMHostShowPopupAction
+Y	shift ctrl alt	SingleUserFollowAction|CurrentLeadUnfollowAction
+Y	meta alt	Synchronize
+Z	meta	$Undo
+Z	shift meta	$Redo
+Z	meta alt	Vcs.RollbackChangedLines|ChangesView.Revert
+0	ctrl	GotoBookmark0
+0	meta	ActivateCommitToolWindow
+0	shift ctrl	ToggleBookmark0
+0	ctrl alt	ResetIdeScaleAction
+1	ctrl	GotoBookmark1
+1	meta	ActivateProjectToolWindow|DuplicatesForm.SendToLeft|FileChooser.GotoHome
+1	shift ctrl	ToggleBookmark1
+1	shift meta	ActivateAIAssistantToolWindow
+1	shift alt	ActivateAIAssistantToolWindow
+1	shift meta alt	com.intellij.searchEverywhereMl.ranking.core.actions.OpenFeaturesInScratchFileAction
+2	ctrl	GotoBookmark2
+2	meta	ActivateBookmarksToolWindow|FileChooser.GotoProject|DuplicatesForm.SendToRight
+2	shift ctrl	ToggleBookmark2
+3	ctrl	GotoBookmark3
+3	meta	ActivateFindToolWindow|FileChooser.GotoModule
+3	shift ctrl	ToggleBookmark3
+4	ctrl	GotoBookmark4
+4	meta	ActivateRunToolWindow
+4	shift ctrl	ToggleBookmark4
+5	ctrl	GotoBookmark5
+5	meta	ActivateDebugToolWindow
+5	shift ctrl	ToggleBookmark5
+6	ctrl	GotoBookmark6
+6	meta	ActivateProblemsViewToolWindow
+6	shift ctrl	ToggleBookmark6
+6	shift alt	EditorFocusGutter|EditorShowGutterIconTooltip
+7	ctrl	GotoBookmark7
+7	meta	ActivateStructureToolWindow
+7	shift ctrl	ToggleBookmark7
+7	meta alt	ActivateNuGetToolWindow
+8	ctrl	GotoBookmark8
+8	meta	ActivateServicesToolWindow
+8	shift ctrl	ToggleBookmark8
+8	shift meta	EditorToggleColumnMode
+8	meta alt	ActivateUnitTestsToolWindow
+9	ctrl	GotoBookmark9
+9	meta	ActivateVersionControlToolWindow
+9	shift ctrl	ToggleBookmark9
+9	shift meta alt	DumpMLCompletionFeatures
+F1	none	QuickJavaDoc
+F1	shift	ExternalJavaDoc
+F1	alt	SelectIn
+F1	meta	ShowErrorDescription
+F1	shift meta	ContextHelp
+F2	none	XDebugger.SetValue|ChangesView.Rename|Table-startEditing|Console.TableResult.GotoReferencedResult|Git.Reword.Commit|ShelvedChanges.Rename|Git.Rename.Local.Branch|Console.TableResult.EditValue|GotoNextError|Arrangement.Rule.Edit|Tree-startEditing
+F2	shift	GotoPreviousError
+F2	alt	WebOpenInAction
+F2	meta	Stop
+F2	shift meta	StopBackgroundProcesses
+F3	none	ToggleBookmark
+F3	alt	ToggleBookmarkWithMnemonic
+F3	meta	ShowBookmarks
+F3	meta alt	ShowTypeBookmarks
+F4	none	EditSource
+F4	shift	EditSourceInNewWindow|XDebugger.JumpToTypeSource
+F4	shift ctrl	CloseActiveTab
+F4	meta alt	Images.EditExternally
+F5	none	Graph.RouteEdges|CopyElement
+F5	shift	Graph.ApplyCurrentLayout
+F5	shift alt	XDebugger.AttachToProcess
+F6	none	Move
+F6	shift	ChangesView.Rename|Git.Reword.Commit|ShelvedChanges.Rename|Git.Rename.Local.Branch|RenameElement
+F6	meta	ChangeSignature
+F6	shift meta	ChangeTypeSignature
+F6	meta alt	SwitchCoverage
+F7	none	NextDiff|StepInto
+F7	shift	PreviousDiff|SmartStepInto
+F7	alt	FindUsages
+F7	meta	FindUsagesInFile
+F7	shift meta	HighlightUsagesInFile
+F7	shift alt	ForceStepInto
+F7	shift meta alt	ShowSettingsAndFindUsages
+F7	meta alt	ShowUsages
+F8	none	StepOver
+F8	shift	StepOut
+F8	alt	EvaluateExpression
+F8	meta	ToggleLineBreakpoint
+F8	shift meta	EditBreakpoint|ViewBreakpoints
+F8	shift alt	ForceStepOver
+F8	shift meta alt	ToggleTemporaryLineBreakpoint
+F8	meta alt	QuickEvaluateExpression
+F9	none	Resume
+F9	alt	RunToCursor
+F9	meta	CompileDirty
+F9	shift meta	Compile
+F9	meta alt	ForceRunToCursor
+F10	none	SwitchHeaderSource
+F10	alt	ShowExecutionPoint
+F10	meta	UpdateRunningApplication
+F10	shift meta	Console.Open
+F11	alt	RunJsbtTask
+F12	none	JumpToLastWindow
+F12	shift	RestoreDefaultLayout
+F12	alt	ActivateTerminalToolWindow
+F12	meta	FileStructurePopup
+F12	shift meta	HideAllWindows
+F12	meta alt	ShowFilePath
+SPACE	none	SplitChooser.SplitCenter|QuickPreview|Console.TableResult.ColumnVisibility|CollapsiblePanel-toggle
+SPACE	shift	Console.TableResult.SelectRow
+SPACE	ctrl	ChangesView.SetDefault|CodeCompletion
+SPACE	alt	QuickImplementations
+SPACE	meta	Console.TableResult.SelectColumn
+SPACE	shift ctrl	SmartTypeCompletion
+SPACE	ctrl alt	ClassNameCompletion
+SPACE	ctrl meta	EmojiAndSymbols
+DOWN	none	EditorDown|Vcs.CombinedDiff.CaretToNextBlock|Terminal.SelectBlockBelow
+DOWN	shift	EditorDownWithSelection
+DOWN	alt	MethodOverloadSwitchDown|EditorUnSelectWord|ShowSearchHistory|List-selectLastRow|Arrangement.Rule.Match.Condition.Move.Down
+DOWN	meta	SearchEverywhere.NavigateToNextGroup|EditSource|Terminal.SelectPrompt|Terminal.LineDown|Table-selectLastRow
+DOWN	shift ctrl	MethodDown|ShowContent
+DOWN	ctrl alt	GotoNextElementUnderCaretUsage|ResizeToolWindowDown
+DOWN	shift meta	MoveStatementDown|Table-selectLastRowExtendSelection
+DOWN	shift alt	List-selectLastRowExtendSelection|MoveLineDown
+DOWN	shift ctrl alt	VcsShowNextChangeMarker
+DOWN	meta alt	Console.TableResult.NextPage|NextOccurence
+UP	none	EditorUp|Vcs.CombinedDiff.CaretToPrevBlock|Terminal.SelectBlockAbove
+UP	shift	EditorUpWithSelection
+UP	alt	EditorSelectWord|List-selectFirstRow|MethodOverloadSwitchUp|Arrangement.Rule.Match.Condition.Move.Up
+UP	meta	ShowNavBar|SearchEverywhere.NavigateToPrevGroup|FileChooser.GoToParent|Terminal.LineUp|Table-selectFirstRow|Terminal.SelectLastBlock|Terminal.SelectBlockAbove
+UP	shift ctrl	MethodUp
+UP	ctrl alt	ResizeToolWindowUp|GotoPrevElementUnderCaretUsage
+UP	shift meta	Table-selectFirstRowExtendSelection|MoveStatementUp
+UP	ctrl meta	GotoRelated
+UP	shift alt	List-selectFirstRowExtendSelection|MoveLineUp
+UP	shift ctrl alt	VcsShowPrevChangeMarker
+UP	meta alt	PreviousOccurence|Console.TableResult.PreviousPage
+PAGE_DOWN	none	SearchEverywhere.NavigateToNextGroup|EditorPageDown
+PAGE_DOWN	shift	EditorPageDownWithSelection|Terminal.PageDown
+PAGE_DOWN	meta	EditorMoveToPageBottom
+PAGE_DOWN	shift meta	EditorMoveToPageBottomWithSelection
+RIGHT	none	EditorRight|Vcs.Log.GoToParent|Terminal.InsertInlineCompletion
+RIGHT	shift	EditorRightWithSelection
+RIGHT	ctrl	NextTab
+RIGHT	alt	EditorNextWord
+RIGHT	meta	EditorLineEnd
+RIGHT	shift ctrl	NextEditorTab|Diff.NextChange
+RIGHT	ctrl alt	EmmetNextEditPoint|ResizeToolWindowRight
+RIGHT	shift meta	EditorLineEndWithSelection
+RIGHT	ctrl meta	Diff.ApplyLeftSide
+RIGHT	shift alt	EditorNextWordWithSelection
+RIGHT	shift meta alt	MoveElementRight
+RIGHT	meta alt	Forward
+ENTER	none	Git.Log.Branches.Change.Branch.Filter|DirDiffMenu.SynchronizeDiff|Console.Execute|Console.TableResult.GotoReferencedResult|SplitChooser.Split|NextTemplateVariable|EditorChooseLookupItem|Console.TableResult.EditValue|SearchEverywhere.SelectItem|EditorEnter
+ENTER	shift	EditorStartNewLine|OpenInRightSplit|CollapseExpandableComponent|Console.TableResult.EditValueMaximized|ExpandExpandableComponent
+ENTER	ctrl	Generate|NewElement
+ENTER	alt	ShowIntentionActions|Console.TableResult.GotoReferencedResult|Console.TableResult.EditValue
+ENTER	meta	ViewSource|EditorSplitLine|Console.Execute.Multiline|Docker.RemoteServers.StartComposeService|DirDiffMenu.SynchronizeDiff.All|SplitChooser.Duplicate|Terminal.SmartCommandExecution.Run
+ENTER	shift meta	Terminal.SmartCommandExecution.Debug|Console.TableResult.ShowRecordView|EditorCompleteStatement
+ENTER	shift alt	SplitChooser|Console.TableResult.EditValueMaximized
+ENTER	shift meta alt	Console.Transaction.Commit|Console.TableResult.SubmitAndCommit
+ENTER	meta alt	QuickActionPopup|EditorStartNewLineBefore
+BACK_QUOTE	ctrl	QuickChangeScheme
+BACK_QUOTE	meta	NextWindow
+BACK_QUOTE	shift meta	PreviousWindow
+BACK_QUOTE	shift meta alt	PreviousProjectWindow
+BACK_QUOTE	meta alt	NextProjectWindow
+TAB	none	SearchEverywhere.NextTab|CodeFloatingToolbar.GotoNextMenu|NextParameter|ExpandLiveTemplateByTab|EditorChooseLookupItemReplace|NextTemplateVariable|InsertInlineCompletionAction|SearchEverywhere.CompleteCommand|Terminal.CommandCompletion|EditorIndentSelection|SplitChooser.NextWindow|EditorTab|BraceOrQuoteOut
+TAB	shift	PrevParameter|PreviousTemplateVariable|SplitChooser.PreviousWindow|EditorUnindentSelection|CodeFloatingToolbar.GotoPrevMenu|SearchEverywhere.PrevTab
+TAB	ctrl	Switcher
+TAB	alt	NextSplitter
+TAB	shift ctrl	Diff.FocusOppositePane|Switcher
+TAB	shift alt	PrevSplitter
+COMMA	meta	ShowSettings
+COMMA	shift ctrl	EditorDecreaseFontSizeGlobal
+CLOSE_BRACKET	alt	NextInlineCompletionSuggestionAction
+CLOSE_BRACKET	meta	Forward
+CLOSE_BRACKET	shift meta	NextTab
+CLOSE_BRACKET	ctrl meta	CypressOpen
+CLOSE_BRACKET	shift meta alt	EditorCodeBlockEndWithSelection
+CLOSE_BRACKET	meta alt	EditorCodeBlockEnd
+LEFT	none	EditorLeft|Vcs.Log.GoToChild
+LEFT	shift	EditorLeftWithSelection
+LEFT	ctrl	PreviousTab
+LEFT	alt	EditorPreviousWord
+LEFT	meta	EditorLineStart
+LEFT	shift ctrl	Diff.PrevChange|PreviousEditorTab
+LEFT	ctrl alt	EmmetPreviousEditPoint|ResizeToolWindowLeft
+LEFT	shift meta	EditorLineStartWithSelection
+LEFT	ctrl meta	Diff.ApplyRightSide
+LEFT	shift alt	EditorPreviousWordWithSelection
+LEFT	shift meta alt	MoveElementLeft
+LEFT	meta alt	Back
+BACK_SPACE	none	EditorBackSpace|$Delete
+BACK_SPACE	shift	EditorBackSpace|UsageView.Include
+BACK_SPACE	alt	EditorDeleteToWordStart
+BACK_SPACE	meta	EditorDeleteLine|$Delete
+BACK_SPACE	shift meta	JumpToLastChange
+BACK_SPACE	shift alt	$Redo
+BACK_SPACE	shift meta alt	Console.TableResult.ColumnSortReset
+HOME	none	EditorLineStart
+HOME	shift	EditorLineStartWithSelection
+HOME	alt	ShowNavBar
+HOME	meta	Table-selectFirstRow|EditorTextStart
+HOME	shift meta	Table-selectFirstRowExtendSelection|EditorTextStartWithSelection
+EQUALS	none	Graph.ZoomIn
+EQUALS	meta	ExpandRegion|ExpandAll|ExpandExpandableComponent
+EQUALS	ctrl alt	ZoomInIdeAction
+EQUALS	shift meta	ExpandAllRegions
+EQUALS	ctrl meta	ZoomCurrentWindow
+EQUALS	meta alt	ExpandRegionRecursively
+END	none	EditorLineEnd
+END	shift	EditorLineEndWithSelection
+END	meta	EditorTextEnd|Table-selectLastRow
+END	shift meta	EditorTextEndWithSelection|Table-selectLastRowExtendSelection
+PAGE_UP	none	SearchEverywhere.NavigateToPrevGroup|EditorPageUp
+PAGE_UP	shift	Terminal.PageUp|EditorPageUpWithSelection
+PAGE_UP	meta	EditorMoveToPageTop
+PAGE_UP	shift meta	EditorMoveToPageTopWithSelection
+DELETE	none	$Delete|EditorDelete|DatabaseView.DropAction
+DELETE	shift	$Cut
+DELETE	alt	EditorDeleteToWordEnd
+DELETE	meta	SafeDelete
+DELETE	shift meta	Unwrap
+DELETE	shift alt	Console.TableResult.DeleteColumns
+SEMICOLON	meta	ShowProjectStructureSettings
+SEMICOLON	meta alt	EmojiPicker.Open
+MULTIPLY	none	FullyExpandTreeNode
+MULTIPLY	meta	ExpandToLevel2|ExpandToLevel2|ExpandToLevel1|ExpandToLevel1|ExpandToLevel4|ExpandToLevel4|ExpandToLevel3|ExpandToLevel3|ExpandToLevel5|ExpandToLevel5
+MULTIPLY	meta alt	ExpandAllToLevel5|ExpandAllToLevel5|ExpandAllToLevel4|ExpandAllToLevel4|ExpandAllToLevel3|ExpandAllToLevel3|ExpandAllToLevel2|ExpandAllToLevel2|ExpandAllToLevel1|ExpandAllToLevel1
+OPEN_BRACKET	alt	PrevInlineCompletionSuggestionAction
+OPEN_BRACKET	meta	Back
+OPEN_BRACKET	shift meta	PreviousTab
+OPEN_BRACKET	shift meta alt	EditorCodeBlockStartWithSelection
+OPEN_BRACKET	meta alt	EditorCodeBlockStart
+SLASH	alt	HippieCompletion
+SLASH	meta	FileChooser.GoToRoot|Graph.ActualSize|Images.Editor.ActualSize|CommentByLineComment
+SLASH	shift ctrl	CommentByBlockComment
+SLASH	shift meta	CommentByBlockComment
+SLASH	shift alt	HippieBackwardCompletion
+SLASH	meta alt	CommentByBlockComment
+PERIOD	ctrl	EditorChooseLookupItemDot
+PERIOD	meta	CollapseSelection
+PERIOD	shift ctrl	EditorIncreaseFontSizeGlobal
+PERIOD	shift meta	CollapseBlock
+PERIOD	meta alt	GotoCustomRegion
+DIVIDE	meta	Graph.ActualSize|Images.Editor.ActualSize|CommentByLineComment
+DIVIDE	shift ctrl	CommentByBlockComment
+DIVIDE	shift meta	CommentByBlockComment|CommentByBlockComment
+DIVIDE	meta alt	CommentByBlockComment
+MINUS	none	Graph.ZoomOut
+MINUS	meta	CollapseExpandableComponent|CollapseRegion|CollapseAll
+MINUS	ctrl alt	ZoomOutIdeAction
+MINUS	shift meta	CollapseAllRegions
+MINUS	meta alt	CollapseRegionRecursively
+BACK_SLASH	shift meta	ToggleHintsAction
+BACK_SLASH	ctrl meta	ToggleHintsAction
+BACK_SLASH	shift alt	CallInlineCompletionAction
+QUOTE	meta	Images.Editor.ToggleGrid
+QUOTE	shift meta	MaximizeToolWindow
+ADD	none	ExpandTreeNode|Graph.ZoomIn
+ADD	meta	ExpandRegion|ExpandAll|ExpandExpandableComponent
+ADD	shift meta	ExpandAllRegions
+ADD	meta alt	ExpandRegionRecursively
+ESCAPE	none	CloseGotItTooltip|FocusEditor|EscUnfollowUserAction|EditorEscape|CloseDiffEditor
+ESCAPE	shift	HideActiveWindow
+ESCAPE	meta	Vcs.CombinedDiff.ToggleCollapseBlock
+SUBTRACT	none	Graph.ZoomOut|CollapseTreeNode
+SUBTRACT	meta	CollapseExpandableComponent|CollapseRegion|CollapseAll
+SUBTRACT	shift meta	CollapseAllRegions
+SUBTRACT	meta alt	CollapseRegionRecursively
+INSERT	none	EditorToggleInsertState|DomCollectionControl.Add|XDebugger.NewWatch
+INSERT	shift	Terminal.Paste|$Paste
+INSERT	alt	FileChooser.NewFolder
+INSERT	meta	Terminal.CopySelectedText|$Copy
+INSERT	shift meta	PasteMultiple
