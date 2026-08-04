@@ -177,52 +177,6 @@
     
     $vim -o/-O f f1  = 打开多个文件时横向/纵向分割
 
-## ~/.vimrc
-    " 显示行号
-    set number
-    " 高亮
-    syntax on
-    " 使用鼠标
-    set mouse=a
-    " 编码
-    set encoding=utf-8
-    " 256色
-    set t_Co=256
-    " 检查文件类型
-    filetype indent on
-    " tab显示空格数
-    set tabstop=2
-    " 自动保持缩进
-    set autoindent
-    " >>缩进空格数
-    set shiftwidth=2
-    " tab转化为空格
-    set expandtab
-    " tab 转化为多个空格
-    set softtabstop=2
-    " 光标所在行高亮
-    set cursorline
-    " 显示光标当前行行号
-    set relativenumber
-    " 匹配括号
-    set showmatch
-    " 高亮搜索
-    set hlsearch
-    " 自动跳转到匹配结果
-    set incsearch
-    " 共享剪切板
-    set clipboard=unnamed
-    " 不自动换行
-    set nowrap
-    
-    " Ctags
-    set autochdir
-    set tags+=~/.vim/systags
-    set tags+=tags;
-    let mapleader=";"
-    nmap <leader>n :tnext<CR>
-    nmap <leader>p :tprevious<CR>
-
 ## Ctags
     MacOS默认使用XCode版本ctags
     $brew install ctags
