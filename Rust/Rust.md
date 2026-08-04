@@ -70,37 +70,123 @@
       }
   }
   ```
+### 结构体
+#### 结构体更新语法
+  `..`语法指定使用其他实例创建实例，剩余未显示初始化的字段都使用给定实例对应字段的值更新(move)
+  ```Rust
+  fn main() {
+    struct Test {
+      name: String,
+      age: u32,
+    }
+    let t = Test {
+      name: String::from("test"),
+      age: 20,
+    };
+    let t1 = Test {
+      name: String::from("test1"),
+      ..t
+    };
+    println!("{}, {}", t1.name, t1.age);
+  }
+  ```
 ### 标签
   `'label loop { break 'label; }`
 ### 函数
   * 函数内可以定义函数
 ### 借用
+  * 概念
+    * 共享借用：通过`&T`创建对某个数据的不可变引用。只要存在共享借用，数据本身就不能被修改或移动。
+    * 可变借用(也称独占借用): 通过`&mut T`获取数据独占访问权限。在同一生命周期内，某个数据一旦存在可变借用，就不能有其他任何其他借用(无论是共享借用还是可变借用)
+    * 重借用: 从一个已存在的引用中，再创建一个新的引用，在新的生命周期内原引用(如果原引用是可变引用)会被暂时冻结/挂起，直到新引用的生命周期结束。重借用包括：
+      * 从`&T`中创建`&T`(原引用和新引用都可正常访问)
+      * 从`&mut T`中创建不可变引用`&T`(原引用被临时冻结，可读但不可写)
+      * 从`&mut T`中创建可变引用`&mut T`(原引用被临时挂起，即独占权被临时转移给新的引用，原引用完全不能访问)，这种情况即可变重借用
+    * 隐式重借用: 将一个可变引用`&mut T`传递给一个可变借用`&mut T`的函数或赋值给一另个变量时，Rust不会move这个引用本身，而是自动隐式地根据原引用创建一个生命周期比较短的新引用，相当于自动插入`&mut *old_ref`，触发场景：
+      * 函数调用传入`&mut T`时
+      * 显式类型标注的赋值与重新绑定
+      * 方法调用中的self接收者
   * 一个对象在同一时间只能有一个可变借用或者多个不可变借用，不能同时拥有可变借用和不可变借用
-  * 再借用
+  * 示例
     ```Rust
-    #[allow(unused)]
     fn main() {
-        {
-            let mut a = String::default();
-            let r = &mut a;
-            let rr = r; // move
-            println!("{}", rr);
-        }
-        {
-            let mut a = String::default();
-            let r = &mut a;
-            let rr = &*r;
-            println!("{}", r); // reborrow后允许不可变借用
-            // r.push('!'); // reborrow后不允许可变借用
-            println!("{}", rr);
-        }
-        {
-            fn test(str: &mut String) { }
-            let mut a = String::default();
-            let mut r = &mut a;
-            test(r); // reborrow
-        }
+      {
+        let mut str = String::default();
+        let r1: &String = &str; // 从数据创建共享借用
+        let r2: &String = &*r1; // 从引用创建共享借用
+    
+        let r3 : &mut String = &mut str;
+        let r4 : &String = &*r3; // 从可变借用中创建共享借用
+      }
+      {
+        let mut str = String::default();
+        let r1: &mut String = &mut str;
+        let r2: &mut String = r1; // 隐式重借用，相当于 let r2: &mut String = &mut *r1;
+      }
+      {
+        fn test(v: &mut String) {}
+        let mut str = String::default();
+        let r1: &mut String = &mut str;
+        test(r1); // 隐式重借用，相当于 test(&mut *r1)
+      }
+      {
+          let mut str = String::default();
+          let r1: &mut String = &mut str;
+          r1.push_str("hello"); // 隐式重借用，相当于 (&mut *r1).push_str("hello");
+      }
+      {
+        let mut str = String::default();
+        let r1: &mut String = &mut str;
+        let r2 = r1; // r1 moved，因为没有强制要求进行类型转换
+      }
+      {
+        let mut str= String::new();
+        let r1: &String = &str;
+        str.push_str("hello"); // error: 存在共享借用，无法被修改
+        let str1 = str; // error:  存在共享借用，无法移动
+        println!("{}", r1);
+      }
+      {
+        let mut str = String::default();
+        let r1: &mut String = &mut str;
+        let r2: &String = &str; // error: 存在可变借用，不能共享借用
+        println!("{}, {}", r1, r2);
+      }
+      {
+        let mut str = String::from("hello");
+        let r1: &mut String = &mut str;
+        let r2: &String = &*r1;
+        let _ = r1.clone(); // ok, r1被临时冻结，但允许共享读取
+        println!("{}, {}", r1, r2); // ok, 都是共享读取
+      }
+      {
+        let mut str = String::default();
+        let r1: &mut String = &mut str;
+        let r2: &mut String = &mut *r1;
+        println!("{}, {}", r1, r2); // error: r2可变可借用时，r1被临时挂起，不允许访问
+      }
+      {
+        struct Point { x: i32, y: i32 };
+        let mut point = Point { x: 0, y: 0 };
+        let x: &mut i32 = &mut point.x;
+        let y: &mut i32 = &mut point.y;
+        println!("{}, {}", x, y); // ok, 编译器允许独立借用结构体的不同字段
+      }
+      {
+        let mut str = String::default();
+        let r1: &mut String = &mut str;
+        let r2: &&mut String = &r1; // 二级引用
+        println!("{}, {}", r1, r2); // ok
+      }
+      {
+        let mut str = String::default();
+        let mut r1: &mut String = &mut str;
+        let r2: &mut &mut String = &mut r1; // 二级可变引用
+        r2.push_str(""); // ok
+        println!("{}, {}", r1, r2); // error: r2可变借用时，r1被临时挂起，不允许访问
+      }
     }
+
     ```
 ### 自动解引用
   自动解引用的情况:
@@ -2205,6 +2291,10 @@
         let _b: Test = Test::from(a);
     }
     ```
+
+## 调试
+### dbg!
+  `dbg!`宏接受一个表达式的所有权，并将表达式以Debug格式打印到stderr(包含文件名、行号、表达式、值)，然后返回该值的所有权
 
 ## 性能优化
   * 循环尽量使用迭代器代替索引访问，使用map转换、filter过滤、fold聚合、chain链接等方法代替if判断，不仅有更多多编译器优化空间，还可提高运行效率
