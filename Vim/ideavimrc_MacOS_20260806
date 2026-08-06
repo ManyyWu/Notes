@@ -21,7 +21,10 @@
 " 跳转到执行点     Alt+8
 " 断点             Alt+9
 " 临时断点         Alt+Shift+9
-" 构建             Alt+-
+" 切换断点启用状态 Alt+-
+" 查看断点         Alt+Shift+-
+" 构建             Alt+=
+" 刷新Cargo项目    Alt+Shift+=
 
 " 清空以前的自定义映射
 mapclear
@@ -398,11 +401,11 @@ let g:WhichKeyDesc_m = "<leader>m 构建/"
 " 刷新Cargo项目
 nnoremap <silent> <leader>mc      :action Cargo.RefreshCargoProject<CR>
 vnoremap <silent> <leader>mc      :action Cargo.RefreshCargoProject<CR>
-let g:WhichKeyDesc_m_c            = "<leader>mc 刷新Cargo项目"
+let g:WhichKeyDesc_m_c            = "<leader>mc 刷新Cargo项目 (Alt+Shift+=)"
 " 构建
 nnoremap <silent> <leader>mb      :action BuildProject<CR>
 vnoremap <silent> <leader>mb      :action BuildProject<CR>
-let g:WhichKeyDesc_m_b            = "<leader>mb 构建 (Alt+-)"
+let g:WhichKeyDesc_m_b            = "<leader>mb 构建 (Alt+=)"
 " 重新构建(清理后重新构建)
 nnoremap <silent> <leader>mr      :action RebuildProject<CR>
 vnoremap <silent> <leader>mr      :action RebuildProject<CR>
@@ -419,10 +422,14 @@ let g:WhichKeyDesc_b_b            = "<leader>bb 断点 (Alt+9)"
 nnoremap <silent> <leader>bt      :action ToggleTemporaryLineBreakpoint<CR>
 vnoremap <silent> <leader>bt      :action ToggleTemporaryLineBreakpoint<CR>
 let g:WhichKeyDesc_b_t            = "<leader>bt 临时断点 (Alt+Shift+9)"
+" 切换断点启用状态
+nnoremap <silent> <leader>bs      :action ToggleBreakpointEnabled<CR>
+vnoremap <silent> <leader>bs      :action ToggleBreakpointEnabled<CR>
+let g:WhichKeyDesc_b_s            = "<leader>bs 切换断点启用状态 (Alt+-)"
 " 查看断点
 nnoremap <silent> <leader>bv      :action ViewBreakpoints<CR>
 vnoremap <silent> <leader>bv      :action ViewBreakpoints<CR>
-let g:WhichKeyDesc_b_v            = "<leader>bv 查看断点"
+let g:WhichKeyDesc_b_v            = "<leader>bv 查看断点 (Alt+Shift+-)"
 
 
 " =======运行=======
@@ -586,6 +593,10 @@ nnoremap <silent> <leader>xn <Nop>
 nnoremap <silent> <leader>xo <Nop>
 nnoremap <silent> <leader>xp <Nop>
 nnoremap <silent> <leader>xq <Nop>
+nnoremap <silent> <leader>xr <Nop>
+nnoremap <silent> <leader>xs <Nop>
+nnoremap <silent> <leader>xt <Nop>
+nnoremap <silent> <leader>xu <Nop>
 let g:WhichKeyDesc_x1  = "<leader>x1 Alt+Esc      隐藏工具窗口"
 let g:WhichKeyDesc_x2  = "<leader>x2 Meta-F       文件内搜索"
 let g:WhichKeyDesc_x3  = "<leader>x3 Meta-Shift-F 全局搜索"
@@ -610,4 +621,7 @@ let g:WhichKeyDesc_xn  = "<leader>xn Alt+7       对表达式求值"
 let g:WhichKeyDesc_xo  = "<leader>xo Alt+8       跳转到执行点"
 let g:WhichKeyDesc_xp  = "<leader>xp Alt+9       断点"
 let g:WhichKeyDesc_xq  = "<leader>xq Alt+Shift+9 临时断点"
-let g:WhichKeyDesc_xr  = "<leader>xr Alt+-       构建"
+let g:WhichKeyDesc_xr  = "<leader>xr Alt+-       切换断点启用状态
+let g:WhichKeyDesc_xs  = "<leader>xs Alt+Shift+- 查看断点
+let g:WhichKeyDesc_xt  = "<leader>xt Alt+=       构建"
+let g:WhichKeyDesc_xu  = "<leader>xu Alt+Shift+= 刷新Cargo项目"
