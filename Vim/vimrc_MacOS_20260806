@@ -41,6 +41,10 @@ set scrolloff=10
 autocmd InsertLeave * silent! call system('/usr/local/bin/im-select com.apple.keylayout.ABC')
 inoremap <C-c> <Esc>
 
+" 防止误操作
+nnoremap <C-a> <Nop>
+nnoremap <C-x> <Nop>
+
 " Ctags
 set autochdir
 set tags+=~/.vim/systags

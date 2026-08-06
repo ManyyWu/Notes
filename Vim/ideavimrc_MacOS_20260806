@@ -1,0 +1,611 @@
+" 插件要求：
+" Which-key
+" IdeaVimExtension(需添加en_US或ABC键盘)
+" Translation(设置-工具-Translation，勾选“保留内容格式”和“自动翻译文档”)
+
+" IDE快捷键设置：
+" 恢复             Alt-0
+" 停止             Alt-Shift-0
+" 步过             Alt-1
+" 强制步过         Alt-Shift-1
+" 步入             Alt-2
+" 强制步入         Alt-Shift-2
+" 步出             Alt-3
+" 运行到光标处     Alt-4
+" 强制运行到光标处 Alt-Shift-4
+" 以当前配置运行   Alt-5
+" 以当前上下文运行 Alt-Shift-5
+" 以当前配置调试   Alt-6
+" 以当前上下文调试 Alt-Shift-6
+" 对表达式求值     Alt-7
+" 跳转到执行点     Alt-8
+" 断点             Alt-9
+" 临时断点         Alt-Shift-9
+
+" 清空以前的自定义映射
+mapclear
+imapclear
+cmapclear
+" 使用系统剪切板
+set clipboard+=unnamed
+" 高亮搜索结果
+set hlsearch
+" 立即高亮结果
+set incsearch
+" 显示相对行号
+set relativenumber
+" 光标所在行高亮
+set cursorline
+" 搜索时忽略大小写
+set ignorecase
+" 光标距离顶部和底部10行
+set scrolloff=10
+" Normal模式自动切换英文(IdeaVimExtension插件)
+set keep-english-in-normal
+" C-c映射到Esc
+inoremap <C-c> <Esc>
+
+
+" =======防止误操作=======
+nnoremap <C-a> <Nop>
+nnoremap <C-x> <Nop>
+
+
+" ==================
+" =======命令=======
+" 命令之后不要加空白字符!!!
+
+" 导出ActionID：
+" 方法一：随处搜索 - Edit Custom Properties - 添加"idea.is.internal=true"激活开发者模式 - 重启，工具 - 内部操作 - 将按键映射导出到csv
+" 方法二：添加快捷键 - 导出设置
+" 方法三：AI
+" 方法四：https://github.com/chloneda/vim-cheatsheet/blob/master/resources/actionlist.vim
+
+" Which-key插件
+" https://github.com/TheBlob42/idea-which-key
+set which-key
+" 无超时
+set notimeout
+" 超时
+"set timeoutlen=5000
+" 字体大小
+let g:WhichKey_FontSize  = 20
+" 排序
+let g:WhichKey_SortOrder = "by_key_prefix_last"
+let g:WhichKey_SortCaseSensitive = "false"
+" g键描述
+let g:WhichKeyDesc_g     = "g 跳转/"
+" <leader>键描述
+let g:WhichKeyDesc_space = "<Space> 快捷键/"
+" <leader>定义
+let mapleader=' '
+
+
+" =======注释=======
+" 行注释
+nnoremap <silent> <C-/>           :action CommentByLineComment<CR>
+vnoremap <silent> <C-/>           :action CommentByLineComment<CR>
+let g:WhichKeyDesc_ctrl_slash     = "<C-/> 行注释"
+" 块注释
+nnoremap <silent> <C-S-/>         :action CommentByBlockComment<CR>
+vnoremap <silent> <C-S-/>         :action CommentByBlockComment<CR>
+let g:WhichKeyDesc_ctrl_shift_slash = "<C-shift-/> 块注释"
+
+
+" =======跳转/文档=======
+" 跳转到标识符的定义
+nnoremap <silent> gd              :action GotoDeclaration<CR>
+vnoremap <silent> gd              :action GotoDeclaration<CR>
+let g:WhichKeyDesc_g_d            = "gd 跳转到标识符的定义"
+" 快速定义
+nnoremap <silent> gD              :action QuickImplementations<CR>
+vnoremap <silent> gD              :action QuickImplementations<CR>
+let g:WhichKeyDesc_g_D            = "gD 快速定义"
+" 跳转类型定义
+nnoremap <silent> gl              :action GotoTypeDeclaration<CR>
+vnoremap <silent> gl              :action GotoTypeDeclaration<CR>
+let g:WhichKeyDesc_g_l            = "gl 跳转类型定义"
+" 快速类型定义
+nnoremap <silent> gL              :action QuickTypeDefinition<CR>
+vnoremap <silent> gL              :action QuickTypeDefinition<CR>
+let g:WhichKeyDesc_g_L            = "gL 快速类型定义"
+" 跳转到Trait、接口的实现
+nnoremap <silent> gi              :action GotoImplementation<CR>
+vnoremap <silent> gi              :action GotoImplementation<CR>
+let g:WhichKeyDesc_g_i            = "gi 跳转到Trait、接口的实现"
+" 跳转到Super方法(gi的相反操作，即跳到接口定义)
+nnoremap <silent> gI              :action GotoSuperMethod<CR>
+vnoremap <silent> gI              :action GotoSuperMethod<CR>
+let g:WhichKeyDesc_g_I            = "gI 跳转到Super方法"
+" 快速文档(Hover符号)              
+nnoremap <silent> gh              :action QuickJavaDoc<CR>
+vnoremap <silent> gh              :action QuickJavaDoc<CR>
+let g:WhichKeyDesc_g_h            = "gh 快速文档"
+" 外部文档
+nnoremap <silent> gH              :action ExternalJavaDoc<CR>
+vnoremap <silent> gH              :action ExternalJavaDoc<CR>
+let g:WhichKeyDesc_g_H            = "gH 外部文档"
+" 上一个函数
+nnoremap <silent> g[              :action MethodUp<CR>
+vnoremap <silent> g[              :action MethodUp<CR>
+let g:WhichKeyDesc_g_left_bracket = "g[ 上一个函数"
+" 下一个函数
+nnoremap <silent> g]              :action MethodDown<CR>
+vnoremap <silent> g]              :action MethodDown<CR>
+let g:WhichKeyDesc_g_right_bracket = "g] 下一个函数"
+" 快速表达式求值
+nnoremap <silent> go              :action QuickEvaluateExpression<CR>
+vnoremap <silent> go              :action QuickEvaluateExpression<CR>
+let g:WhichKeyDesc_g_o            = "go 快速表达式求值"
+" 下一个高亮显示错误
+nnoremap <silent> gx              :action GotoNextError<CR>
+vnoremap <silent> gx              :action GotoNextError<CR>
+let g:WhichKeyDesc_g_x            = "gx 下一个高亮显示错误"
+" 上一个高亮显示错误
+nnoremap <silent> gX              :action GotoPreviousError<CR>
+vnoremap <silent> gX              :action GotoPreviousError<CR>
+let g:WhichKeyDesc_g_X            = "gX 上一个高亮显示错误"
+" 显示意图操作(快速修复、宏展开)
+nnoremap <silent> gy              :action ShowIntentionActions<CR>
+vnoremap <silent> gy              :action ShowIntentionActions<CR>
+let g:WhichKeyDesc_g_y            = "gy 显示意图操作"
+" 显示错误描述(Hover错误)
+nnoremap <silent> gY              :action ShowErrorDescription<CR>
+vnoremap <silent> gY              :action ShowErrorDescription<CR>
+let g:WhichKeyDesc_g_Y            = "gY 显示错误描述"
+
+
+" =======预览=======
+let g:WhichKeyDesc_v = "<leader>v 预览/"
+" 快速文档(Hover符号)
+nnoremap <silent> <leader>vh      :action QuickJavaDoc<CR>
+vnoremap <silent> <leader>vh      :action QuickJavaDoc<CR>
+let g:WhichKeyDesc_v_h            = "<leader>vh 快速文档 gh"
+" 外部文档
+nnoremap <silent> <leader>vH      :action ExternalJavaDoc<CR>
+vnoremap <silent> <leader>vH      :action ExternalJavaDoc<CR>
+let g:WhichKeyDesc_v_H            = "<leader>vH 外部文档 gH"
+" 快速定义(gd预览)
+nnoremap <silent> <leader>vd      :action QuickImplementations<CR>
+vnoremap <silent> <leader>vd      :action QuickImplementations<CR>
+let g:WhichKeyDesc_v_d            = "<leader>vd 快速定义 gD"
+" 快速类型定义(gl预览)
+nnoremap <silent> <leader>vt      :action QuickTypeDefinition<CR>
+vnoremap <silent> <leader>vt      :action QuickTypeDefinition<CR>
+let g:WhichKeyDesc_v_t            = "<leader>vt 快速类型定义 gL"
+" 形参信息(函数调用的参数信息预览)
+nnoremap <silent> <leader>vp      :action ParameterInfo<CR>
+vnoremap <silent> <leader>vp      :action ParameterInfo<CR>
+let g:WhichKeyDesc_v_p            = "<leader>vp 形参信息"
+" 类型信息(变量、表达式的类型和推导类型预览)
+nnoremap <silent> <leader>vT      :action ExpressionTypeInfo<CR>
+vnoremap <silent> <leader>vT      :action ExpressionTypeInfo<CR>
+let g:WhichKeyDesc_v_T            = "<leader>vT 类型信息"
+" 上下文信息(上下文过长时显示当前所处位置，顶部通常会自动提示)
+nnoremap <silent> <leader>vc      :action EditorContextInfo<CR>
+vnoremap <silent> <leader>vc      :action EditorContextInfo<CR>
+let g:WhichKeyDesc_v_c            = "<leader>vc 上下文信息"
+" 显示意图操作(快速修复、宏展开)
+nnoremap <silent> <leader>vm      :action ShowIntentionActions<CR>
+vnoremap <silent> <leader>vm      :action ShowIntentionActions<CR>
+let g:WhichKeyDesc_v_m            = "<leader>vm 显示意图操作"
+" 显示错误描述(Hover错误)
+nnoremap <silent> <leader>ve      :action ShowErrorDescription<CR>
+vnoremap <silent> <leader>ve      :action ShowErrorDescription<CR>
+let g:WhichKeyDesc_v_e            = "<leader>ve 显示错误描述"
+
+
+" =======最近=======
+let g:WhichKeyDesc_h = "<leader>h 最近/"
+" 最近的位置(最近访问的代码片段预览)
+nnoremap <silent> <leader>hp      :action RecentLocations<CR>
+vnoremap <silent> <leader>hp      :action RecentLocations<CR>
+let g:WhichKeyDesc_h_p            = "<leader>hp 最近的位置"
+" 最近的文件(包含各种窗口、最近位置和最近访问的文件)
+nnoremap <silent> <leader>hf      :action RecentFiles<CR>
+vnoremap <silent> <leader>hf      :action RecentFiles<CR>
+let g:WhichKeyDesc_h_f            = "<leader>hf 最近的文件"
+" 最近的更改(历史记录)
+nnoremap <silent> <leader>hc      :action RecentChanges<CR>
+vnoremap <silent> <leader>hc      :action RecentChanges<CR>
+let g:WhichKeyDesc_h_c            = "<leader>hc 最近的更改"
+
+
+" =======代码=======
+let g:WhichKeyDesc_c = "<leader>c 代码/"
+" 调用内联补全(AI)
+nnoremap <silent> <leader>ca      :action CallInlineCompletionAction<CR>
+vnoremap <silent> <leader>ca      :action CallInlineCompletionAction<CR>
+let g:WhichKeyDesc_c_a            = "<leader>ca 调用内联补全"
+" 实现必须实现且没有默认代码的抽象方法
+nnoremap <silent> <leader>ci      :action ImplementMethods<CR>
+vnoremap <silent> <leader>ci      :action ImplementMethods<CR>
+let g:WhichKeyDesc_c_i            = "<leader>ci 实现必须实现且没有默认代码的抽象方法"
+" 生成(impl块、方法、构造函数、常用Trait实现、测试函数等)
+nnoremap <silent> <leader>cg      :action Generate<CR>
+vnoremap <silent> <leader>cg      :action Generate<CR>
+let g:WhichKeyDesc_c_g            = "<leader>cg 生成"
+" 格式化代码
+nnoremap <silent> <leader>cf      :action ReformatCode<CR>
+vnoremap <silent> <leader>cf      :action ReformatCode<CR>
+let g:WhichKeyDesc_c_f            = "<leader>cf 格式化代码"
+" 文件格式化(弹窗选择范围)
+nnoremap <silent> <leader>cF      :action ShowReformatFileDialog<CR>
+vnoremap <silent> <leader>cF      :action ShowReformatFileDialog<CR>
+let g:WhichKeyDesc_c_F            = "<leader>cF 文件格式化"
+" 自动缩进行
+nnoremap <silent> <leader>cs      :action AutoIndentLines<CR>
+vnoremap <silent> <leader>cs      :action AutoIndentLines<CR>
+let g:WhichKeyDesc_c_s            = "<leader>cs 自动缩进行"
+" 优化import
+nnoremap <silent> <leader>co      :action OptimizeImports<CR>
+vnoremap <silent> <leader>co      :action OptimizeImports<CR>
+let g:WhichKeyDesc_c_o            = "<leader>co 优化import"
+" 检查代码
+nnoremap <silent> <leader>ck      :action InspectCode<CR>
+vnoremap <silent> <leader>ck      :action InspectCode<CR>
+let g:WhichKeyDesc_c_k            = "<leader>ck 检查代码"
+" 代码清理(移除无用代码，批量修复Clippy告警或冗余导入)
+nnoremap <silent> <leader>cl      :action CodeCleanup<CR>
+vnoremap <silent> <leader>cl      :action CodeCleanup<CR>
+let g:WhichKeyDesc_c_l            = "<leader>cl 代码清理"
+
+
+" =======查找=======
+let g:WhichKeyDesc_s = "<leader>s 随处搜索/"
+let g:WhichKeyDesc_S = "<leader>S 结构化操作/"
+" 文件内查找
+nnoremap <silent> <leader><C-f>   :action Find<CR>
+vnoremap <silent> <leader><C-f>   :action Find<CR>
+let g:WhichKeyDesc_Ctrl_f         = "<leader><C-f> 文件内查找"
+" 文件内替换
+nnoremap <silent> <leader><C-r>   :action Replace<CR>
+vnoremap <silent> <leader><C-r>   :action Replace<CR>
+let g:WhichKeyDesc_Ctrl_r         = "<leader><C-r> 文件内替换"
+" 文件中查找
+nnoremap <silent> <leader><C-S-f> :action FindInPath<CR>
+vnoremap <silent> <leader><C-S-f> :action FindInPath<CR>
+let g:WhichKeyDesc_Ctrl_Shift_F   = "<leader><C-S-f> 文件中查找"
+" 文件中替换
+nnoremap <silent> <leader><C-S-r> :action ReplaceInPath<CR>
+vnoremap <silent> <leader><C-S-r> :action ReplaceInPath<CR>
+let g:WhichKeyDesc_Ctrl_Shift_r   = "<leader><C-S-r> 文件中替换"
+" 下一个匹配
+nnoremap <silent> <leader><C-n>   :action FindNext<CR>
+vnoremap <silent> <leader><C-n>   :action FindNext<CR>
+let g:WhichKeyDesc_Ctrl_n         = "<leader><C-n> 下一个匹配"
+" 上一个匹配
+nnoremap <silent> <leader><C-S-n> :action FindPrevious<CR>
+vnoremap <silent> <leader><C-S-n> :action FindPrevious<CR>
+let g:WhichKeyDesc_Ctrl_Shift_n   = "<leader><C-S-n> 上一个匹配"
+" 随处搜索
+nnoremap <silent> <leader>sx      :action SearchEverywhere<CR>
+vnoremap <silent> <leader>sx      :action SearchEverywhere<CR>
+let g:WhichKeyDesc_s_x            = "<leader>sx 随处搜索(Shift-Shift)"
+" 类型搜索
+nnoremap <silent> <leader>st      :action GotoClass<CR>
+vnoremap <silent> <leader>st      :action GotoClass<CR>
+let g:WhichKeyDesc_s_t            = "<leader>st 类型搜索"
+" 文件搜索
+nnoremap <silent> <leader>sf      :action GotoFile<CR>
+vnoremap <silent> <leader>sf      :action GotoFile<CR>
+let g:WhichKeyDesc_s_f            = "<leader>sf 文件搜索"
+" 符号搜索
+nnoremap <silent> <leader>ss      :action GotoSymbol<CR>
+vnoremap <silent> <leader>ss      :action GotoSymbol<CR>
+let g:WhichKeyDesc_s_s            = "<leader>ss 符号搜索"
+" 文本搜索
+nnoremap <silent> <leader>se      :action TextSearchAction<CR>
+vnoremap <silent> <leader>se      :action TextSearchAction<CR>
+let g:WhichKeyDesc_s_e            = "<leader>se 文本搜索"
+" 显示用法(Meta+鼠标点击)
+nnoremap <silent> <leader>su      :action ShowUsages<CR>
+vnoremap <silent> <leader>su      :action ShowUsages<CR>
+let g:WhichKeyDesc_s_u            = "<leader>su 显示用法"
+" 查找用法
+nnoremap <silent> <leader>sU      :action FindUsages<CR>
+vnoremap <silent> <leader>sU      :action FindUsages<CR>
+let g:WhichKeyDesc_s_U            = "<leader>sU 查找用法"
+" 结构化搜索
+nnoremap <silent> <leader>Sf      :action StructuralSearchAction<CR>
+vnoremap <silent> <leader>Sf      :action StructuralSearchAction<CR>
+let g:WhichKeyDesc_S_f            = "<leader>Sf 结构化搜索"
+" 结构化替换
+nnoremap <silent> <leader>Sr      :action StructuralReplaceAction<CR>
+vnoremap <silent> <leader>Sr      :action StructuralReplaceAction<CR>
+let g:WhichKeyDesc_S_r            = "<leader>Sr 结构化替换"
+" XPath查找
+nnoremap <silent> <leader>Sx      :action XPathView.Actions.FindByExpression<CR>
+vnoremap <silent> <leader>Sx      :action XPathView.Actions.FindByExpression<CR>
+let g:WhichKeyDesc_S_x            = "<leader>Sx XPath查找"
+" 对JSONPath表达式求值
+nnoremap <silent> <leader>Sj      :action JsonPathEvaluateAction<CR>
+vnoremap <silent> <leader>Sj      :action JsonPathEvaluateAction<CR>
+let g:WhichKeyDesc_S_j            = "<leader>Sj 对JSONPath表达式求值"
+
+
+" =======标签=======
+let g:WhichKeyDesc_q = "<leader>q 标签/"
+" 关闭其他页签
+nnoremap <silent> <leader>qo      :action CloseAllEditorsButActive<CR>
+vnoremap <silent> <leader>qo      :action CloseAllEditorsButActive<CR>
+let g:WhichKeyDesc_q_o            = "<leader>qo 关闭其他页签"
+" 关闭左边页签
+nnoremap <silent> <leader>ql      :action CloseAllToTheLeft<CR>
+vnoremap <silent> <leader>ql      :action CloseAllToTheLeft<CR>
+let g:WhichKeyDesc_q_l            = "<leader>ql 关闭左边页签"
+" 关闭右边页签
+nnoremap <silent> <leader>qr      :action CloseAllToTheRight<CR>
+vnoremap <silent> <leader>qr      :action CloseAllToTheRight<CR>
+let g:WhichKeyDesc_q_r            = "<leader>qr 关闭右边页签"
+
+
+" =======工具窗口(Shift-Esc 隐藏工具窗口)=======
+let g:WhichKeyDesc_w = "<leader>w 窗口/"
+" 提交
+nnoremap <silent> <leader>wc      :action ActivateCommitToolWindow<CR>
+vnoremap <silent> <leader>wc      :action ActivateCommitToolWindow<CR>
+let g:WhichKeyDesc_w_c            = "<leader>wc 提交"
+" 项目
+nnoremap <silent> <leader>wp      :action ActivateProjectToolWindow<CR>
+vnoremap <silent> <leader>wp      :action ActivateProjectToolWindow<CR>
+let g:WhichKeyDesc_w_p            = "<leader>wp 项目"
+" 查找
+nnoremap <silent> <leader>wf      :action ActivateFindToolWindow<CR>
+vnoremap <silent> <leader>wf      :action ActivateFindToolWindow<CR>
+let g:WhichKeyDesc_w_f            = "<leader>wf 查找"
+" 运行
+nnoremap <silent> <leader>wr      :action ActivateRunToolWindow<CR>
+vnoremap <silent> <leader>wr      :action ActivateRunToolWindow<CR>
+let g:WhichKeyDesc_w_r            = "<leader>wr 运行"
+" 调试
+nnoremap <silent> <leader>wd      :action ActivateDebugToolWindow<CR>
+vnoremap <silent> <leader>wd      :action ActivateDebugToolWindow<CR>
+let g:WhichKeyDesc_w_d            = "<leader>wd 调试"
+" 问题
+nnoremap <silent> <leader>wi      :action ActivateProblemsViewToolWindow<CR>
+vnoremap <silent> <leader>wi      :action ActivateProblemsViewToolWindow<CR>
+let g:WhichKeyDesc_w_i            = "<leader>wi 问题"
+" 结构
+nnoremap <silent> <leader>ws      :action ActivateStructureToolWindow<CR>
+vnoremap <silent> <leader>ws      :action ActivateStructureToolWindow<CR>
+let g:WhichKeyDesc_w_s            = "<leader>ws 结构"
+" Git
+nnoremap <silent> <leader>wg      :action ActivateVersionControlToolWindow<CR>
+vnoremap <silent> <leader>wg      :action ActivateVersionControlToolWindow<CR>
+let g:WhichKeyDesc_w_g            = "<leader>wg Git"
+" 终端
+nnoremap <silent> <leader>wt      :action ActivateTerminalToolWindow<CR>
+vnoremap <silent> <leader>wt      :action ActivateTerminalToolWindow<CR>
+let g:WhichKeyDesc_w_t            = "<leader>wt 终端"
+" 构建
+nnoremap <silent> <leader>wb      :action ActivateBuildToolWindow<CR>
+vnoremap <silent> <leader>wb      :action ActivateBuildToolWindow<CR>
+let g:WhichKeyDesc_w_b            = "<leader>wb 构建"
+" TODO
+nnoremap <silent> <leader>wT      :action ActivateTODOToolWindow<CR>
+vnoremap <silent> <leader>wT      :action ActivateTODOToolWindow<CR>
+let g:WhichKeyDesc_w_T            = "<leader>wT TODO"
+" 书签
+nnoremap <silent> <leader>wB      :action ActivateBookmarksToolWindow<CR>
+vnoremap <silent> <leader>wB      :action ActivateBookmarksToolWindow<CR>
+let g:WhichKeyDesc_w_B            = "<leader>wB 书签"
+
+
+" =======构建=======
+let g:WhichKeyDesc_m = "<leader>m 构建/"
+" 刷新Cargo项目
+nnoremap <silent> <leader>mc      :action Cargo.RefreshCargoProject<CR>
+vnoremap <silent> <leader>mc      :action Cargo.RefreshCargoProject<CR>
+let g:WhichKeyDesc_m_c            = "<leader>mc 刷新Cargo项目"
+" 构建
+nnoremap <silent> <leader>mb      :action BuildProject<CR>
+vnoremap <silent> <leader>mb      :action BuildProject<CR>
+let g:WhichKeyDesc_m_b            = "<leader>mb 构建"
+" 重新构建(清理后重新构建)
+nnoremap <silent> <leader>mr      :action RebuildProject<CR>
+vnoremap <silent> <leader>mr      :action RebuildProject<CR>
+let g:WhichKeyDesc_m_r            = "<leader>mr 重新构建"
+
+
+" =======断点=======
+let g:WhichKeyDesc_b = "<leader>b 断点/"
+" 断点
+nnoremap <silent> <leader>bb      :action ToggleLineBreakpoint<CR>
+vnoremap <silent> <leader>bb      :action ToggleLineBreakpoint<CR>
+let g:WhichKeyDesc_b_b            = "<leader>bb 断点 Alt-9"
+" 临时断点
+nnoremap <silent> <leader>bt      :action ToggleTemporaryLineBreakpoint<CR>
+vnoremap <silent> <leader>bt      :action ToggleTemporaryLineBreakpoint<CR>
+let g:WhichKeyDesc_b_t            = "<leader>bt 临时断点 Alt-Shift-9"
+" 查看断点
+nnoremap <silent> <leader>bv      :action ViewBreakpoints<CR>
+vnoremap <silent> <leader>bv      :action ViewBreakpoints<CR>
+let g:WhichKeyDesc_b_v            = "<leader>bv 查看断点"
+
+
+" =======运行=======
+let g:WhichKeyDesc_r = "<leader>r 运行/"
+" 以当前配置运行
+nnoremap <silent> <leader>rr      :action Run<CR>
+vnoremap <silent> <leader>rr      :action Run<CR>
+let g:WhichKeyDesc_r_r            = "<leader>rr 以当前配置运行 Alt-5"
+" 以当前上下文运行
+nnoremap <silent> <leader>rc      :action RunClass<CR>
+vnoremap <silent> <leader>rc      :action RunClass<CR>
+let g:WhichKeyDesc_r_c            = "<leader>rc 以当前上下文运行 Alt-Shift-5"
+" 选择配置并运行
+nnoremap <silent> <leader>rR      :action ChooseRunConfiguration<CR>
+vnoremap <silent> <leader>rR      :action ChooseRunConfiguration<CR>
+let g:WhichKeyDesc_r_R            = "<leader>rR 选择配置并运行"
+" 使用覆盖率运行
+nnoremap <silent> <leader>rt      :action RunCoverage<CR>
+vnoremap <silent> <leader>rt      :action RunCoverage<CR>
+let g:WhichKeyDesc_r_t            = "<leader>rt 使用覆盖率运行"
+" 分析(Profiler/性能分析)
+nnoremap <silent> <leader>rp      :action Profile<CR>
+vnoremap <silent> <leader>rp      :action Profile<CR>
+let g:WhichKeyDesc_r_p            = "<leader>rp 分析"
+" 通过Valgrind Memcheck运行
+nnoremap <silent> <leader>rv      :action RunValgrind<CR>
+vnoremap <silent> <leader>rv      :action RunValgrind<CR>
+let g:WhichKeyDesc_r_v            = "<leader>rv 通过Valgrind Memcheck运行"
+" 停止
+nnoremap <silent> <leader>rs      :action Stop<CR>
+vnoremap <silent> <leader>rs      :action Stop<CR>
+let g:WhichKeyDesc_r_s            = "<leader>rs 停止 Alt-Shift-0"
+" 停止后台进程
+nnoremap <silent> <leader>rS      :action StopBackgroundProcesses<CR>
+vnoremap <silent> <leader>rS      :action StopBackgroundProcesses<CR>
+let g:WhichKeyDesc_r_S            = "<leader>rS 停止后台进程"
+
+
+" =======调试=======
+let g:WhichKeyDesc_d = "<leader>d 调试/"
+" 以当前配置调试            
+nnoremap <silent> <leader>dd      :action Debug<CR>
+vnoremap <silent> <leader>dd      :action Debug<CR>
+let g:WhichKeyDesc_d_d            = "<leader>dd 以当前配置调试 Alt-6"
+" 以当前上下文调试
+nnoremap <silent> <leader>dc      :action DebugClass<CR>
+vnoremap <silent> <leader>dc      :action DebugClass<CR>
+let g:WhichKeyDesc_d_c            = "<leader>dc 以当前上下文调试 Alt-Shift-6"
+" 选择配置并调试
+nnoremap <silent> <leader>dD      :action ChooseDebugConfiguration<CR>
+vnoremap <silent> <leader>dD      :action ChooseDebugConfiguration<CR>
+let g:WhichKeyDesc_d_D            = "<leader>dD 选择配置并调试"
+" 恢复
+nnoremap <silent> <leader>dr      :action Resume<CR>
+vnoremap <silent> <leader>dr      :action Resume<CR>
+let g:WhichKeyDesc_d_r            = "<leader>dr 恢复 Alt-0"
+" 步过
+nnoremap <silent> <leader>dn      :action StepOver<CR>
+vnoremap <silent> <leader>dn      :action StepOver<CR>
+let g:WhichKeyDesc_d_n            = "<leader>dn 步过 Alt-1"
+" 强制步过(忽略内部断点)
+nnoremap <silent> <leader>dN      :action ForceStepOver<CR>
+vnoremap <silent> <leader>dN      :action ForceStepOver<CR>
+let g:WhichKeyDesc_d_N            = "<leader>dN 强制步过 Alt-Shift-1"
+" 步入
+nnoremap <silent> <leader>ds      :action StepInto<CR>
+vnoremap <silent> <leader>ds      :action StepInto<CR>
+let g:WhichKeyDesc_d_s            = "<leader>ds 步入 Alt-2"
+" 智能步入
+nnoremap <silent> <leader>da      :action SmartStepInto<CR>
+vnoremap <silent> <leader>da      :action SmartStepInto<CR>
+let g:WhichKeyDesc_d_a            = "<leader>da 智能步入"
+" 强制步入(即使是第三方库)
+nnoremap <silent> <leader>dS      :action ForceStepInto<CR>
+vnoremap <silent> <leader>dS      :action ForceStepInto<CR>
+let g:WhichKeyDesc_d_S            = "<leader>dS 强制步入 Alt-Shift-2"
+" 步出
+nnoremap <silent> <leader>df      :action StepOut<CR>
+vnoremap <silent> <leader>df      :action StepOut<CR>
+let g:WhichKeyDesc_d_f            = "<leader>df 步出 Alt-3"
+" 运行到光标处
+nnoremap <silent> <leader>du      :action RunToCursor<CR>
+vnoremap <silent> <leader>du      :action RunToCursor<CR>
+let g:WhichKeyDesc_d_u            = "<leader>du 运行到光标处 Alt-4"
+" 强制运行到光标处(忽略内部断点)
+nnoremap <silent> <leader>dU      :action ForceRunToCursor<CR>
+vnoremap <silent> <leader>dU      :action ForceRunToCursor<CR>
+let g:WhichKeyDesc_d_U            = "<leader>dU 强制运行到光标处 Alt-Shift-4"
+" 对表达式求值
+nnoremap <silent> <leader>dv      :action EvaluateExpression<CR>
+vnoremap <silent> <leader>dv      :action EvaluateExpression<CR>
+let g:WhichKeyDesc_d_v            = "<leader>dv 对表达式求值 Alt-7"
+" 跳转到执行点
+nnoremap <silent> <leader>dj      :action ShowExecutionPoint<CR>
+vnoremap <silent> <leader>dj      :action ShowExecutionPoint<CR>
+let g:WhichKeyDesc_d_j            = "<leader>dj 跳转到执行点 Alt-8"
+
+
+" =======结构=======
+let g:WhichKeyDesc_H = "<leader>H 结构/"
+" 文件结构(弹出式大纲)
+nnoremap <silent> <leader>Hs      :action FileStructurePopup<CR>
+vnoremap <silent> <leader>Hs      :action FileStructurePopup<CR>
+let g:WhichKeyDesc_H_s            = "<leader>Hs 文件结构"
+" 文件路径
+nnoremap <silent> <leader>Hp      :action ShowFilePath<CR>
+vnoremap <silent> <leader>Hp      :action ShowFilePath<CR>
+let g:WhichKeyDesc_H_p            = "<leader>Hp 文件路径"
+" 导入层次结构
+nnoremap <silent> <leader>Hi      :action CIDR.Lang.ImportsHierarchy<CR>
+vnoremap <silent> <leader>Hi      :action CIDR.Lang.ImportsHierarchy<CR>
+let g:WhichKeyDesc_H_i            = "<leader>Hi 导入层次结构"
+" 调用层次结构
+nnoremap <silent> <leader>Hc      :action CallHierarchy<CR>
+vnoremap <silent> <leader>Hc      :action CallHierarchy<CR>
+let g:WhichKeyDesc_H_c            = "<leader>Hc 调用层次结构"
+" 类型层次结构
+nnoremap <silent> <leader>Ht      :action TypeHierarchy<CR>
+vnoremap <silent> <leader>Ht      :action TypeHierarchy<CR>
+let g:WhichKeyDesc_H_t            = "<leader>Ht 类型层次结构"
+" 方法层次结构
+nnoremap <silent> <leader>Hf      :action MethodHierarchy<CR>
+vnoremap <silent> <leader>Hf      :action MethodHierarchy<CR>
+let g:WhichKeyDesc_H_f            = "<leader>Hf 方法层次结构"
+
+
+" =======翻译=======
+" 翻译(Translation插件)
+nnoremap <silent> <leader>t       :action Translation.EditorTranslateAction<CR>
+vnoremap <silent> <leader>t       :action Translation.EditorTranslateAction<CR>
+let g:WhichKeyDesc_t              = "<leader>t 翻译"
+" 翻译框
+nnoremap <silent> <leader>T       :action Translation.ShowTranslationDialogAction<CR>
+vnoremap <silent> <leader>T       :action Translation.ShowTranslationDialogAction<CR>
+let g:WhichKeyDesc_T              = "<leader>T 翻译框"
+
+
+" =======快捷键备忘(无实际映射)=======
+let g:WhichKeyDesc_x   = "<leader>x 快捷键备忘/"
+nnoremap <silent> <leader>x1 <Nop>
+nnoremap <silent> <leader>x2 <Nop>
+nnoremap <silent> <leader>x3 <Nop>
+nnoremap <silent> <leader>x4 <Nop>
+nnoremap <silent> <leader>x5 <Nop>
+nnoremap <silent> <leader>x6 <Nop>
+nnoremap <silent> <leader>x7 <Nop>
+nnoremap <silent> <leader>xa <Nop>
+nnoremap <silent> <leader>xb <Nop>
+nnoremap <silent> <leader>xc <Nop>
+nnoremap <silent> <leader>xd <Nop>
+nnoremap <silent> <leader>xe <Nop>
+nnoremap <silent> <leader>xf <Nop>
+nnoremap <silent> <leader>xg <Nop>
+nnoremap <silent> <leader>xh <Nop>
+nnoremap <silent> <leader>xi <Nop>
+nnoremap <silent> <leader>xj <Nop>
+nnoremap <silent> <leader>xk <Nop>
+nnoremap <silent> <leader>xl <Nop>
+nnoremap <silent> <leader>xm <Nop>
+nnoremap <silent> <leader>xn <Nop>
+nnoremap <silent> <leader>xo <Nop>
+nnoremap <silent> <leader>xp <Nop>
+nnoremap <silent> <leader>xq <Nop>
+let g:WhichKeyDesc_x1  = "<leader>x1 Alt-Esc      隐藏工具窗口"
+let g:WhichKeyDesc_x2  = "<leader>x2 Meta-F       文件内搜索"
+let g:WhichKeyDesc_x3  = "<leader>x3 Meta-Shift-F 全局搜索"
+let g:WhichKeyDesc_x4  = "<leader>x4 Meta-R       文件内替换"
+let g:WhichKeyDesc_x5  = "<leader>x5 Meta-Shift-R 全局替换"
+let g:WhichKeyDesc_x6  = "<leader>x6 Meta-G       上一个匹配项"
+let g:WhichKeyDesc_x7  = "<leader>x7 Meta-Shift-G 下一个匹配项"
+let g:WhichKeyDesc_xa  = "<leader>xa Alt-0       恢复"
+let g:WhichKeyDesc_xb  = "<leader>xb Alt-Shift-0 停止"
+let g:WhichKeyDesc_xc  = "<leader>xc Alt-1       步过"
+let g:WhichKeyDesc_xd  = "<leader>xd Alt-Shift-1 强制步过"
+let g:WhichKeyDesc_xe  = "<leader>xe Alt-2       步入"
+let g:WhichKeyDesc_xf  = "<leader>xf Alt-Shift-2 强制步入"
+let g:WhichKeyDesc_xg  = "<leader>xg Alt-3       步出"
+let g:WhichKeyDesc_xh  = "<leader>xh Alt-4       运行到光标处"
+let g:WhichKeyDesc_xi  = "<leader>xi Alt-Shift-4 强制运行到光标处"
+let g:WhichKeyDesc_xj  = "<leader>xj Alt-5       以当前配置运行"
+let g:WhichKeyDesc_xk  = "<leader>xk Alt-Shift-5 以当前上下文运行"
+let g:WhichKeyDesc_xl  = "<leader>xl Alt-6       以当前配置调试"
+let g:WhichKeyDesc_xm  = "<leader>xm Alt-Shift-6 以当前上下文调试"
+let g:WhichKeyDesc_xn  = "<leader>xn Alt-7       对表达式求值"
+let g:WhichKeyDesc_xo  = "<leader>xo Alt-8       跳转到执行点"
+let g:WhichKeyDesc_xp  = "<leader>xp Alt-9       断点"
+let g:WhichKeyDesc_xq  = "<leader>xq Alt-Shift-9 临时断点"
