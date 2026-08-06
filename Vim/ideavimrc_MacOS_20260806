@@ -4,23 +4,24 @@
 " Translation(设置-工具-Translation，勾选“保留内容格式”和“自动翻译文档”)
 
 " IDE快捷键设置：
-" 恢复             Alt-0
-" 停止             Alt-Shift-0
-" 步过             Alt-1
-" 强制步过         Alt-Shift-1
-" 步入             Alt-2
-" 强制步入         Alt-Shift-2
-" 步出             Alt-3
-" 运行到光标处     Alt-4
-" 强制运行到光标处 Alt-Shift-4
-" 以当前配置运行   Alt-5
-" 以当前上下文运行 Alt-Shift-5
-" 以当前配置调试   Alt-6
-" 以当前上下文调试 Alt-Shift-6
-" 对表达式求值     Alt-7
-" 跳转到执行点     Alt-8
-" 断点             Alt-9
-" 临时断点         Alt-Shift-9
+" 恢复             Alt+0
+" 停止             Alt+Shift+0
+" 步过             Alt+1
+" 强制步过         Alt+Shift+1
+" 步入             Alt+2
+" 强制步入         Alt+Shift+2
+" 步出             Alt+3
+" 运行到光标处     Alt+4
+" 强制运行到光标处 Alt+Shift+4
+" 以当前配置运行   Alt+5
+" 以当前上下文运行 Alt+Shift+5
+" 以当前配置调试   Alt+6
+" 以当前上下文调试 Alt+Shift+6
+" 对表达式求值     Alt+7
+" 跳转到执行点     Alt+8
+" 断点             Alt+9
+" 临时断点         Alt+Shift+9
+" 构建             Alt+-
 
 " 清空以前的自定义映射
 mapclear
@@ -401,7 +402,7 @@ let g:WhichKeyDesc_m_c            = "<leader>mc 刷新Cargo项目"
 " 构建
 nnoremap <silent> <leader>mb      :action BuildProject<CR>
 vnoremap <silent> <leader>mb      :action BuildProject<CR>
-let g:WhichKeyDesc_m_b            = "<leader>mb 构建"
+let g:WhichKeyDesc_m_b            = "<leader>mb 构建 (Alt+-)"
 " 重新构建(清理后重新构建)
 nnoremap <silent> <leader>mr      :action RebuildProject<CR>
 vnoremap <silent> <leader>mr      :action RebuildProject<CR>
@@ -413,11 +414,11 @@ let g:WhichKeyDesc_b = "<leader>b 断点/"
 " 断点
 nnoremap <silent> <leader>bb      :action ToggleLineBreakpoint<CR>
 vnoremap <silent> <leader>bb      :action ToggleLineBreakpoint<CR>
-let g:WhichKeyDesc_b_b            = "<leader>bb 断点 Alt-9"
+let g:WhichKeyDesc_b_b            = "<leader>bb 断点 (Alt+9)"
 " 临时断点
 nnoremap <silent> <leader>bt      :action ToggleTemporaryLineBreakpoint<CR>
 vnoremap <silent> <leader>bt      :action ToggleTemporaryLineBreakpoint<CR>
-let g:WhichKeyDesc_b_t            = "<leader>bt 临时断点 Alt-Shift-9"
+let g:WhichKeyDesc_b_t            = "<leader>bt 临时断点 (Alt+Shift+9)"
 " 查看断点
 nnoremap <silent> <leader>bv      :action ViewBreakpoints<CR>
 vnoremap <silent> <leader>bv      :action ViewBreakpoints<CR>
@@ -429,11 +430,11 @@ let g:WhichKeyDesc_r = "<leader>r 运行/"
 " 以当前配置运行
 nnoremap <silent> <leader>rr      :action Run<CR>
 vnoremap <silent> <leader>rr      :action Run<CR>
-let g:WhichKeyDesc_r_r            = "<leader>rr 以当前配置运行 Alt-5"
+let g:WhichKeyDesc_r_r            = "<leader>rr 以当前配置运行 (Alt+5)"
 " 以当前上下文运行
 nnoremap <silent> <leader>rc      :action RunClass<CR>
 vnoremap <silent> <leader>rc      :action RunClass<CR>
-let g:WhichKeyDesc_r_c            = "<leader>rc 以当前上下文运行 Alt-Shift-5"
+let g:WhichKeyDesc_r_c            = "<leader>rc 以当前上下文运行 (Alt+Shift+5)"
 " 选择配置并运行
 nnoremap <silent> <leader>rR      :action ChooseRunConfiguration<CR>
 vnoremap <silent> <leader>rR      :action ChooseRunConfiguration<CR>
@@ -453,7 +454,7 @@ let g:WhichKeyDesc_r_v            = "<leader>rv 通过Valgrind Memcheck运行"
 " 停止
 nnoremap <silent> <leader>rs      :action Stop<CR>
 vnoremap <silent> <leader>rs      :action Stop<CR>
-let g:WhichKeyDesc_r_s            = "<leader>rs 停止 Alt-Shift-0"
+let g:WhichKeyDesc_r_s            = "<leader>rs 停止 (Alt+Shift+0)"
 " 停止后台进程
 nnoremap <silent> <leader>rS      :action StopBackgroundProcesses<CR>
 vnoremap <silent> <leader>rS      :action StopBackgroundProcesses<CR>
@@ -465,11 +466,11 @@ let g:WhichKeyDesc_d = "<leader>d 调试/"
 " 以当前配置调试            
 nnoremap <silent> <leader>dd      :action Debug<CR>
 vnoremap <silent> <leader>dd      :action Debug<CR>
-let g:WhichKeyDesc_d_d            = "<leader>dd 以当前配置调试 Alt-6"
+let g:WhichKeyDesc_d_d            = "<leader>dd 以当前配置调试 (Alt+6)"
 " 以当前上下文调试
 nnoremap <silent> <leader>dc      :action DebugClass<CR>
 vnoremap <silent> <leader>dc      :action DebugClass<CR>
-let g:WhichKeyDesc_d_c            = "<leader>dc 以当前上下文调试 Alt-Shift-6"
+let g:WhichKeyDesc_d_c            = "<leader>dc 以当前上下文调试 (Alt+Shift+6)"
 " 选择配置并调试
 nnoremap <silent> <leader>dD      :action ChooseDebugConfiguration<CR>
 vnoremap <silent> <leader>dD      :action ChooseDebugConfiguration<CR>
@@ -477,19 +478,19 @@ let g:WhichKeyDesc_d_D            = "<leader>dD 选择配置并调试"
 " 恢复
 nnoremap <silent> <leader>dr      :action Resume<CR>
 vnoremap <silent> <leader>dr      :action Resume<CR>
-let g:WhichKeyDesc_d_r            = "<leader>dr 恢复 Alt-0"
+let g:WhichKeyDesc_d_r            = "<leader>dr 恢复 (Alt+0)"
 " 步过
 nnoremap <silent> <leader>dn      :action StepOver<CR>
 vnoremap <silent> <leader>dn      :action StepOver<CR>
-let g:WhichKeyDesc_d_n            = "<leader>dn 步过 Alt-1"
+let g:WhichKeyDesc_d_n            = "<leader>dn 步过 (Alt+1)"
 " 强制步过(忽略内部断点)
 nnoremap <silent> <leader>dN      :action ForceStepOver<CR>
 vnoremap <silent> <leader>dN      :action ForceStepOver<CR>
-let g:WhichKeyDesc_d_N            = "<leader>dN 强制步过 Alt-Shift-1"
+let g:WhichKeyDesc_d_N            = "<leader>dN 强制步过 (Alt+Shift+1)"
 " 步入
 nnoremap <silent> <leader>ds      :action StepInto<CR>
 vnoremap <silent> <leader>ds      :action StepInto<CR>
-let g:WhichKeyDesc_d_s            = "<leader>ds 步入 Alt-2"
+let g:WhichKeyDesc_d_s            = "<leader>ds 步入 (Alt+2)"
 " 智能步入
 nnoremap <silent> <leader>da      :action SmartStepInto<CR>
 vnoremap <silent> <leader>da      :action SmartStepInto<CR>
@@ -497,27 +498,27 @@ let g:WhichKeyDesc_d_a            = "<leader>da 智能步入"
 " 强制步入(即使是第三方库)
 nnoremap <silent> <leader>dS      :action ForceStepInto<CR>
 vnoremap <silent> <leader>dS      :action ForceStepInto<CR>
-let g:WhichKeyDesc_d_S            = "<leader>dS 强制步入 Alt-Shift-2"
+let g:WhichKeyDesc_d_S            = "<leader>dS 强制步入 (Alt+Shift+2)"
 " 步出
 nnoremap <silent> <leader>df      :action StepOut<CR>
 vnoremap <silent> <leader>df      :action StepOut<CR>
-let g:WhichKeyDesc_d_f            = "<leader>df 步出 Alt-3"
+let g:WhichKeyDesc_d_f            = "<leader>df 步出 (Alt+3)"
 " 运行到光标处
 nnoremap <silent> <leader>du      :action RunToCursor<CR>
 vnoremap <silent> <leader>du      :action RunToCursor<CR>
-let g:WhichKeyDesc_d_u            = "<leader>du 运行到光标处 Alt-4"
+let g:WhichKeyDesc_d_u            = "<leader>du 运行到光标处 (Alt+4)"
 " 强制运行到光标处(忽略内部断点)
 nnoremap <silent> <leader>dU      :action ForceRunToCursor<CR>
 vnoremap <silent> <leader>dU      :action ForceRunToCursor<CR>
-let g:WhichKeyDesc_d_U            = "<leader>dU 强制运行到光标处 Alt-Shift-4"
+let g:WhichKeyDesc_d_U            = "<leader>dU 强制运行到光标处 (Alt+Shift+4)"
 " 对表达式求值
 nnoremap <silent> <leader>dv      :action EvaluateExpression<CR>
 vnoremap <silent> <leader>dv      :action EvaluateExpression<CR>
-let g:WhichKeyDesc_d_v            = "<leader>dv 对表达式求值 Alt-7"
+let g:WhichKeyDesc_d_v            = "<leader>dv 对表达式求值 (Alt+7)"
 " 跳转到执行点
 nnoremap <silent> <leader>dj      :action ShowExecutionPoint<CR>
 vnoremap <silent> <leader>dj      :action ShowExecutionPoint<CR>
-let g:WhichKeyDesc_d_j            = "<leader>dj 跳转到执行点 Alt-8"
+let g:WhichKeyDesc_d_j            = "<leader>dj 跳转到执行点 (Alt+8)"
 
 
 " =======结构=======
@@ -585,27 +586,28 @@ nnoremap <silent> <leader>xn <Nop>
 nnoremap <silent> <leader>xo <Nop>
 nnoremap <silent> <leader>xp <Nop>
 nnoremap <silent> <leader>xq <Nop>
-let g:WhichKeyDesc_x1  = "<leader>x1 Alt-Esc      隐藏工具窗口"
+let g:WhichKeyDesc_x1  = "<leader>x1 Alt+Esc      隐藏工具窗口"
 let g:WhichKeyDesc_x2  = "<leader>x2 Meta-F       文件内搜索"
 let g:WhichKeyDesc_x3  = "<leader>x3 Meta-Shift-F 全局搜索"
 let g:WhichKeyDesc_x4  = "<leader>x4 Meta-R       文件内替换"
 let g:WhichKeyDesc_x5  = "<leader>x5 Meta-Shift-R 全局替换"
 let g:WhichKeyDesc_x6  = "<leader>x6 Meta-G       上一个匹配项"
 let g:WhichKeyDesc_x7  = "<leader>x7 Meta-Shift-G 下一个匹配项"
-let g:WhichKeyDesc_xa  = "<leader>xa Alt-0       恢复"
-let g:WhichKeyDesc_xb  = "<leader>xb Alt-Shift-0 停止"
-let g:WhichKeyDesc_xc  = "<leader>xc Alt-1       步过"
-let g:WhichKeyDesc_xd  = "<leader>xd Alt-Shift-1 强制步过"
-let g:WhichKeyDesc_xe  = "<leader>xe Alt-2       步入"
-let g:WhichKeyDesc_xf  = "<leader>xf Alt-Shift-2 强制步入"
-let g:WhichKeyDesc_xg  = "<leader>xg Alt-3       步出"
-let g:WhichKeyDesc_xh  = "<leader>xh Alt-4       运行到光标处"
-let g:WhichKeyDesc_xi  = "<leader>xi Alt-Shift-4 强制运行到光标处"
-let g:WhichKeyDesc_xj  = "<leader>xj Alt-5       以当前配置运行"
-let g:WhichKeyDesc_xk  = "<leader>xk Alt-Shift-5 以当前上下文运行"
-let g:WhichKeyDesc_xl  = "<leader>xl Alt-6       以当前配置调试"
-let g:WhichKeyDesc_xm  = "<leader>xm Alt-Shift-6 以当前上下文调试"
-let g:WhichKeyDesc_xn  = "<leader>xn Alt-7       对表达式求值"
-let g:WhichKeyDesc_xo  = "<leader>xo Alt-8       跳转到执行点"
-let g:WhichKeyDesc_xp  = "<leader>xp Alt-9       断点"
-let g:WhichKeyDesc_xq  = "<leader>xq Alt-Shift-9 临时断点"
+let g:WhichKeyDesc_xa  = "<leader>xa Alt+0       恢复"
+let g:WhichKeyDesc_xb  = "<leader>xb Alt+Shift+0 停止"
+let g:WhichKeyDesc_xc  = "<leader>xc Alt+1       步过"
+let g:WhichKeyDesc_xd  = "<leader>xd Alt+Shift+1 强制步过"
+let g:WhichKeyDesc_xe  = "<leader>xe Alt+2       步入"
+let g:WhichKeyDesc_xf  = "<leader>xf Alt+Shift+2 强制步入"
+let g:WhichKeyDesc_xg  = "<leader>xg Alt+3       步出"
+let g:WhichKeyDesc_xh  = "<leader>xh Alt+4       运行到光标处"
+let g:WhichKeyDesc_xi  = "<leader>xi Alt+Shift+4 强制运行到光标处"
+let g:WhichKeyDesc_xj  = "<leader>xj Alt+5       以当前配置运行"
+let g:WhichKeyDesc_xk  = "<leader>xk Alt+Shift+5 以当前上下文运行"
+let g:WhichKeyDesc_xl  = "<leader>xl Alt+6       以当前配置调试"
+let g:WhichKeyDesc_xm  = "<leader>xm Alt+Shift+6 以当前上下文调试"
+let g:WhichKeyDesc_xn  = "<leader>xn Alt+7       对表达式求值"
+let g:WhichKeyDesc_xo  = "<leader>xo Alt+8       跳转到执行点"
+let g:WhichKeyDesc_xp  = "<leader>xp Alt+9       断点"
+let g:WhichKeyDesc_xq  = "<leader>xq Alt+Shift+9 临时断点"
+let g:WhichKeyDesc_xr  = "<leader>xr Alt+-       构建"
