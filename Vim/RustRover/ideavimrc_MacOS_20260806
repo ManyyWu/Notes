@@ -569,6 +569,7 @@ let g:WhichKeyDesc_T              = "<leader>T 翻译框"
 
 " =======快捷键备忘(无实际映射)=======
 let g:WhichKeyDesc_x   = "<leader>x 快捷键备忘/"
+nnoremap <silent> <leader>x0 <Nop>
 nnoremap <silent> <leader>x1 <Nop>
 nnoremap <silent> <leader>x2 <Nop>
 nnoremap <silent> <leader>x3 <Nop>
@@ -597,6 +598,7 @@ nnoremap <silent> <leader>xr <Nop>
 nnoremap <silent> <leader>xs <Nop>
 nnoremap <silent> <leader>xt <Nop>
 nnoremap <silent> <leader>xu <Nop>
+let g:WhichKeyDesc_x0  = "<leader>x0 Ctrl+Tab     切换器"
 let g:WhichKeyDesc_x1  = "<leader>x1 Alt+Esc      隐藏工具窗口"
 let g:WhichKeyDesc_x2  = "<leader>x2 Meta-F       文件内搜索"
 let g:WhichKeyDesc_x3  = "<leader>x3 Meta-Shift-F 全局搜索"

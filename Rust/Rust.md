@@ -1859,6 +1859,46 @@
   ```
 
 ## 宏
+### 常用宏
+#### 输出与格式化
+  * `print!/eprint!/println!/eprintln!`: 输出到标准输出/标准错误
+  * `format!`: 格式化并创建String
+  * `format_args!`: 创建fmt::Arguments
+  * `write!/writeln!`: 写入
+#### 集合与字符串
+  * `vec!`: 创建Vec
+  * `concat!`: 编译期连接字面量
+  * `stringify!`: 把源代码文本转换成字符串
+  * `matches!`: 判断值是否匹配某个模式
+#### 断言宏
+  * `assert!/assert_eq!/assert_ne!`: 断言
+  * `debug_assert!/debug_assert_eq!/debug_assert_ne!`: 断言(仅Debug) 
+#### 调试、错误与占位宏
+  * `dbg!`: 打印表达式及其结果(取得表达式所有权并返回它)
+  * `todo!`: 标记尚未实现(执行到此处会panic)
+  * `unimplemented!`: 类似`todo!`，语义偏“未实现”
+  * `unreachable!`: 标记不可达(执行到此处会panic)
+  * `unreachable_unchecked!`: 绝不可达，编译器可基于这个事实承诺
+#### 编译期信息宏
+  * `file!`: 获取当前源文件名
+  * `line!`: 获取当前源代码行号
+  * `column!`: 获取当前源代码列号
+  * `module_path!`: 获取当前模块路径
+  * `env!`: 读取编译期环境变量
+  * `option_env!`: 可选读取编译期环境变量
+  * `compile_error!`: 主动产生编译错误
+#### 条件编译宏与属性
+  * `cfg!`:
+  * `#[cfg(...)]`:
+  * `#[cfg_attr(...)]`:
+  * `compile_error!`:
+#### 文件嵌入宏
+  * `include_str!`: 将文件嵌入为字符串
+  * `include_bytes!`: 将文件嵌入为字节数组
+  * `include!`: 将文件解析为 Rust 代码并插入
+  * ``:
+
+### 宏手册
   https://zjp-cn.github.io/tlborm/
 
 ## 模块与包
@@ -1871,31 +1911,34 @@
     |   `-- mod_1.rs
     `-- main.rs
   ```
+
   src/mod_0/mod.rs
   ```Rust
-  // 当前作用域是mod_0
+  // 当前作用域是crate::mod_0
   
   pub mod mod_1;
   
   mod mod_2 {}
   ```
+
   src/mod_0/mod_1.rs
   ```Rust
-  // 当前作用域是mod_1
+  // 当前作用域是crate::mod_0::mod_1
   
   #[allow(unused)]
   fn f() {}
   
   #[allow(unused)]
   pub mod mod_2 {
-      pub fn f() {}
+      pub fn f() {} 
   }
   
   ```
+
   src/main.rs
   ```Rust
   // 在当前作用域声明mod_0，会自动查找mod_0.rs或mod_0/mod.rs
-  // 只能在函数或模块外声明
+  // 文件模块不能在代码块中声明
   mod mod_0;
   
   #[allow(unused)]
@@ -1963,12 +2006,14 @@
     |-- mod_0.rs
     `-- main.rs
   ```
+
   src/mod_0.rs
   ```Rust
   // 当前作用域是mod_0
   
   pub mod mod_1;
   ```
+
   src/mod_0/mod_1.rs
   ```Rust
   // 当前作用域是mod_1
@@ -1976,6 +2021,7 @@
   #[allow(unused)]
   fn f() {}  
   ```
+
   src/main.rs
   ```Rust
   mod mod_0;
