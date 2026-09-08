@@ -11,7 +11,59 @@
   * 枚举也可以定义方法、实现trait
 #### 类型别名和newtype
   * 类型别名: `type NewType = ExistType;`
+  ```Rust
+  // 用于缩短类型名称、方便书写
+  // 它们只是别名，和原类型完全相同，可以混用
+  type OrderMap = std::collections::HashMap<OrderId, Order>;
+  type OrderResult<T> = Result<T, String>;
+  ```
   * newtype: `struct NewType(ExistType);`
+  ```Rust
+  // 区分不同概念
+  #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+  struct UserId(u64);
+  
+  #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+  struct OrderId(u64);
+  
+  #[derive(Debug)]
+  struct Order {
+      id: OrderId,
+      buyer: UserId,
+      discount: Percentage,
+      tags: Tags,
+  }
+  
+  
+  // 维护数据约束，通过私有字段和构造函数控制创建过程
+  // 外部只能通过暴露的接口访问内部数据
+  #[derive(Debug)]
+  pub struct Percentage(u8);
+  
+  impl Percentage {
+      pub fn new(value: u8) -> Result<Self, String> {
+          if value <= 100 {
+              Ok(Self(value))
+          } else {
+              Err(format!("百分比不能超过 100，当前值是 {value}"))
+          }
+      }
+  
+      pub fn value(&self) -> u8 {
+          self.0
+      }
+  }
+  
+  // 绕过孤儿规则：为已有类型实现外部 trait
+  #[derive(Debug)]
+  struct Tags(Vec<String>);
+  
+  impl std::fmt::Display for Tags {
+      fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+          write!(f, "{}", self.0.join(", "))
+      }
+  }
+  ```
 #### 动态大小类型DST
   切片`str`、`[T]`和trait对象`dyn Trait`在编译期无法确定大小或布局  
   DST无法直接使用，但可以通过引用或Box间接使用
@@ -94,15 +146,22 @@
   `'label loop { break 'label; }`
 ### 函数
   * 函数内可以定义函数
+  * 常量函数是可以在常量上下文中调用的函数
+  ```Rust
+  const fn square(x: i32) -> i32 {
+      x * x
+  }
+  const VALUE: i32 = square(12);
+  ```
 ### 借用
   * 概念
-    * 共享借用：通过`&T`创建对某个数据的不可变引用。只要存在共享借用，数据本身就不能被修改或移动。
+    * 共享借用: 通过`&T`创建对某个数据的不可变引用。只要存在共享借用，数据本身就不能被修改或移动。
     * 可变借用(也称独占借用): 通过`&mut T`获取数据独占访问权限。在同一生命周期内，某个数据一旦存在可变借用，就不能有其他任何其他借用(无论是共享借用还是可变借用)
-    * 重借用: 从一个已存在的引用中，再创建一个新的引用，在新的生命周期内原引用(如果原引用是可变引用)会被暂时冻结/挂起，直到新引用的生命周期结束。重借用包括：
+    * 重借用: 从一个已存在的引用中，再创建一个新的引用，在新的生命周期内原引用(如果原引用是可变引用)会被暂时冻结/挂起，直到新引用的生命周期结束。重借用包括: 
       * 从`&T`中创建`&T`(原引用和新引用都可正常访问)
       * 从`&mut T`中创建不可变引用`&T`(原引用被临时冻结，可读但不可写)
       * 从`&mut T`中创建可变引用`&mut T`(原引用被临时挂起，即独占权被临时转移给新的引用，原引用完全不能访问)，这种情况即可变重借用
-    * 隐式重借用: 将一个可变引用`&mut T`传递给一个可变借用`&mut T`的函数或赋值给一另个变量时，Rust不会move这个引用本身，而是自动隐式地根据原引用创建一个生命周期比较短的新引用，相当于自动插入`&mut *old_ref`，触发场景：
+    * 隐式重借用: 将一个可变引用`&mut T`传递给一个可变借用`&mut T`的函数或赋值给一另个变量时，Rust不会move这个引用本身，而是自动隐式地根据原引用创建一个生命周期比较短的新引用，相当于自动插入`&mut *old_ref`，触发场景: 
       * 函数调用传入`&mut T`时
       * 显式类型标注的赋值与重新绑定
       * 方法调用中的self接收者
@@ -274,7 +333,99 @@
 
 ## 泛型
   * 泛型支持指定默认类型
-  * 约束条件尽量在impl中指定，除非该类型没有impl实现才在定义时指定(因为即使在定义时指定了，impl中也需要再次指定)
+  * 约束条件尽量在impl中指定，除非该类型没有impl实现，才在定义时指定(因为即使在定义时指定了，impl中也需要再次指定)
+  ```Rust
+  #[derive(Debug)]
+  struct Pair<T, U> {
+      //      ^^^^
+      // 声明：Pair 有两个泛型参数 T、U
+  
+      first: T,  // 使用 T
+      second: U, // 使用 U
+  }
+  
+  // A、B 只是局部名字，不必与 struct 中的 T、U 同名
+  impl<A, B> Pair<A, B> {
+      // ^^^^       ^^^^
+      // 声明 A、B   把 A、B 传给 Pair
+      //
+      // 对应关系按位置确定：
+      // struct 的 T = impl 的 A
+      // struct 的 U = impl 的 B
+  
+      // A、B 已经由 impl 声明，方法不用再写 <A, B>
+      fn first(&self) -> &A {
+          &self.first
+      }
+  
+      fn second(&self) -> &B {
+          &self.second
+      }
+  
+      // V 是这个方法新增的类型，因此在方法名后声明 <V>
+      fn replace_second<V>(self, new_second: V) -> Pair<A, V> {
+          //                 ^ 新类型 V        ^ 使用 A 和 V
+          Pair {
+              first: self.first,      // A
+              second: new_second,     // V
+          }
+      }
+  }
+  
+  // 针对特定类型 Pair<f64, f64> 的实现
+  // 类型已经确定，不需要 impl<T>
+  impl Pair<f64, f64> {
+      fn sum(&self) -> f64 {
+          self.first + self.second
+      }
+  }
+  
+  // 针对特定类型的 Pair<Vec<E>, usize> 的实现
+  impl<E> Pair<Vec<E>, usize> {
+      // ^ 声明 E
+      //          ^^^^^^ 使用 E：Pair 的第一个类型是 Vec<E>
+      //                  Pair 的第二个类型固定为 usize
+  
+      fn first_item(&self) -> Option<&E> {
+          self.first.first()
+      }
+  
+      fn stored_len(&self) -> usize {
+          self.second
+      }
+  }
+  
+  // 普通泛型函数：函数自己声明 T
+  fn duplicate<T: Clone>(value: T) -> Pair<T, T> {
+      //          ^ 使用 T              ^ 使用 T
+      Pair {
+          first: value.clone(),
+          second: value,
+      }
+  }
+  
+  // struct Pair<T, U>
+  // │
+  // │  T、U 只在结构体定义中声明字段类型
+  // │
+  // ├── impl<A, B> Pair<A, B>
+  // │   │
+  // │   │  A、B 属于整个 impl 块
+  // │   │
+  // │   ├── fn first(&self) -> &A
+  // │   │       直接使用已有的 A，不重新声明
+  // │   │
+  // │   └── fn replace_second<V>(...)
+  // │           V 是该方法新引入的类型
+  // │
+  // ├── impl Pair<f64, f64>
+  // │       类型全部确定，不声明泛型
+  // │
+  // └── impl<E> Pair<Vec<E>, usize>
+  // E 是未知类型，需要声明
+  // Vec<E> 使用 E
+  // usize 已确定，不需要声明
+  ```
 
 ## 模式匹配
   [参考](https://rustwiki.org/zh-CN/reference/patterns.html)
@@ -394,27 +545,86 @@
   ```
 
 ## Trait
+### 孤儿规则
+  为一个类型实现实现Trait时，至少要有一个类型是当前crate定义的。即不能使用外部类型给外部类型实现Trait，但是可以通过newtype绕过限制
+### 有条件地实现方法(T满足条件，给类型<T>实现方法/关联函数)
+  ```Rust
+  impl<T: 条件> 类型<T> {
+    fn 方法(&self) { }
+  }
+  ```
+### 为满足约束的类型实现Trait(T满足条件，给T实现Trait)
+  ```Rust
+  // 为类型实现特征
+  impl 特征 for 类型 {
+  }
+  // 为满足特定条件的类型实现特征
+  impl<T: 条件> 特征 for T {
+    // 实现
+  }
+  ```
+### 特征对象的限制
+  ```Rust
+  fn main() {
+    trait Service {
+      // 以下方法不能通过动态派发(dyn Trait)
+      // fn name() -> String;              // 必须有可用于动态分发的接收者，如&self、&mut self、Box<Self>
+      // fn convert<T>(&self, value: T);   // 方法不能使用类型泛型参数(可使用生命周期泛型)，因为每种泛型都需要生成不同的代码，无法用固定的虚表索引
+      // fn clone_self(&self) -> Self;     // 返回值不能是Self，因为Self类型未知、大小未知
+      // fn ref_self(&self) -> &Self;      // 类型未知
+  
+      // ok, 返回类型是统一的 Box<dyn Service>
+      fn clone_to_box(&self) -> Box<dyn Service>;
+  
+      // ok, 给上面的方法加上约束，使其只对特定类型可用，但仍无法动态派发
+      fn name() -> String where Self: Sized;
+      fn convert<T>(&self, value: T) where Self: Sized;
+      fn clonse_self(&self) -> Self where Self: Sized;
+    }
+  
+    struct Test {};
+  
+    impl Service for Test {
+      fn clone_to_box(&self) -> Box<dyn Service> { Box::new(Test {}) }
+  
+      fn name() -> String where Self: Sized { String::from("test") }
+  
+      fn convert<T>(&self, value: T) where Self: Sized { }
+  
+      fn clonse_self(&self) -> Self where Self: Sized { Self {} }
+    }
+  
+    let t = Test {};
+    let v: &dyn Service = &t;
+    v.clone_to_box();
+    <Test as Service>::name();
+    Service::convert(&t, &t);
+    Service::clonse_self(&t);
+  }
+  ```
 ### 常用特征
 #### Drop特征
   离开作用域时自动调用析构方法drop
 #### From/Into
-  
 #### Move、Clone和Copy
 ##### Move
-  * Move相当于浅拷贝, 但会使源对象不可用
-  * 对于栈上的数据，Move相当于深拷贝，所以尽量不要在栈上定义过大的变量（即使有被优化的可能性）
-  * 对于堆上的数据，Move相当于浅拷贝，只是拷贝引用
-  * 赋值时, 若类型未实现Copy特征, 会优先使用Move语义，Copy特征实现后优先使用Copy
-  * Move对象的成员时, 会使对象及被Move的成员不可用, 但其他成员可用, 重新赋值可以使其可用
-  * `let x = "".to_string(); x;`中的`x;`相当于`let _temp = x;`
+  * Move 表示所有权转移。Move之后，源位置通常被视为未初始化，因此不能继续读取，直到重新赋值
+  * Move 在语义上不是浅拷贝或深拷贝。实现层面通常只转移值自身的内存表示，编译器也可能将实际的数据复制优化掉。
+  * 如果值包含堆资源，如 String或Vec<T>，Move不会复制堆中的内容，只转移其所有权。实现层面通常处理的是指针、长度、容量等字段。
+  * 如果值完全存储在栈上，如大型数组或大型结构体，Move在未被优化时可能需要复制该值的全部内存表示。为避免栈溢出和较大的复制成本，不宜在栈上放置过大的值。
+  * 在需要按值使用变量时，若类型实现了Copy，会复制值，原变量仍可使用；若未实现Copy，则发生Move，原变量不能继续读取。
+  * 将非Copy字段从结构体中移出会造成部分移动。被移动的字段不能继续使用，其他未移动字段仍可单独使用，但结构体暂时不能作为完整值使用。
+  * 实现了Drop的类型，通常不能直接移出其非Copy字段。
+  * 对于没有实现Copy的类型，如`let x = "".to_string(); x;`中的`x;`相当于`let _temp = x;`
 ##### Copy
-  * Copy是浅拷贝，直接复制值
-  * 所有字段实现Copy特征时才能派生Copy(一个类型如果要实现Copy特征它必须先实现Clone特征)
-  * 默认支持Copy的类型: 基本类型、基本类型组成的元组、&T(这些类型不会赋值时Move是因为实现了Copy)
+  * Copy是浅拷贝，表示值可以通过简单的按位复制被隐式复制。赋值、传参后，原变量仍然可用。
+  * 类型实现Copy的前提是所有直接字段都实现Copy，并且该类型没有实现Drop
+  * 默认支持Copy的类型: 基本类型、基本类型组成的元组、&T、指针，&T实现Copy与T是否实现无关，&mut T不能实现Copy
 ##### Clone
-  * Clone是深拷贝，为类型实现Clone特征
-  * 所有字段实现Clone特征时才能派生Clone
-  * 未实现Clone时，引用类型的clone()等价于Copy。实现了Clone时，引用类型的clone()将克隆并自动解引用为引用所指类型
+  * Clone是一般是深拷贝（由具体实现决定）
+  * 使用`#[derive(Clone)]`时，编译器会依次克隆所有字段，因此所有字段都必须实现Clone
+  * 手动实现Clone时，可自定义克隆行为，因此不严格要求所有字段都必须实现Clone
+  * 引用本身实现了Clone，克隆引用只会复制引用。但使用r.clone()方法语法时，自动解引用可能使调用解析到T::clone()。需要明确克隆引用时，可以写<&T>::clone(&r)或直接赋值。
 ### 外部特征
   * Rust中无法为外部类型实现外部特征，比如无法为Vec实现Display，但可以通过newtype实现`struct MyVec(Vec<i32>); impl Display for Myvec {}`
 ### 约束条件
@@ -469,6 +679,7 @@
   }
   ```
 ### 多态
+  * `fn test<T: std::fmt::Display>(t: &T) {}`与`fn test(t: &impl std::fmt::Display) {}`相同，都是静态派发，后者是前者的语法糖
 #### 静态多态与动态多态
   ```Rust
   use std::fmt::Debug;
@@ -590,7 +801,7 @@
 ## 字符串转换
   ```
   fn main() {
-      // char, 参考: https://doc.rust-lang.org/beta/std/primitive.char.html
+      // char, 参考: https://doc.rust-lang.org/beta/std/primitive.ehar.html
       println!("{}", char::from_u32(0x1d54f).unwrap());
   
       // &str为起点
@@ -630,7 +841,41 @@
   }
   ```
   
-## 不太聪明的生命周期检查
+## 生命周期
+### 生命周期约束
+  ```Rust
+  struct Test<'a> {
+    v: &'a str,
+  }
+
+  impl<'a> Test<'a> {
+    fn test<'b>(&'a self, v: &'b str) -> &'b str
+    where 'a: 'b { 
+      self.v
+    }
+  }
+  // 'a: 'b 通俗地解释是：函数承诺返回的引用至少可以活'b，但实际返回的self.v只能活'a，
+  // 所以为了使'a能覆盖'b，需要告诉编译器'a的生命周期至少是'b
+  ```
+### 不太聪明的生命周期检查
+  ```Rust
+  #[derive(Debug)]
+  struct Foo;
+  
+  impl Foo {
+      fn mutate_and_share<'a>(&'a mut self) -> &'a Self {
+          &*self // self本身是对self(即foo)的可变借用，返回值是从这个可变借我派生出的再借用
+      }
+      fn share(&self) {}
+  }
+  
+  fn main() {
+      let mut foo = Foo;
+      let loan = foo.mutate_and_share();
+      foo.share(); // ERROR: 返回的再借用与loan共存，违反借用规则
+      println!("{:?}", loan);
+  }
+  ```
   ```Rust
   // 编译错误
   use std::collections::HashMap;
@@ -645,12 +890,9 @@
                   K: Clone + Eq + Hash,
                   V: Default {
               match map.get_mut(&key) {
-                  //Some(v) => v, // 当v作为返回值时，v与map具有相同的生命周期，v在生命周期内会保持对map的可变借用
-                  Some(v) => {
-                      // v在这里可以使用，但不能返回
-                      map.get_mut(&key).unwrap()
-                  },
+                  Some(v) => v,
                   None => {
+                      // 理论上两个分支的借用互不影响，但编译器借用检查器的控制流分析存在限制，下一代借用检查器方案Polonius会解决这个问题
                       map.insert(key.clone(), V::default()); // error[E0499]: cannot borrow `*map` as mutable more than once at a time
                       map.get_mut(&key).unwrap()
                   }
@@ -746,7 +988,7 @@
   ```
   ```Rust
   fn main() {
-      // 闭包中返回引用时，编译器无法推测生命周期，且很被解决，最好用普通函数代替
+      // 闭包中返回引用时，编译器无法推测生命周期，且很难被解决，最好用普通函数代替
       // let _ = |x: &i32| -> &i32 { x }; // Error: lifetime may not live long enough
   
       fn f(x: &i32) -> &i32 { x }
@@ -781,6 +1023,22 @@
   ```
   
 ## 闭包
+### 闭包的Fn特征推导规则
+  * 一个闭包实现了哪种Fn特征取决于该闭包如何使用被捕获的变量，而不是取决于闭包如何捕获它们
+  * 所有的闭包都自动实现了FnOnce特征，因此任何一个闭包都至少可以被调用一次
+  * 移出捕获值，仅实现FnOnce
+  * 不移出但修改捕获值，实现FnMut + FnOnce
+  * 既不移出也不修改捕获值，实现Fn + FnMut + FnOnce
+### Fn、FnMut、FnOnce的关系
+  * Fn        能满足 FnMut 和 FnOnce 的要求
+  * FnMut     能满足 FnOnce 的要求
+  * FnOnce    要求最宽，只保证能调用一次
+### 闭包中必须要显式添加move的场景
+  * 闭包被发送到新线程
+  * 从函数返回捕获局部变量的闭包
+  * 闭包需要存活得比被捕获变量所在作用域更久
+  * async块需要拥有外部数据
+ 
   ```Rust
   fn test<'a, F> (f: F) -> &'a mut String
       where
@@ -807,13 +1065,8 @@
   }
   
   fn main () {
+ 
       let mut a = String::from("Hello world");
-  
-      // 一个闭包实现了哪种Fn特征取决于该闭包如何使用被捕获的变量，而不是取决于闭包如何捕获它们
-      // 所有的闭包都自动实现了FnOnce特征，因此任何一个闭包都至少可以被调用一次
-      // 没有移出所捕获变量的所有权的闭包自动实现了FnMut特征
-      // 不需要对捕获变量进行改变的闭包自动实现了Fn特征
-  
       println!("{:?}", test(|| &mut a));                    // FnOnce
       println!("{:?}", test1(|| { a += "!"; a.clone() }));  // FnMut
       println!("{:?}", test3(|| { let b = a.clone(); b })); // Fn
@@ -965,161 +1218,182 @@
   use futures::task::{ArcWake, waker_ref};
   
   struct Task {
-      // Task实际不跨线程，理论上不需要Mutex，但ArcWake要求Task是Sync
-      future: Mutex<BoxFuture<'static, ()>>,
+    // Task实际不跨线程，理论上不需要Mutex，但ArcWake要求Task是Sync
+    future: Mutex<BoxFuture<'static, ()>>,
   
-      // task就续时，task使用sender向队列发送自身获得poll的机会
-      sender: Sender<Arc<Task>>,
+    // task就绪时，task使用sender向队列发送自身获得poll的机会
+    sender: Sender<Arc<Task>>,
   }
   
   impl ArcWake for Task {
-      fn wake_by_ref(arc_self: &Arc<Self>) {
-          arc_self.sender.send(arc_self.clone()).unwrap();
-      }
+    fn wake_by_ref(arc_self: &Arc<Self>) {
+      arc_self.sender.send(arc_self.clone()).unwrap();
+    }
   }
   
   struct MiniTokio {
-      // 等待poll的任务
-      scheduled: Receiver<Arc<Task>>,
+    // 等待poll的任务
+    scheduled: Receiver<Arc<Task>>,
   
-      sender: Sender<Arc<Task>>,
+    sender: Sender<Arc<Task>>,
   }
   
   impl MiniTokio {
-      fn new() -> MiniTokio {
-          let (tx, rx) = channel();
+    fn new() -> MiniTokio {
+      let (tx, rx) = channel();
   
-          MiniTokio {
-              scheduled: rx,
-              sender: tx,
-          }
+      MiniTokio {
+        scheduled: rx,
+        sender: tx,
+      }
+    }
+  
+    async fn sleep(duration: Duration) {
+      struct Timer {
+        end: Instant,
+  
+        waker: Option<Arc<Mutex<Waker>>>,
       }
   
-      async fn sleep(duration: Duration) {
-          struct Timer {
-              end: Instant,
+      impl Future for Timer {
+        type Output = ();
   
-              waker: Option<Arc<Mutex<Waker>>>,
-          }
+        // poll调用时机:
+        // 1. 外层Future被poll并执行到await时，被等待的Future会被poll
+        // 2. wake只是把任务重新加入执行器的就绪队列
+        // 3. 执行器之后再次poll外层任务，外层任务再继续poll被等待的Future
+        //
+        // Future需要pin的原因:
+        // 因为Future需要在loop中不断poll，需要保证其在内存中的位置不会被移动
+        // 解决方法一: 要求Future是Unpin，然后使用&mut Future来poll
+        // 因为future库的实现会自动给&mut Future实现Future，&mut Future作为Future来poll，Future则不会被move
+        // impl<F: ?Sized + Future + Unpin> Future for &mut F {
+        //     type Output = F::Output;
+        //     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        //         F::poll(Pin::new(&mut **self), cx)
+        //     }
+        // }
+        // 解决方法二: 使用tokio::pin把Future固定(Future变成Pin<&mut Future>)，然后再可变借用它，即&mut Pin<&mut Future>，它是Unpin的
+        fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+          if let Some(waker) = &self.waker {
+            // 判断两个wake是否会唤醒同一个任务，如果不是则需要更新waker，否则Future完成条件发生变化时可能无法被唤醒
+            // 返回true：保证唤醒同一任务
+            // 返回false：无法确认，可能相同，也可能不同
+            let mut waker = waker.lock().unwrap();
+            if !waker.will_wake(cx.waker()) {
+              *waker = cx.waker().clone();
+            }
+            println!("[TIMER]poll");
+          } else {
+            let waker = Arc::new(Mutex::new(cx.waker().clone()));
+            self.waker = Some(waker.clone());
   
-          impl Future for Timer {
-              type Output = ();
+            // 第一次poll时创建一个线程（简单的实现方式）
+            let end = self.end;
+            thread::spawn(move || {
+              sleep(end.saturating_duration_since(Instant::now()));
   
-              // poll调用时机：
-              // 1. 调用.await时会执行一次poll
-              // 2. waker唤醒Future时会执行一次poll，此时self和self的调用者都会执行一次poll
-              //
-              // Future需要pin的原因:
-              // 因为future需要在loop中不断poll，如果传入Self每次poll会消耗Future，因此需要传入&mut Future，但&mut Future存在Future被move的风险
-              // 解决方法一：要求Future是Unpin，然后使用&mut Future来poll
-              // 因为future库的实现会自动给&mut Future实现Future，&mut Future作为Future来poll，Future则不会被move
-              // impl<F: ?Sized + Future + Unpin> Future for &mut F {
-              //     type Output = F::Output;
-              //     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-              //         F::poll(Pin::new(&mut **self), cx)
-              //     }
-              // }
-              // 解决方法二：使用tokio::pin把Future固定(Future变成Pin<&mut Future>)，然后再可变借用它，即&mut Pin<&mut Future>，它是Unpin的
-              fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
-                  if let Some(waker) = &self.waker {
-                      // Timer有可能在不同的Task中移动，当前Context中的waker和self.waker有可能不匹配，此时需要更新self.waker
-                      let mut waker = waker.lock().unwrap();
-                      if !waker.will_wake(cx.waker()) {
-                          *waker = cx.waker().clone();
-                      }
-                      println!("[TIMER]poll");
-                  } else {
-                      let waker = Arc::new(Mutex::new(cx.waker().clone()));
-                      self.waker = Some(waker.clone());
-  
-                      // 第一次poll时创建一个线程（简单的实现方式）
-                      let end = self.end;
-                      thread::spawn(move || {
-                          sleep(end - Instant::now());
-  
-                          // 唤醒Timer
-                          waker.lock().unwrap().wake_by_ref();
-                      });
-                      println!("[TIMER]create");
-                  }
-  
-                  if Instant::now() >= self.end {
-                      println!("[TIMER]ready");
-                      Poll::Ready(())
-                  } else {
-                      println!("[TIMER]pending");
-                      Poll::Pending
-                  }
-              }
+              // 唤醒Timer
+              waker.lock().unwrap().wake_by_ref();
+            });
+            println!("[TIMER]create");
           }
   
-          Timer {
-              end: Instant::now() + duration,
-              waker: None
-          }.await;
+          if Instant::now() >= self.end {
+            println!("[TIMER]ready");
+            Poll::Ready(())
+          } else {
+            println!("[TIMER]pending");
+            Poll::Pending
+          }
+        }
       }
   
-      fn spawn(future: impl Future<Output=()> + Send + 'static) -> Arc<Task> {
-          println!("[RUNTIME]spawn");
-          let mut task = Option::<Arc<Task>>::None;
-          RUNTIME.with(|runtime| {
-              task = Some(Arc::new(Task {
-                  future: Mutex::new(Box::pin(future)),
-                  sender: runtime.borrow().sender.clone(),
-              }));
-          });
-          let task = task.unwrap();
-          task.sender.send(task.clone()).unwrap();
-          task
-      }
+      Timer {
+        end: Instant::now() + duration,
+        waker: None
+      }.await;
+    }
   
-      fn run() {
-          RUNTIME.with(|runtime: &RefCell<MiniTokio>| {
-              // while let在future.poll期间会继续持有runtime的借用，在future中再次调用spawn会借用失败
-              // 解决方法 while let it = { let it = $expr; it }
-              while let Ok(task) = { let task = runtime.borrow_mut().scheduled.recv(); task } {
-                  println!("[RUNTIME]poll");
-                  let mut future = task.future.lock().unwrap();
-                  let waker = waker_ref(&task);
-                  let ctx = &mut Context::from_waker(&waker);
-                  let _ = future.as_mut().poll(ctx);
-              }
-          });
-      }
+    fn spawn(future: impl Future<Output=()> + Send + 'static) -> Arc<Task> {
+      println!("[RUNTIME]spawn");
+      let mut task = Option::<Arc<Task>>::None;
+      RUNTIME.with(|runtime| {
+        task = Some(Arc::new(Task {
+          future: Mutex::new(Box::pin(future)),
+          sender: runtime.borrow().sender.clone(),
+        }));
+      });
+      let task = task.unwrap();
+      task.sender.send(task.clone()).unwrap();
+      task
+    }
+  
+    fn run() {
+      // Future执行过程
+      // 执行器准备 Task 对应的 Waker
+      // ↓
+      // 使用 Waker 创建 Context
+      // ↓
+      // 执行器调用 Future::poll(..., &mut Context)
+      // ↓
+      // Future 未完成，克隆并保存 Context 中的 Waker
+      // ↓
+      // Future 返回 Pending，Context 的本次借用结束
+      // ↓
+      // I/O、定时器等事件完成
+      // ↓
+      // 调用保存的 Waker
+      // ↓
+      // 对应 Task 再次进入执行器的就绪队列
+      // ↓
+      // 执行器创建新的 Context，再次 poll Future
+      RUNTIME.with(|runtime: &RefCell<MiniTokio>| {
+        // while let在future.poll期间会继续持有runtime的借用，在future中再次调用spawn会借用失败
+        // 解决方法 while let it = { let it = $expr; it }
+        while let Ok(task) = { let task = runtime.borrow_mut().scheduled.recv(); task } {
+          println!("[RUNTIME]poll");
+          let mut future = task.future.lock().unwrap();
+          let waker = waker_ref(&task);
+          let ctx = &mut Context::from_waker(&waker);
+          let _ = future.as_mut().poll(ctx);
+        }
+      });
+    }
   }
   
   thread_local! {
-      static RUNTIME: RefCell<MiniTokio> = RefCell::new(MiniTokio::new());
-  }
-
+        static RUNTIME: RefCell<MiniTokio> = RefCell::new(MiniTokio::new());
+    }
+  
   fn main() {
+    MiniTokio::spawn(async {
+      println!("sleep1 begin");
+      MiniTokio::sleep(Duration::from_secs(3)).await;
+      println!("sleep1 end");
+  
+      println!("sleep2 begin");
+      MiniTokio::sleep(Duration::from_secs(1)).await;
+      println!("sleep2 end");
+  
       MiniTokio::spawn(async {
-          println!("sleep1 begin");
-          MiniTokio::sleep(Duration::from_secs(3)).await;
-          println!("sleep1 end");
-  
-          println!("sleep2 begin");
+        let future = async {
+          println!("sleep4 begin");
           MiniTokio::sleep(Duration::from_secs(1)).await;
-          println!("sleep2 end");
+          println!("sleep4 end");
   
-          MiniTokio::spawn(async {
-              let future = async {
-                  println!("sleep4 begin");
-                  MiniTokio::sleep(Duration::from_secs(1)).await;
-                  println!("sleep4 end");
+          // MiniTokio未实现自动退出
+          exit(0);
+        };
   
-                  // MiniTokio未实现自动退出
-                  exit(0);
-              };
+        println!("sleep3 begin");
+        MiniTokio::sleep(Duration::from_secs(1)).await;
+        println!("sleep3 end");
   
-              println!("sleep3 begin");
-              MiniTokio::sleep(Duration::from_secs(1)).await;
-              println!("sleep3 end");
-  
-              future.await;
-          });
+        future.await;
       });
-      MiniTokio::run();
+    });
+    MiniTokio::run();
   }
   ```
 
@@ -1144,12 +1418,17 @@
   
           async fn test() {
               // test持有未实现Send的Rc变量，因此test是非Send
-              // 解决方法：在.await前销毁非Send变量
+              // 解决方法: 在.await前销毁非Send变量
               let rc = std::rc::Rc::new(0);
               drop(rc);
+
+              // 或用代码块包含
+              {
+                let rc = std::rc::Rc::new(0);
+              }
   
               // .await意味着test可能跨线程执行
-              tokio::task::yeild_now().await;
+              tokio::task::yield_now().await;
           }
   
           require_send(test());
@@ -1162,7 +1441,7 @@
               drop(v);
   
               // test持有未实现Send的MutexGuard，因此async块是非Send
-              // 解决方法：在v被引用的情况下，drop(v)不被编译器识别，可使用块封装非Send变量的作用域
+              // 解决方法: 在v被引用的情况下，drop(v)不被编译器识别，可使用块封装非Send变量的作用域
               {
                   let mut v = m1.lock().unwrap();
                   *v += 1;
@@ -1888,154 +2167,406 @@
   * `option_env!`: 可选读取编译期环境变量
   * `compile_error!`: 主动产生编译错误
 #### 条件编译宏与属性
-  * `cfg!`:
-  * `#[cfg(...)]`:
-  * `#[cfg_attr(...)]`:
-  * `compile_error!`:
+  * `cfg!`: 判断编译配置并返回bool
+  * `#[cfg(...)]`: 根据条件编译代码
+  * `#[cfg_attr(...)]`: 根据条件添加属性
+  * `compile_error!`: 在指定配置下终止编译
 #### 文件嵌入宏
   * `include_str!`: 将文件嵌入为字符串
   * `include_bytes!`: 将文件嵌入为字节数组
-  * `include!`: 将文件解析为 Rust 代码并插入
-  * ``:
+  * `include!`: 将文件解析为Rust代码并插入
+#### 指针与底层编程宏
+  * `addr_of!`: 创建字段的原始常量指针
+  * `addr_of_mut!`: 创建字段的原始可变指针
+  * `asm!`: 编写内联汇编
+  * `global_asm!`: 定义模块级汇编代码
+  * `naked_asm!`: 为naked函数提供汇编体
+#### 异步与固定值宏
+  * `std::pin::pin!`: 将值固定在当前作用域
+  * `std::task::ready!`: 未就绪时提前返回Poll::Pending
+  * `thread_local!`: 定义线程局部静态变量
+#### 声明宏开发
+  * `macro_rules!`: 定义声明宏
+#### 测试属性
+  * `#[test]`: 定义单元测试
+  * `#[cfg(test)]`: 仅在测试构建中编译
+  * `#[ignore]`: 默认忽略测试
+  * `#[should_panic]`: 测试代码是否panic
+#### 标准派生宏
+  * `#[derive(Debug)]`: 生成调试格式化实现({:?}和{:#?})
+  * `#[derive(Clone)]`: 生成显式复制实现
+  * `#[derive(Copy, Clone)]`: 生成隐式按位复制语义
+  * `#[derive(Default)]`: 生成默认值
+  * `#[derive(PartialEq)]`: 支持==和!=
+  * `#[derive(Eq)]`: 表示完整相等关系
+  * `#[derive(PartialOrd)]`: 支持部分排序 
+  * `#[derive(Ord)]`: 支持全序
+  * `#[derive(Hash)]`: 生成哈希实现
+#### 代码检查与文档属性
+  * `#[allow(...)]`: 关闭指定lint
+  * `#[expect(...)]`: 声明预期出现指定lint
+  * `#[expect(...)]`:	有意保留触发 lint 的代码
+  * `#![warn()]`: 将lint设置为警告	不会阻止编译
+  * `#![deny()]`: 将lint设置为错误
+  * `#![forbid()]`: 禁止某类代码
+  * `#[must_use]`: 提醒调用者必须使用返回值
+  * `#[deprecated(note = "...")]`: 标记API已弃用
+  * `#![doc = include_str!("...")]`: 动态嵌入文档
+  * `#[rustfmt::skip]`: 跳过自动格式化，不可作为常规格式化解决方案
+#### 优化与类型布局属性
+  * `#[inline]`: 提示编译器内联函数
+  * `#[inline(always)]`: 强烈建议编译器内联函数
+  * `#[inline(never)]`: 建议编译器不要内联函数
+  * `#[cold]`: 标记函数为低频执行路径
+  * `#[track_caller]`: 在函数中保留调用者的源码位置
+  * `#[repr(C)]`: 使用兼容 C 语言的内存布局
+  * `#[repr(transparent)]`: 让包装类型采用内部字段的内存布局
+  * `#[repr(u8)]`: 指定枚举判别值使用 `u8` 表示
+  * `#[non_exhaustive]`: 允许将来为结构体或枚举增加字段或变体
+#### Serde 与 JSON 宏
+  * `#[derive(Serialize)]`: 生成序列化实现
+  * `#[derive(Deserialize)]`: 生成反序列化实现
+  * `serde_json::json!`: 构造 JSON 值
+  * `#[serde(rename = "...")]`: 修改序列化和反序列化时的字段名
+  * `#[serde(rename_all = "...")]`: 按指定规则批量修改字段名
+  * `#[serde(default)]`: 字段缺失时使用默认值
+  * `#[serde(skip)]`: 跳过字段的序列化和反序列化
+  * `#[serde(skip_serializing)]`: 序列化时跳过字段
+  * `#[serde(skip_deserializing)]`: 反序列化时跳过字段
+  * `#[serde(skip_serializing_if = "...")]`: 满足条件时跳过字段序列化
+  * `#[serde(flatten)]`: 将嵌套结构体的字段展开到当前对象
+  * `#[serde(tag = "...")]`: 使用指定字段标记枚举变体
+  * `#[serde(untagged)]`: 不生成枚举变体标签
+  * `#[serde(with = "...")]`: 使用指定模块自定义序列化和反序列化
+  * `#[serde(serialize_with = "...")]`: 使用指定函数自定义序列化
+  * `#[serde(deserialize_with = "...")]`: 使用指定函数自定义反序列化
+#### Tokio 异步宏
+  * `#[tokio::main]`: 创建 Tokio 运行时并执行异步 `main` 函数
+  * `#[tokio::test]`: 创建 Tokio 运行时并执行异步测试
+  * `tokio::join!`: 并发等待多个 Future 全部完成
+  * `tokio::try_join!`: 并发等待多个返回 `Result` 的 Future
+  * `tokio::select!`: 等待多个异步分支中的一个完成
+  * `tokio::pin!`: 将 Future 固定在当前栈上
+#### 日志与追踪宏
+  * `trace!`: 记录最细粒度的追踪日志
+  * `debug!`: 记录调试信息
+  * `info!`: 记录普通运行信息
+  * `warn!`: 记录警告或可恢复问题
+  * `error!`: 记录错误事件
+  * `tracing::span!`: 创建结构化追踪跨度
+  * `tracing::event!`: 创建指定等级的结构化事件
+  * `#[tracing::instrument]`: 自动为函数创建追踪跨度
+  * `#[instrument(skip(...))]`: 创建函数跨度时跳过指定参数
+  * `#[instrument(skip_all)]`: 创建函数跨度时跳过所有参数
+  * `#[instrument(fields(...))]`: 为函数跨度添加自定义字段
+#### 错误处理宏
+  * `anyhow!`: 创建动态错误
+  * `bail!`: 创建错误并立即返回
+  * `ensure!`: 条件不满足时立即返回错误
+  * `#[derive(thiserror::Error)]`: 自动实现 `std::error::Error`
+  * `#[error("...")]`: 定义错误的显示文本
+  * `#[from]`: 自动实现来源错误到当前错误的转换
+  * `#[source]`: 指定错误链中的底层错误
+  * `#[error(transparent)]`: 透明转发底层错误的显示和来源信息
+#### Clap 命令行宏
+  * `#[derive(clap::Parser)]`: 定义命令行参数解析器
+  * `#[derive(clap::Subcommand)]`: 定义命令行子命令
+  * `#[derive(clap::Args)]`: 定义可复用的参数组
+  * `#[derive(clap::ValueEnum)]`: 定义枚举形式的参数值
+  * `#[command(name = "...")]`: 设置命令名称
+  * `#[command(version)]`: 显示程序版本信息
+  * `#[command(about = "...")]`: 设置命令说明
+  * `#[command(subcommand)]`: 将字段声明为子命令
+  * `#[command(flatten)]`: 展开并复用参数组
+  * `#[arg(short)]`: 为参数设置短选项
+  * `#[arg(long)]`: 为参数设置长选项
+  * `#[arg(default_value = "...")]`: 设置参数默认值
+  * `#[arg(required = true)]`: 将参数设置为必填
+  * `#[arg(value_enum)]`: 将参数限制为枚举值
+  * `#[arg(env = "...")]`: 从环境变量读取参数
+  * `#[arg(flatten)]`: 将参数组展开到当前命令
+#### SQLx 数据库宏
+  * `sqlx::query!`: 编译期检查 SQL 并生成查询结果类型
+  * `sqlx::query_as!`: 编译期检查 SQL 并将结果映射到结构体
+  * `sqlx::query_scalar!`: 编译期检查并查询单列值
+  * `sqlx::query_file!`: 从文件读取并检查 SQL 查询
+  * `sqlx::query_file_as!`: 从文件读取 SQL 并将结果映射到结构体
+  * `sqlx::query_file_scalar!`: 从文件读取 SQL 并查询单列值
+  * `sqlx::migrate!`: 编译期嵌入数据库迁移文件
+  * `#[derive(sqlx::FromRow)]`: 生成数据库行到结构体的转换实现
+  * `#[derive(sqlx::Type)]`: 生成 Rust 类型与数据库类型的映射实现
+  * `#[sqlx(rename = "...")]`: 修改字段或变体对应的数据库名称
+  * `#[sqlx(rename_all = "...")]`: 按指定规则批量修改数据库字段名
+  * `#[sqlx(default)]`: 数据库字段缺失时使用默认值
+  * `#[sqlx(flatten)]`: 将嵌套结构体字段展开映射
+  * `#[sqlx(skip)]`: 跳过指定字段的数据库映射
+#### 不建议优先使用的宏
+  * `lazy_static!`: 延迟初始化全局静态值，现代代码可使用 `LazyLock` 或 `OnceLock`
+  * `concat_idents!`: 拼接标识符，功能和稳定性受限
+  * `format_args_nl!`: 创建带换行的格式化参数，主要用于内部实现
+  * `const_format_args!`: 在常量环境中创建格式化参数，稳定性受限
+  * `assert_matches!`: 断言值匹配指定模式，部分工具链可能不可用
 
 ### 宏手册
   https://zjp-cn.github.io/tlborm/
 
 ## 模块与包
-### 文件分层
-#### 方式一：
-  ```文件层次
-  src/
-    |-- mod_0/
-    |   |-- mod.rs
-    |   `-- mod_1.rs
-    `-- main.rs
-  ```
-
-  src/mod_0/mod.rs
-  ```Rust
-  // 当前作用域是crate::mod_0
-  
-  pub mod mod_1;
-  
-  mod mod_2 {}
-  ```
-
-  src/mod_0/mod_1.rs
-  ```Rust
-  // 当前作用域是crate::mod_0::mod_1
-  
-  #[allow(unused)]
-  fn f() {}
-  
-  #[allow(unused)]
-  pub mod mod_2 {
-      pub fn f() {} 
-  }
-  
-  ```
-
-  src/main.rs
-  ```Rust
-  // 在当前作用域声明mod_0，会自动查找mod_0.rs或mod_0/mod.rs
-  // 文件模块不能在代码块中声明
-  mod mod_0;
-  
-  #[allow(unused)]
-  mod mod_1 {
-      pub struct MyStruct {
-          v: i32,
-      }
-  
-      // impl不需要使用pub
-      impl MyStruct {
-          pub fn new(v: i32) -> MyStruct { MyStruct { v } }
-      }
-  
-      pub enum MyEnum {
-          A(i32),
-      }
-  
-      fn f() {}
-  
-      mod mod_2 {
-          pub fn f() {}
-      }
-  
-      pub mod mod_3 {
-          pub fn f() {}
-      }
-  }
-  
-  #[allow(unused)]
-  mod mod_2 {
-      mod mod_3 {
-          mod mod_4 {
-              fn f() {
-                  { use self::f; } // self代表自身模块create::mod_2::mod_3::mod_mod_4
-                  { use super::mod_4::f; } // super代表父模块create::mod_2::mod_3
-                  { use crate::mod_2::mod_3::mod_4; } // crate代表包根
-              }
-          }
-      }
-  }
-
-  #[allow(unused)]
-  fn main() {
-      // { use mod_1::f; } // 不可见
-      // { use mod_1::mod_2; } // 不可见
-      { use mod_1; } // 同层级可见
-      { use mod_1::mod_3::f; } // 相对路径
-      { use crate::mod_1::mod_3::f; } // 绝对路径，优点是模块移动位置时不需要修改路径
-      { use mod_1::MyEnum::A; } // 将枚举设置为pub，其字段也对外可见
-      {
-          let v = mod_1::MyStruct::new(0);
-          // v.v // 将结构体设置为pub，其字段对外不可见
-      }
-      // { use mod_0::mod_2; } // 不可见
-      // { use mod_0::mod_1::f; } // 不可见
-      { use mod_0::mod_1::mod_2::f; }
-  }
-  ```
-#### 方式二
-  ```文件层次
-  src/
-    |-- mod_0/
-    |   |
-    |   `-- mod_1.rs
-    |-- mod_0.rs
-    `-- main.rs
-  ```
-
-  src/mod_0.rs
-  ```Rust
-  // 当前作用域是mod_0
-  
-  pub mod mod_1;
-  ```
-
-  src/mod_0/mod_1.rs
-  ```Rust
-  // 当前作用域是mod_1
-  
-  #[allow(unused)]
-  fn f() {}  
-  ```
-
-  src/main.rs
-  ```Rust
-  mod mod_0;
-
-  fn main() {
-      mod_1::mod_2::test();
-  }
-  ```
 ### 可见性
   * pub: 无限制
   * pub(crate): 当前包可见
   * pub(self): 当前模块可见
   * pub(super): 在父模块可见
   * pub(in <path>): 在某个模块可见，path必须是父模块或祖先模块。举例:pub(in crate::mod_name)
+### 作用域与私有性
+  ```Rust
+  mod outer {
+    fn f() {}
+  
+    mod inner {
+      pub mod mod_0 {
+        pub mod mod_1 {
+          fn f() {}
+        }
+        pub mod mod_2 {
+          pub fn f() {}
+        }
+  
+        mod mod_3 {}
+      }
+  
+      pub trait Network { // impl中的关联类型、关联常量、关联函数、方法的可见性由trait自身可见性决定
+        type Error;
+        const NAME: &'static str;
+  
+        fn run() -> Result<(), Self::Error>;
+      }
+  
+      pub struct SyncNetwork { }
+
+      impl SyncNetwork {
+        fn f() {}                                      // private
+      }
+  
+      impl Network for SyncNetwork {
+        type Error = ();
+        const NAME: &'static str = "Sync";             // public
+  
+        fn run() -> Result<(), Self::Error> { Ok(()) } // public
+      }
+  
+      pub enum NETWORK_TYPE {
+        SYNC, // public，公开枚举的变体无需声明pub
+      }
+  
+  
+      #[cfg(test)]
+      fn test() {
+        use mod_0::mod_1::f;                                        // error: private
+        use mod_0::mod_3;                                           // error: private
+        use mod_0::mod_2::f;                                        // 从当前作用域开始的相对路径，适用于已通过use引入的模块、crate根模块、外部crate
+        use self::mod_0::mod_2::f;                                  // 从当前模块开始的相对路径，明确访问当前模块中的名称，适用于访问当前模块内部的符号、导入和导出内部符号
+        use crate::outer::inner::mod_0::mod_2::f;                   // 绝对路径，适用于跨模块访问、明确路径、代码移动后路径仍从crate开始等场景
+        use super::f;                                               // 子模块访问父模块，适用于兄弟模块经由八模块访问
+        use std::collections::HashMap;                              // 引入需要频繁访问的符号
+        let _ = std::collections::HashMap::<String, String>::new(); // 偶尔使用、符号存在重复的情况，明确来源访问
+      }
+    }
+  }
+  ```
+### 模块定义
+#### 方式一: 
+  文件层次
+  ```txt
+  src/
+    |-- services/
+    |   |-- mod.rs
+    |   `-- cache.rs
+    |   `-- network.rs
+    `-- main.rs
+  ```
+
+  src/mod.rs
+  ```Rust
+  // 这里为了压缩层级，向外部隐藏cache和network子模块，不使用pub
+  mod cache;   // 声明crate::service::cache, 查找cache.rs
+  mod network; // 声明crate::service::network, 查找network.rs
+
+  // 重导出，把两个子模块直接暴露到service模块
+  pub use self::cache::Cache;
+  pub use self::network::{SyncNetwork, AsyncNetwork, Network};
+
+  /* 适合在mod.rs中定义内联子模块的场景 */
+  
+  // 1. 代码量很小的模块可以在mod.rs中可定义模块，
+  pub mod tiny_module {
+  
+  }
+  
+  // 2. 私有模块也可以在mod.rs中定义，只公开必要接口
+  mod private_module {
+    pub fn internal_f() {}
+  }
+  
+  pub fn f() {
+    self::private_module::internal_f();
+  }
+  
+  // 3. 根据不同平台对模块进行不同实现
+  #[cfg(target_os = "linux")]
+  mod platform {
+  
+  }
+  
+  #[cfg(target_os = "windows")]
+  mod platform {
+  
+  }
+  
+  #[cfg(target_os = "macos")]
+  mod platform {
+  
+  }
+  
+  #[cfg(not(any(
+    target_os = "linux",
+    target_os = "windows",
+    target_os = "macos",
+  )))]
+  compile_error!("当前操作系统不受支持");
+  
+  // 4. 模块级的测试用例
+  #[cfg(test)]
+  mod tests {
+    use super::*;
+  
+    #[test]
+    fn test() {
+  
+    }
+  }
+  
+  // 5. API分类
+  pub mod sync_network {
+    use crate::service::network::{SyncNetwork, Network};
+  
+    pub fn run() {
+      SyncNetwork::run();
+    }
+  }
+  
+  pub mod async_network {
+    use crate::service::network::{AsyncNetwork, Network};
+  
+    pub fn run() {
+      AsyncNetwork::run();
+    }
+  }
+
+  ```
+
+  src/service/cache.rs
+  ```Rust
+  pub struct Cache {}
+  
+  impl Cache {
+    pub fn run() {}
+  }
+  ```
+
+  src/service/network.rs
+  ```Rust
+  pub trait Network { // pub已指定函数的可见性，impl中不再需要指定pub
+    fn run();
+  }
+  
+  pub struct SyncNetwork { }
+  
+  impl Network for SyncNetwork {
+    fn run() {}
+  }
+  
+  pub struct AsyncNetwork { }
+  
+  impl Network for AsyncNetwork {
+    fn run() {}
+  }
+  ```
+
+  src/main.rs
+  ```Rust
+  mod service; // 声明模块crate::service, 查找service.rs
+  
+  use crate::service::{Network, SyncNetwork, AsyncNetwork};
+  use crate::service::Cache;
+  use crate::service::f;
+  
+  fn main() {
+    SyncNetwork::run();
+    AsyncNetwork::run();
+    Cache::run();
+    f();
+  }
+  ```
+#### 方式二
+  文件层次
+  ```txt
+  src/
+    |-- service /
+    |   |
+    |   `-- cache.rs
+    |   `-- network.rs
+    |-- service.rs
+    `-- main.rs
+  ```
+
+  src/service/cache.rs
+  ```Rust
+  pub struct Cache {}
+  
+  impl Cache {
+    pub fn run() {}
+  }
+  ```
+
+  src/service/network.rs
+  ```Rust
+  pub trait Network {
+    fn run();
+  }
+  
+  pub struct SyncNetwork { }
+  
+  impl Network for SyncNetwork {
+    fn run() {}
+  }
+  
+  pub struct AsyncNetwork { }
+  
+  impl Network for AsyncNetwork {
+    fn run() {}
+  }
+  ```
+
+  src/service.rs
+  ```Rust
+  pub mod cache;   // 声明crate::service::cache, 查找service/cache.rs
+  pub mod network; // 声明crate::service::network, 查找service/network.rs
+  ```
+
+  src/main.rs
+  ```Rust
+  mod service; // 声明模块crate::service, 查找service.rs
+  
+  use crate::service::network::{Network, SyncNetwork, AsyncNetwork};
+  use crate::service::cache::Cache;
+  
+  fn main() {
+    SyncNetwork::run();
+    AsyncNetwork::run();
+    Cache::run();
+  }
+  ```
+#### 方式三(库)
 
 ## 错误处理
 ### 枚举实现错误码
@@ -2114,7 +2645,7 @@
 ### 错误处理库
   * thiserror
   * anyhow
-  * 关于如何选用thiserror和anyhow只需要遵循一个原则即可：是否关注自定义错误消息，关注则使用thiserror(常见业务代码)，否则使用anyhow(编写第三方库代码)
+  * 关于如何选用thiserror和anyhow只需要遵循一个原则即可: 是否关注自定义错误消息，关注则使用thiserror(常见业务代码)，否则使用anyhow(编写第三方库代码)
   ```Rust
   fn main() {
       {
@@ -2196,6 +2727,11 @@
   ```
 ### panic!
   * panic!打印堆栈并退出程序
+  * panic后默认处理策略会开始展开unwinding(退栈)，即Rust会沿调用栈退出每一个函数，同时清理各层的局部变量。另一种策略是直接abort，即不清理数据就退出程序，可在Cargo.toml中配置:
+    ```Rust
+    [profile.release]
+    panic = "abort"
+    ```
   * RUST_BACKTRACE=1 cargo run可以输出更详细的堆栈信息
   * 示例
   ```Rust
@@ -2215,10 +2751,11 @@
       fn catch_unwind() {
           // 捕获闭包中的panic
           let result = std::panic::catch_unwind(|| {
-              panic!("Error");
+              panic!("OH NO!!!");
           });
           // 恢复panic
           if let Err(ctx) = result {
+              println!("{:?}", ctx.downcast_ref::<&'static str>());
               std::panic::resume_unwind(Box::new(ctx))
           }
       }
@@ -2289,7 +2826,7 @@
           break;
       }
   
-      // 解决办法：
+      // 解决办法: 
       while let _ = { let v = cell.borrow_mut().unwrap(); v } {
           assert!(cell.try_borrow().is_ok());
           break;
@@ -2315,7 +2852,7 @@
 ### Unsafe实现类型强制转换
 #### transmuter
   * 延长和缩短生命周期
-  * 强制类型转换(注意：使用transmute时要保证源类型和目标类型的内存布局和大小相同)
+  * 强制类型转换(注意: 使用transmute时要保证源类型和目标类型的内存布局和大小相同)
     ```Rust
     #[repr(i32)]
     enum Test {
@@ -2639,7 +3176,7 @@
               select! {
                   // biased;
   
-                  // async block panic的原因：
+                  // async block panic的原因: 
                   // 1. 按顺序每次都会先轮询该分支
                   // 2. 因为f1每次都是轮询同一个future，第二次选择该分支时由于future已经完成而panic
                   // _ = &mut f1 => {}, // panic: resumed after completion
